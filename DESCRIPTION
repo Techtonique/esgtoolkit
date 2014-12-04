@@ -1,0 +1,22 @@
+Package: ESGtoolkit
+Type: Package
+Title: Toolkit for the simulation of financial assets and interest
+        rates models.
+Version: 0.1
+Date: 2014-06-13
+Author: Jean-Charles Croix, Thierry Moudiki, Frederic Planchet, Wassim Youssef
+Maintainer: Thierry Moudiki <thierry.moudiki@gmail.com>
+Description: Toolkit for Monte Carlo simulations of financial assets and
+    interest rates models, involved in an Economic Scenario Generator (ESG).
+    The underlying simulation loops have been implemented in C++.
+License: GPL-2 | GPL-3
+Depends: CDVine, ggplot2, gridExtra, reshape2, ycinterextra
+Imports: Rcpp(>= 0.11.0)
+Suggests: knitr, fOptions
+LinkingTo: Rcpp
+VignetteBuilder: knitr
+Collate: 'RcppExports.R' 'code.R'
+Packaged: 2014-06-12 23:32:30 UTC; Thierry
+NeedsCompilation: yes
+Repository: CRAN
+Date/Publication: 2014-06-13 06:17:14

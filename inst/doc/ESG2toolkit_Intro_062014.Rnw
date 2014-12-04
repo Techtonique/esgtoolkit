@@ -1,0 +1,575 @@
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{ESGtoolkit}
+\documentclass[a4paper]{article}
+\usepackage[british]{babel}
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[colorlinks,linkcolor=red, citecolor=blue, urlcolor=red]{hyperref}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{float}
+\usepackage{amssymb,amsfonts,amsmath}
+\usepackage{graphicx}
+\usepackage{latexsym}
+\usepackage[authoryear]{natbib}
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyhead[C]{\code{ESGtoolkit}, tools for Economic Scenario Generation $\bullet$ June 2014} % 
+\date{}
+\newcommand{\CC}{\ensuremath{\mathbb{C}} }
+\newcommand{\NN}{\ensuremath{\mathbb{N}} }
+\newcommand{\RR}{\ensuremath{\mathbb{R}} }
+\newcommand{\QQ}{\ensuremath{\mathbb{Q}} }
+\newcommand{\EE}{\ensuremath{\mathbb{E}} }
+\newcommand{\PP}{\ensuremath{\mathbb{P}} }
+\newcommand{\noi}{\noindent}
+\newcommand{\II}{\mbox{\large 1\hskip -0,353em 1}}
+\newcommand{\dps}{\displaystyle}
+\newcommand{\ms}{\medskip}
+\newcommand{\itb}{\ms\item[$\bullet$]}
+\newcommand{\itm}{\ms\item}
+\newcommand{\pkg}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+\newcommand{\proglang}[1]{\textsf{#1}}
+\newcommand{\code}[1]{\mbox{\texttt{#1}}}
+\newcommand{\MN}{\mathcal{N}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\GG}{\mathcal{G}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\LL}{\mathcal{L}}
+\newcommand{\AT}{\mathcal{A}}
+
+
+\begin{document}
+
+\title{\bf{\code{ESGtoolkit}, tools for Economic Scenarios Generation}} % Article title
+\author{
+Thierry Moudiki\\ % Your name
+%\url{http://thierrymoudiki.wordpress.com}\\ % Your institution
+\today{}
+%\href{mailto:thierry.moudiki@gmail.com}{thierry.moudiki@gmail.com} % Your email address
+}
+\maketitle
+
+\tableofcontents
+
+%\newpage
+
+\section{Overview}
+
+\subsection{Context}
+
+An \textit{Economic Scenario Generator} (ESG) is a tool for projection of plausible future paths for an insurer's financial risk factors. It helps her in pricing her insurance products, and in assessing her current and future solvency. 
+
+\medskip
+
+Two types of ESGs are generally needed, for different purposes : a \textit{real-world} ESG, and a  a \textit{market consistent} ESG.
+
+
+\medskip
+
+The aim of a real-world ESG is to produce projections of risk factors, whose distribution patterns are  coherent with the past distribution of those risk factors. Real-world scenarios are mainly used for the valuation of solvency capital requirements.  
+
+\medskip
+
+A market consistent ESG shall produce projections of risk factors that are coherent with market prices observed at the valuation date. Market consistent scenarios are mainly used for the best estimate valuation of the technical reserves. 
+
+
+\medskip
+
+Hence, in real-world simulations the historical probability is used and in market consistent simulations, the projection of risk factors is made in a risk-neutral probability. A risk-neutral probability measure is a measure under which the discounted prices of assets are martingales.  
+
+\medskip
+
+A simple example about transitioning from a simulation under the historical probability to a simulation under a risk-neutral probability can be made by using the Black-Scholes model, a geometric Brownian motion. In real-world simulations, the asset evolves according to the following SDE\footnote{Stochastic Differential Equation} (with a drift $\mu$, a volatility $\sigma$, and $\left( W(t) \right)_{t \geq 0}$ being a standard brownian motion) : 
+
+\begin{equation}
+dS(t) = \mu S(t) dt + \sigma S(t) dW(t)
+\end{equation}
+
+\medskip
+
+Let $r$ be a constant risk-free rate. $e^{-rt}S(t)$, the discounted price of $S(t)$,  will be a martingale if 
+\begin{equation}
+d(e^{-rt}S(t))
+\end{equation}
+is driftless. 
+
+\medskip
+
+Applying Ito's formula to $e^{-rt}S(t)$, we have : 
+
+\begin{eqnarray}
+d(e^{-rt}S(t)) &=& -r e^{-rt} S(t) dt + e^{-rt} dS(t) - \frac{1}{2}.0 <dS(t), dS(t)>\\
+               &=& -r e^{-rt} S(t) dt + e^{-rt} \mu S(t) dt + e^{-rt} S(t) \sigma dW(t) \\
+               &=&  e^{-rt} S(t) \left[  (\mu - r) dt + \sigma dW(t) \right]
+\end{eqnarray}
+
+Thus, the drift vanishes iff $\mu = r$, that is, if the asset with price $S(t)$ rewards the risk-free rate $r$. Under this martingale probability measure, the asset price can thus be re-written as :
+
+\begin{equation}
+dS(t) = r S(t) dt + \sigma S(t) dW^*(t)
+\end{equation}
+Where $\left(W^*(t)\right)_{t \geq 0}$ is a standard brownian motion under the risk-neutral measure. 
+
+\medskip
+
+\code{ESGtoolkit} does not directly provide multiple asset models, but instead, some building blocks for constructing a variety of these.
+
+\medskip
+
+Two main functions are therefore provided :  \code{simshocks}, \code{simdiff}. 
+
+\medskip
+
+In this vignette, I introduce these functions, and present how they could be used in building other models. Others tools for statistical testing and visualization are  introduced as well.
+
+\medskip
+
+As a reminder : there are no perfect models, and the more sophisticated doesn't necessarily mean the most judicious. To avoid possible disasters, it's important to know precisely the strengths and weaknesses of a model before using it. 
+
+\subsection{\code{simdiff}}
+
+Let $(W(t))_{t \geq 0}$ be a standard brownian motion. \code{simdiff} makes simulations of a   diffusion process $(X(t))_{t \geq 0}$, which evolves according to the following equation : 
+
+\begin{equation}
+\textcolor{blue}{dX(t) = \mu(t, X(t)) dt + \sigma(t, X(t))} \textcolor{red}{dW(t)} + \textcolor{green}{\gamma(t, X(t-), J)dN(t)}
+\end{equation}
+
+\medskip
+
+Actually, this is just a generic formulation of the models from \code{simdiff}. {\bf Not all the parts of this expression are required all the times}, but only $\textcolor{blue}{\sigma(t, X(t))} \textcolor{red}{dW(t)}$. 
+
+\medskip
+
+The part $\textcolor{green}{\gamma(t, X(t-), J) dN(t)}$ in particular, is optional, and not available for all the models. It contains jumps of the process, that occur according to a homogeneous Poisson process $(N(t))_{t \geq 0}$ with  intensity $\lambda$. The time elasped between two jumping times follows an exponential $\epsilon(\lambda)$ distribution; and the number of jumps of the process on $[0, t[$ follows a Poisson distribution $\mathcal{P}(\lambda t)$. The magnitude of the jumps is controlled by $J$.    
+
+\medskip
+
+Let's make this clearer now. The basic building blocks models implemented in \code{simdiff}, are :
+
+\begin{itemize}
+
+\item An Orsnstein-Uhlenbeck process; for \code{simdiff} used with parameter \newline \code{model = "OU"}, and parameters \code{theta1}, \code{theta2} and \code{theta3} provided (if \code{theta1} or \code{theta2} are  not necessary for building the model, they are to be provided and set to \code{0}) :
+\begin{eqnarray*}
+\textcolor{blue}{\mu(t, X(t))} &=& (\theta_1 - \theta_2 X(t))\\
+\textcolor{blue}{\sigma(t, X(t))} &=& \theta_3\\
+\end{eqnarray*}
+
+\item A Cox-Ingersoll-Ross process; for \code{simdiff} used with parameter \newline \code{model = "CIR"}, and parameters \code{theta1}, \code{theta2}, \code{theta3} provided (if \code{theta1} or \code{theta2} are  not necessary for building the model, they are to be provided and set to \code{0}) : 
+
+\begin{eqnarray*}
+\textcolor{blue}{\mu(t, X(t))} &=& (\theta_1 - \theta_2 X(t))\\
+\textcolor{blue}{\sigma(t, X(t))} &=& \theta_3 \sqrt{X(t)}\\
+\end{eqnarray*} 
+
+\item A Geometric Brownian motion, or 'augmented' versions; for \code{simdiff} used with parameter \code{model = "GBM"}, and parameters \code{theta1}, \code{theta2}, \code{theta3} provided. For the sake of clarity, the argument \code{model} is set to \code{"GBM"}, but not only the Geometric Brownian motion with constant parameters is available. We can have : 
+
+A Geometric Brownian Motion
+
+\begin{eqnarray*}
+\textcolor{blue}{\mu(t, X(t))} &=& \theta_1 X(t)\\
+\textcolor{blue}{\sigma(t, X(t))} &=& \theta_2 X(t)\\ 
+\end{eqnarray*}
+
+A modified Geometric Brownian Motion, with time-varying drift and constant volatility
+
+\begin{eqnarray*}
+\textcolor{blue}{\mu(t, X(t))} &=& \theta_1(t) X(t)\\
+\textcolor{blue}{\sigma(t, X(t))} &=& \theta_2 X(t)\\
+\end{eqnarray*}
+
+A modified Geometric Brownian Motion, with time-varying volatility and constant drift
+
+\begin{eqnarray*}
+\textcolor{blue}{\mu(t, X(t))} &=& \theta_1 X(t)\\ 
+\textcolor{blue}{\sigma(t, X(t))} &=& \theta_2(t) X(t)\\
+\end{eqnarray*}
+\end{itemize}
+
+It's technically possible to have both $\theta_1$ and $\theta_2$ varying with time (both provided as multivariate time series). But it's not advisable to do this, unless you know exactly why you're doing it. 
+
+\medskip
+
+Jumps are available only for \code{model = "GBM"}. The jumps arising from the Poisson process have a common magnitude $J = 1+Z$, whose distribution $\nu$ is either lognormal or double-exponential. Between two jumps, the process behaves like a Geometric Brownian motion, and at jumping times, it increases by $Z$\%. 
+
+\medskip
+
+For lognormal jumps (Merton model), the distribution $\nu$ of $J$ is :
+\begin{equation}
+log(J) = log(1+Z) \sim \MN(log(1+\mu_Z) - \frac{\sigma_Z^2}{2}, \sigma_Z^2)
+\end{equation}
+
+For double exponential jumps (Kou's model), the distribution $\nu$ of $J$ is :
+
+\begin{equation}
+log(J) = log(1+Z) \sim \nu(dy) = p\frac{1}{\eta_u} e^{- \frac{1}{\eta_u}} \II_{y > 0} + (1-p)\frac{1}{\eta_d} e^{\frac{1}{\eta_d}} \II_{y < 0}
+\end{equation}
+
+Hence for taking jumps into account when \code{model = "GBM"}, optional parameters are to be provided to \code{simdiff}, namely :
+
+
+\begin{itemize}
+\item \code{lambda} the intensity of the Poisson process
+\item \code{mu.z} the average jump magnitude (only for {\bf lognormal} jumps)
+\item \code{sigma.z} the standard deviation of the jump magnitude (only for {\bf lognormal} jumps)
+\item \code{p} the probability of positive jumps (only for {\bf double exponential} jumps)
+\item \code{eta\underline{ }up} the mean of positive jumps (only for {\bf double exponential} jumps)
+\item \code{eta\underline{ }down} the mean of negative jumps (only for {\bf double exponential} jumps)
+\end{itemize}
+
+\medskip
+
+\code{simdiff}'s core loops are written in C++ \textit{via} \href{http://cran.r-project.org/web/packages/Rcpp/index.html}{Rcpp}, for an enhanced performance.  Currently, for the simulation of the Ornstein-Uhlenbeck process, with \code{model = "OU"}, the simulation of a Cox-Ingersoll-Ross process with \code{model = "CIR"}, or a geometric brownian motion with \code{model = "GBM"}, it uses an  exact simulation (please see the references for details), which means there's no discretization of the processes. 
+
+\medskip
+
+In \code{simdiff}, the user can choose the \code{horizon} of the projection and the sampling \code{frequency} (annual, semi-annual, quarterly $\ldots$). The output is a time series object created by \code{ts()} from base \proglang{R}. 
+
+\medskip
+
+For a customized simulation of the $\textcolor{red}{\epsilon} \sim \MN(0, 1)$ embedded in the SDE expression \textit{via} $\textcolor{red}{dW(t) = \epsilon dt}$, one can fill \code{simdiff}'s parameter \code{eps}, with an output of the function \code{simshocks}. \code{simshocks} is described in the next section.
+
+
+\subsection{\code{simshocks}}
+
+\code{simshocks} is the complementary function to \code{simdiff}, with which you can simulate custom the $\epsilon \sim \MN(0, 1)$ (that we call shocks) embedded into the diffusion as :
+
+\begin{equation}
+\textcolor{red}{dW(t) = \epsilon dt}
+\end{equation}
+
+\medskip
+
+For the simulation of gaussian increments of a univariate process \code{simshocks} is written in C++ \textit{via} \code{Rcpp}. 
+
+\medskip
+
+When it comes to the simulation of multi-factors models, or the simulation of risk factors with flexible dependence structure, \code{simshocks} calls the underlying function \code{CDVinesim}, from the package \href{http://cran.r-project.org/web/packages/CDVine/index.html}{CDVine}. \code{CDVineSim} makes simulations of canonical ({\bf C-vine}) and {\bf D-vine copulas}. 
+
+\medskip
+
+Simply put, a copula is a function which gives a multidimensional distribution to given margins. If $(X_1, \ldots, X_d)^T$ is a random vector with margins of cumulative distribution functions $F_1, \ldots, F_d$, there exists a copula  function $C$, such that the d-dimensional cumulative distribution function of $(X_1, \ldots, X_d)^T$ is :
+
+\begin{equation}
+F(x_1, \ldots, x_d) = C(F_1(x_1), \ldots, F_d(x_d))
+\end{equation}
+
+
+If the marginal distributions $F_1, \ldots, F_d$ are continuous, then $C$ is unique. 
+
+\medskip
+
+On the other hand, if $C$ is a copula, and $F_1, \ldots, F_d$ are 1-dimensional cumulative distribution functions, the previous equation defines a joint cumulative distribution function for $(X_1, \ldots, X_d)^T$, with margins $F_1, \ldots, F_d$.
+
+\medskip
+
+Contrarily to the multivariate Gaussian or Student-t copulas, vine copulas accurately model the dependence in high dimensions. They use the density functions of bivariate copulas (called pair-copula) to iteratively build a multivariate density function, which leads to a great flexibility in modeling the dependence.  
+
+\medskip
+
+\code{simshocks} applies inverse standard gaussian cumulative distribution function to the uniform margins of \code{CDVinesim} to obtains gaussian shocks, with various dependence structures between them. 
+
+\medskip
+
+The package \code{CDVineSim} can be used first, to choose the copula, and make an inference on it. Sometimes, the choice of the relevant copula is also made with expert knowledge. 
+
+\medskip
+
+\section{Examples}
+
+\subsection{Generating dependent shocks with \code{simshocks}}
+
+To use \code{simshocks}, you need the specify the number of simulations \code{n} that you need, the type of dependence \code{family}, and additional parameters, depending on the copula that you use. For a simulation of Gaussian the copula, the \code{family} is \code{1} : 
+
+<<chgt_package, warning=FALSE, message=FALSE>>=
+library(ESGtoolkit)
+@
+
+<<example_simshocks_1>>=
+# Number of simulations
+nb <- 1000
+
+# Number of risk factors
+d <- 2
+
+# Number of possible combinations of the risk factors (here : 1)
+dd <- d*(d-1)/2
+
+# Family : Gaussian copula 
+fam1 <- rep(1,dd)
+# Correlation coefficients between the risk factors (d*(d-1)/2)
+par0.1 <- 0.1
+par0.2 <- -0.9
+@
+
+The correlation coefficient is provided through the argument \code{par} :
+
+<<example_simshocks_simul>>=
+set.seed(2)
+# Simulation of shocks for the d risk factors
+s0.par1 <- simshocks(n = nb, horizon = 4, 
+family = fam1, par = par0.1)
+
+s0.par2 <- simshocks(n = nb, horizon = 4, 
+family = fam1, par = par0.2)
+@
+
+You can make a correlation test with \code{esgcortest}, to assess whether the correlation estimate is significantly close to the correlation that you specified, or not. 
+
+\medskip
+
+If the confidence interval contains the true value at a given confidence level, then the null hypothesis chosen is not to be rejected at this level. 
+
+\medskip
+
+Use \code{simshocks} along with \code{set.seed}, so that when the correlation seems acceptable, you can  reproduce the simulation.  
+
+<<example_simshocks_2>>=
+# Correlation test
+esgcortest(s0.par1)
+@
+
+These confidence intervals on the estimated correlations can also be visualized with \code{esgplotbands}:  
+
+<<example_simshocks_3, fig.align='center', fig.height=4.5>>=
+test <- esgcortest(s0.par2)
+par(mfrow=c(1, 2))
+esgplotbands(esgcortest(s0.par1))
+esgplotbands(test)
+@
+
+Now with other types of dependences, namely rotated versions of the Clayton copula :
+
+<<example_simshocks_4>>=
+# Family : Rotated Clayton (180 degrees)
+fam2 <- 13
+par0.3 <- 2
+
+# Family : Rotated Clayton (90 degrees)
+fam3 <- 23
+par0.4 <- -2
+
+# number of simulations
+nb <- 200
+
+# Simulation of shocks for the d risk factors
+s0.par3 <- simshocks(n = nb, horizon = 4, 
+family = fam2, par = par0.3)
+
+s0.par4 <- simshocks(n = nb, horizon = 4, 
+family = fam3, par = par0.4)
+@
+
+There's a nice function from the package, \code{esgplotshocks}, that helps you in visualizing the dependence between the shocks (inspired by \href{http://rforpublichealth.blogspot.fr/2014/02/ggplot2-cheatsheet-for-visualizing.html}{this blog post}) : 
+
+<<example_simshocks_5, fig.align='center', fig.height=6>>=
+esgplotshocks(s0.par3, s0.par4)
+@
+
+\newpage
+
+\subsection{Example with \code{simdiff} and \code{simshocks} : Option pricing under the  Bates model (SVJD) for equity}
+
+SVJD stands for Stochastic Volatility with Jump Diffusion. In this model, the volatility of the asset's price evolves as a CIR process. The price itself is a Geometric Brownian motion between jumps, arising from a Poisson process. Here, we consider jumps with lognormal magnitude.  
+
+\medskip
+
+{\bf The model}
+
+\begin{eqnarray*}
+dS(t) &=& (r - \lambda \mu_Z) S(t) dt + \sqrt{v(t)} S(t) dW(t)^{(1)} + (J - 1) dN(t)\\
+dv(t) &=& \kappa(\theta - v(t)) dt + \sigma \sqrt{v(t)} dW(t)^{(2)}\\
+dW(t)^{(1)} dW(t)^{(2)} &=& \rho dt
+\end{eqnarray*}
+
+We use the package \code{fOptions} to compute options' prices from market implied volatility : 
+<<chgtfOptions, message=FALSE, warning=FALSE>>=
+library(fOptions)
+@
+
+The parameters of the Bates model are : 
+<<<example_SVJD_1>>=
+# Spot variance
+V0 <- 0.1372
+# mean-reversion speed
+kappa <- 9.5110/100
+# long-term variance
+theta <- 0.0285
+# volatility of volatility
+volvol <- 0.8010/100
+# Correlation between stoch. vol and prices
+rho <- -0.5483
+# Intensity of the Poisson process
+lambda <- 0.3635
+# mean and vol of the merton jumps diffusion
+mu.J <- -0.2459
+sigma.J <- 0.2547/100
+m <- exp(mu.J + 0.5*(sigma.J^2)) - 1
+# Initial stock price
+S0 <- 4468.17
+# Initial short rate
+r0 <- 0.0357
+@
+
+Now we make \code{300} simulations of shocks and diffusions, on a weekly basis, from today, up to year 1. The shocks are simulated by using a variance reduction technique : antithetic variates (argument \code{method}). 
+
+<<<example_SVJD_2>>=
+n <- 300
+horizon <- 1
+freq <- "weekly" 
+
+# Simulation of shocks, with antithetic variates
+shocks <- simshocks(n = n, horizon = horizon, 
+          frequency = freq, 
+          method = "anti", 
+          family = 1, par = rho)
+
+# Vol simulation
+sim.vol <- simdiff(n = n, horizon = horizon,
+                   frequency = freq, model = "CIR", x0 = V0,
+                   theta1 = kappa*theta, theta2 = kappa, 
+                   theta3 = volvol,
+                    eps = shocks[[1]])
+
+# Plotting the volatility (only for a low number of simulations)
+esgplotts(sim.vol)
+@
+
+Finally, the price's simulation takes {\bf exactly the same parameters} \code{n, horizon, frequency} as \code{simshocks} and \code{simdiff}, and the volatility is embedded through \code{theta2}.
+
+<<<example_SVJD_price>>=
+# prices simulation
+sim.price <- simdiff(n = n, horizon = horizon,
+                     frequency = freq, model = "GBM", x0 = S0,
+                     theta1 = r0 - lambda*m, theta2 = sim.vol,
+                     lambda = lambda, mu.z = mu.J, 
+                     sigma.z = sigma.J, 
+                     eps = shocks[[2]])
+@
+
+We can clearly see the prices jumping with \code{matplot}. But \code{esgplotbands}, offering a view of the paths by percentiles, will be more useful for thousands of simulations : 
+
+<<<example_SVJD_4>>=
+par(mfrow=c(2,1))
+matplot(time(sim.price), sim.price, type = 'l', 
+        main = "with matplot")
+esgplotbands(sim.price, main = "with esgplotbands", xlab = "time", 
+             ylab = "values")
+@
+
+Now, we would like to verify the convergence of the estimated discounted prices to the initial asset price : 
+
+\begin{equation}
+\frac{1}{N}\sum_{i = 1}^N e^{-rT} S_T^{(i)} \longrightarrow \EE[e^{-rT}S_T] = S_0
+\end{equation}
+
+where $N$ is the number of simulations, $r$ is the constant risk free rate, and $T$ is a maturity of 2 weeks. 
+
+<<<example_SVJD_3>>=
+# Discounted Monte Carlo price
+as.numeric(esgmcprices(r0, sim.price, 2/52))
+# Inital price
+S0
+# pct. difference
+as.numeric((esgmcprices(r0, sim.price, 2/52)/S0 - 1)*100)
+@
+
+One would also want to see how fast is the convergence towards $S0$ :
+<<<example_SVJD_cvS0, fig.height=4>>=
+# convergence of the discounted price
+esgmccv(r0, sim.price, 2/52, 
+        main = "Convergence towards the initial \n asset price")
+@
+
+\code{esgmcprices} and \code{esgmccv} give information about the mean, but a statistical test gives more information.  
+
+<<<example_SVJD_martingale_1, results='hide'>>=
+martingaletest.sim.price <- esgmartingaletest(r = r0, 
+                                              X = sim.price, 
+                                              p0 = S0)
+@
+
+\code{esgmartingaletest} computes for each $T$, a Student's t-test of 
+$$H_0 : \EE[e^{-rT}S_T - S_0] = 0$$
+versus the alternative hypothesis that the mean is not $0$, at a given confidence level (default is $95\%$).
+
+\medskip
+
+\code{esgmartingaletest} also provides p-values, and confidence intervals for the mean value. 
+
+\medskip
+
+If all the confidence intervals contain $0$, then the null hypothesis is not rejected at the given level, let's say $95\%$. Which means that there are less than $5$ chances out of $100$ to be wrong by saying that the true mean of the distribution is $0$. 
+
+\medskip
+\code{esgplotbands} gives a visualization of the confidence intervals, as well as the average discounted prices. 
+
+<<<example_SVJD_martingale_2>>=
+esgplotbands(martingaletest.sim.price)
+@
+
+Now, we price a call option under the Bates model :
+
+<<<example_pricing>>=
+# Option pricing
+
+# Strike
+K <- 3400
+Kts <- ts(matrix(K, nrow(sim.price), ncol(sim.price)), 
+               start = start(sim.price), 
+          deltat = deltat(sim.price),
+          end = end(sim.price))
+
+# Implied volatility
+sigma.imp <- 0.6625
+
+#Maturity
+maturity <- 2/52
+
+# payoff at maturity
+payoff <- (sim.price - Kts)*(sim.price > Kts)
+payoff <- window(payoff, 
+             start = deltat(sim.price), 
+             deltat = deltat(sim.price),
+             names = paste0("Series ", 1:n))
+
+# True price
+c0 <- GBSOption("c", S = S0, X = K, Time = maturity, r = r0, 
+                b = 0, sigma = sigma.imp)
+c0@price
+
+# Monte Carlo price
+as.numeric(esgmcprices(r = r0, X = payoff, maturity))
+
+# pct. difference
+as.numeric((esgmcprices(r = r0, X = payoff, 
+             maturity = maturity)/c0@price - 1)*100)
+
+# Convergence towards the option price
+esgmccv(r = r0, X = payoff, maturity = maturity, 
+        main = "Convergence towards the call \n option price")
+
+@
+
+
+\nocite{bates1996jumps}
+\nocite{black1973pricing}
+\nocite{brechmann2012risk}
+\nocite{brechmann2013modeling}
+\nocite{brigo2006interest}
+\nocite{cox1985theory}
+\nocite{eddelbuettel2011rcpp}
+\nocite{glasserman2004monte}
+\nocite{iacus2008simulation}
+\nocite{kou2002jump}
+\nocite{merton1976option}
+\nocite{uhlenbeck1930theory}
+\nocite{vasicek1977equilibrium}
+\nocite{wickham2009ggplot2}
+\bibliographystyle{jss}
+\bibliography{mabiblio}
+
+\end{document}
