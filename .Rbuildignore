@@ -1,2 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^ESGtoolkit\.Rcheck$
+^ESGtoolkit.*\.tar\.gz$
+^ESGtoolkit.*\.tgz$
