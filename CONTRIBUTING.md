@@ -1,4 +1,4 @@
-# `nnetsauce` Code of Conduct
+# `ESGtoolkit` Code of Conduct
 
 ## 1. Purpose
 
