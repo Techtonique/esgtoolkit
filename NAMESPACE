@@ -18,5 +18,11 @@ importFrom(ycinterextra, ycinter)
 importFrom(ycinterextra, ycextra)
 importFrom(ycinterextra, fitted)
 importFrom(Rcpp, evalCpp)
+importFrom("grDevices", "colorRampPalette")
+importFrom("graphics", "abline", "lines", "matplot", "par", "plot",
+             "points", "polygon")
+importFrom("stats", "cor", "cor.test", "deltat", "end", "is.ts", "pt",
+             "qnorm", "qt", "quantile", "sd", "start", "t.test", "time",
+             "ts", "tsp", "window")
 useDynLib("ESGtoolkit")
 

@@ -1,0 +1,9 @@
+\select@language {british}
+\contentsline {section}{\numberline {1}Overview}{2}{section.1}
+\contentsline {subsection}{\numberline {1.1}Context}{2}{subsection.1.1}
+\contentsline {paragraph}{As a reminder:}{3}{section*.2}
+\contentsline {subsection}{\numberline {1.2}\unhbox \voidb@x \hbox {\texttt {simdiff}}}{3}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}\unhbox \voidb@x \hbox {\texttt {simshocks}}}{5}{subsection.1.3}
+\contentsline {section}{\numberline {2}Examples}{6}{section.2}
+\contentsline {subsection}{\numberline {2.1}Generating dependent shocks $\epsilon $ with \unhbox \voidb@x \hbox {\texttt {simshocks}}}{6}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Example with \unhbox \voidb@x \hbox {\texttt {simdiff}} and \unhbox \voidb@x \hbox {\texttt {simshocks}} : Option pricing under the Bates model (SVJD) for equity}{10}{subsection.2.2}

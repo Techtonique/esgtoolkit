@@ -71,6 +71,8 @@
 #' 1 : C-vine
 #' 2 : D-vine
 #'
+#'@param seed reproducibility seed
+#'
 #'@return
 #'If \code{family} and \code{par} are not provided, a univariate time 
 #'series object with simulated gaussian shocks for one risk factor. Otherwise, 
@@ -143,7 +145,8 @@ simshocks <- function(n, horizon,
                                     "weekly", "daily"), 
                       method = c("classic", "antithetic", 
                                  "mm", "hybridantimm", "TAG"), 
-                      family = NULL, par = NULL, par2 = NULL, type = c("CVine", "DVine"))
+                      family = NULL, par = NULL, par2 = NULL, type = c("CVine", "DVine"),
+                      seed = 123)
 {
   if (floor(n) != n) stop("'n' must be an integer")
   if (n <= 1) stop("'n' must be > 1")
@@ -159,6 +162,8 @@ simshocks <- function(n, horizon,
   method <- match.arg(method)
   m <- horizon/delta  
   type <- match.arg(type)
+  
+  set.seed(seed)
   
   if (is.null(family) && is.null(par))
   {
@@ -324,9 +329,9 @@ simshocks <- cmpfun(simshocks)
 #'
 #'@param lambda intensity of the Poisson process counting the jumps. Optional.
 #'
-#'@param mu.z mean parameter for the lognormal jumps size. Optional.
+#'@param mu_z mean parameter for the lognormal jumps size. Optional.
 #'
-#'@param sigma.z standard deviation parameter for the lognormal jumps size. 
+#'@param sigma_z standard deviation parameter for the lognormal jumps size. 
 #'Optional.
 #'
 #'@param p probability of positive jumps. Must belong to ]0, 1[. Optional.
@@ -339,6 +344,8 @@ simshocks <- cmpfun(simshocks)
 #'@param eps gaussian shocks. If not provided, independent shocks are 
 #'generated internally by the function. Otherwise, for custom shocks, 
 #'must be an output from \code{\link{simshocks}}. 
+#'
+#'@param seed reproducibility seed
 #'
 #'@return a time series object. 
 #'
@@ -444,9 +451,9 @@ simdiff <- function(n, horizon,
                                   "weekly", "daily"), 
                     model = c("GBM", "CIR", "OU"), 
                     x0, theta1 = NULL, theta2 = NULL, theta3 = NULL,
-                    lambda = NULL, mu.z = NULL, sigma.z = NULL, 
+                    lambda = NULL, mu_z = NULL, sigma_z = NULL, 
                     p = NULL, eta_up = NULL, eta_down = NULL,
-                    eps = NULL)
+                    eps = NULL, seed = 123)
 {
   if (floor(n) != n) stop("'n' must be an integer")
   if (n <= 1) stop("'n' must be > 1")
@@ -462,6 +469,8 @@ simdiff <- function(n, horizon,
   m <- horizon/delta 
   nbdates <- m + 1
   model <- match.arg(model)
+  
+  set.seed(seed)
   
   if (is.null(eps))
   { 
@@ -535,7 +544,7 @@ simdiff <- function(n, horizon,
   
   if (model == "GBM")
   {
-    if (is.null(mu.z) && is.null(sigma.z) && is.null(p) && is.null(eta_up) && is.null(eta_down))
+    if (is.null(mu_z) && is.null(sigma_z) && is.null(p) && is.null(eta_up) && is.null(eta_down))
     {
       # rGBMESGcpp(const int N, const int horizon, const double Delta, const double x0, 
       # NumericMatrix theta1, NumericMatrix theta2, NumericMatrix eps)       
@@ -544,7 +553,7 @@ simdiff <- function(n, horizon,
                 start = 0, end = horizon, deltat = delta))
     }
     
-    if (!is.null(lambda) && !is.null(mu.z) && !is.null(sigma.z))
+    if (!is.null(lambda) && !is.null(mu_z) && !is.null(sigma_z))
     {
       # rGBMjumpsnormESGcpp(const int N, const int horizon, const double Delta,
       # const double x0, NumericMatrix theta1, NumericMatrix theta2,
@@ -552,7 +561,7 @@ simdiff <- function(n, horizon,
       # NumericMatrix eps)       
       return(ts(rGBMjumpsnormESGcpp(N = n, horizon = horizon, Delta = delta, x0 = x0, 
                                     theta1 = theta1, theta2 = theta2,
-                                    lambda = lambda, mu = mu.z, sigma = sigma.z, 
+                                    lambda = lambda, mu = mu_z, sigma = sigma_z, 
                                     eps = eps), start = 0, end = horizon, deltat = delta))
     }
     
