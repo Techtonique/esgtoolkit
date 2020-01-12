@@ -61,16 +61,16 @@ Thierry Moudiki\\ % Your name
 
 \subsection{Context}
 
-This package was initially developped for insurance in 2014. \textbf{If you're not working in insurance, this package is still relevant for stochastic simulation} in Finance, Economics, or Physics. In that case, you can start directly with \ref{sec:simdiff}. Oh, except maybe this paragraph: \ref{para}. 
+Initially, I developped this package for insurance. In 2014. \textbf{If you're not working in insurance, \code{ESGtoolkit} is still relevant for stochastic simulation} in Finance, Economics, or Physics (...). In that case, you can start directly by reading \ref{sec:simdiff}. Oh, in this section, read at least this paragraph: \ref{para}. 
 
 \medskip
 
-An \textit{Economic Scenario Generator} (ESG) is a tool for projection of plausible future paths for an insurer's financial risk factors. It helps in pricing its insurance products, and assessing current and future solvency. Two types of ESGs are generally needed, for different purposes : a \textit{real-world} ESG, and a  a \textit{market consistent} ESG.
+An \textit{Economic Scenario Generator} (ESG) is a tool for projection of plausible future paths of insurers' financial assets. It helps in pricing its products, and assessing its current and future solvency. Two types of ESGs are generally needed: a \textit{real-world} ESG, and a  a \textit{market consistent} ESG.
 
 
 \medskip
 
-The aim of a real-world ESG is to produce projections of risk factors, whose distribution patterns are  coherent with the past distribution of those risk factors. Real-world scenarios are mainly used for the valuation of solvency capital requirements.  
+The aim of a real-world ESG is to produce projections of risk factors, whose patterns are  coherent with the past distribution of those risk factors. Real-world scenarios are mainly used for the valuation of solvency requirements.  
 
 \medskip
 
@@ -104,7 +104,7 @@ d(e^{-rt}S(t)) &=& -r e^{-rt} S(t) dt + e^{-rt} dS(t) - \frac{1}{2}.0 <dS(t), dS
                &=&  e^{-rt} S(t) \left[  (\mu - r) dt + \sigma dW(t) \right]
 \end{eqnarray}
 
-Thus, the drift vanishes iff $\mu = r$. That is, if our asset with price $S(t)$ at time $t$ rewards the risk-free rate $r$. Under this martingale probability measure, the asset price evolution over time can thus be re-written as:
+Thus, the drift vanishes iff $\mu = r$. That is, if our asset with price $S(t)$ at time $t$ rewards the risk-free rate $r$. Under this martingale probability measure, asset price dynamics over time can be re-written as:
 
 \begin{equation}
 dS(t) = r S(t) dt + \sigma S(t) dW^*(t)
@@ -122,7 +122,7 @@ There are no perfect models, and the more sophisticated doesn't necessarily mean
 \subsection{\code{simdiff}}
 \label{sec:simdiff}
 
-Let $(W(t))_{t \geq 0}$ be a standard brownian motion. \code{simdiff} makes simulations of a  diffusion process $(X(t))_{t \geq 0}$, which evolves according to the following equation: 
+Let $(W(t))_{t \geq 0}$ be a standard brownian motion. \code{simdiff} makes simulations of a  diffusion process $(X(t))_{t \geq 0}$, which evolves through time according to the following equation: 
 
 \begin{equation}
 \label{eq:genericsde}
@@ -135,7 +135,7 @@ Actually, (Eq. \ref{eq:genericsde}) is a generic formulation of all \code{simdif
 
 \medskip
 
-$\textcolor{green}{\gamma(t, X(t-), J) dN(t)}$ is optional, and not available for all the models. It contains jumps of the process, that occur according to a homogeneous Poisson process $(N(t))_{t \geq 0}$ with  intensity $\lambda$. The time elasped between two jumping times follows an exponential $\epsilon(\lambda)$ distribution; and the number of jumps of the process on $[0, t[$ follows a Poisson distribution $\mathcal{P}(\lambda t)$. The magnitude of the jumps is controlled by $J$.    
+$\textcolor{green}{\gamma(t, X(t-), J) dN(t)}$ is optional. It contains jumps of the process, that occur according to a homogeneous Poisson process $(N(t))_{t \geq 0}$ with  intensity $\lambda$. The time elasped between two jumping times follows an exponential $\epsilon(\lambda)$ distribution; and the number of jumps of the process on $[0, t[$ follows a Poisson distribution $\mathcal{P}(\lambda t)$. The magnitude of the jumps is controlled by $J$.    
 
 \medskip
 
@@ -209,11 +209,11 @@ Hence for taking jumps into account when \code{model = "GBM"}, optional paramete
 
 \medskip
 
-\code{simdiff}'s core loops are written in C++ \textit{via} \href{http://cran.r-project.org/web/packages/Rcpp/index.html}{Rcpp} because: speed.  Currently, for an Ornstein-Uhlenbeck process with \code{model = "OU"}, a Cox-Ingersoll-Ross process with \code{model = "CIR"}, or a geometric brownian motion with \code{model = "GBM"}, an exact simulation is used, which means there's no discretization of $(X(t))_{t \geq 0}$ on a time grid. You can also choose an \code{horizon} of projection and a sampling \code{frequency} (annual, semi-annual, quarterly $\ldots$). \code{simdiff}'s output is a time series object created by base \proglang{R} function \code{ts()}. Since this output is a \code{ts()} object, it means you can use function such as \code{window.ts} or \code{frequency} on it. 
+\code{simdiff}'s core loops are written in C++ \textit{via} \href{http://cran.r-project.org/web/packages/Rcpp/index.html}{Rcpp} because: speed.  Currently, for an Ornstein-Uhlenbeck process with \code{model = "OU"}, a Cox-Ingersoll-Ross process with \code{model = "CIR"}, or a geometric brownian motion with \code{model = "GBM"}, an exact simulation is used, which means there's no discretization of $(X(t))_{t \geq 0}$ on a time grid. You can also choose an \code{horizon} of projection and a sampling \code{frequency} (annual, semi-annual, quarterly $\ldots$). \code{simdiff}'s output is a time series object created by base \proglang{R} function \code{ts()}. And since this output is a \code{ts()} object, it means you can use \proglang{R} functions such as \code{window.ts} or \code{frequency} on it. 
 
 \medskip
 
-For a customized simulation of $\textcolor{red}{\epsilon} \sim \MN(0, 1)$ embedded in (Eq. \ref{eq:genericsde}) \textit{via} $\textcolor{red}{dW(t) = \epsilon dt}$, you can fill \code{simdiff}'s parameter \code{eps} with an output of function \code{simshocks}. \code{simshocks} is described in the next section, \ref{sec:simshocks}.
+For a customized simulation of $\textcolor{red}{\epsilon} \sim \MN(0, 1)$ embedded in (Eq. \ref{eq:genericsde}) \textit{via} $\textcolor{red}{dW(t) = \epsilon dt}$, you can fill \code{simdiff}'s parameter \code{eps} with an output of function \code{simshocks}. \code{simshocks} is described in the next section, \ref{sec:simshocks}, and an example of such a procedure is described in \ref{sec:examples}.
 
 
 \subsection{\code{simshocks}}
@@ -257,7 +257,7 @@ Contrary to the multivariate Gaussian or Student-t copulas, vine copulas accurat
 \section{Examples}
 \label{sec:examples}
 
-The first section, \ref{sec:exampleshocks}, is related to \ref{sec:simshocks}. That is, to generating model shocks. Then, section \ref{sec:examplesimulation} presents a complete example of simulation using the package. 
+The first section of examples, \ref{sec:exampleshocks}, is related to \ref{sec:simshocks}. That is, to generating  correlated $\epsilon$'s from  $\textcolor{red}{dW(t) = \epsilon dt}$ in (Eq. \ref{eq:genericsde}). Then, section \ref{sec:examplesimulation} presents a complete example of simulation of  a Stochastic Volatility Jump Diffusion (SVJD) model. This SVJD model uses \ref{sec:simshocks}.
 
 \subsection{Generating dependent shocks $\epsilon$ with \code{simshocks}}
 \label{sec:exampleshocks}
@@ -287,7 +287,7 @@ par0_2 <- -0.9
 @
 
 
-A correlation coefficient is provided to \code{simshocks} through argument \code{par}:
+A correlation coefficient is provided to \code{simshocks} through its argument \code{par}:
 
 <<example_simshocks_simul>>=
 set.seed(2)
@@ -300,7 +300,7 @@ s0_par2 <- simshocks(n = nb, horizon = 4,
 family = fam1, par = par0_2)
 @
 
-You can make a correlation test with \code{esgcortest}, to assess whether correlation estimate is significantly close to the correlation you specified or not. If \code{esgcortest}'s confidence interval contains the true value at a given confidence level, the null hypothesis is not to be rejected at this level. 
+You can make a correlation test on \code{simshocks} outputs with \code{esgcortest}, to assess whether correlation estimate between shocks is significantly close to the correlation you specified or not. If \code{esgcortest}'s confidence interval contains the true value at a given confidence level, the null hypothesis is not to be rejected at this level. 
 
 
 <<example_simshocks_2>>=
@@ -350,13 +350,14 @@ esgplotshocks(s0_par3, s0_par4)
 \subsection{Example with \code{simdiff} and \code{simshocks} : Option pricing under the  Bates model (SVJD) for equity}
 \label{sec:examplesimulation}
 
-SVJD stands for Stochastic Volatility with Jump Diffusion. In this model, the volatility of the asset's price evolves as a CIR process. The price itself is a Geometric Brownian motion between jumps, arising from a Poisson process. Here, we consider jumps with lognormal magnitude.  
+SVJD stands for Stochastic Volatility with Jump Diffusion. In this model, the volatility of our asset's price evolves as a CIR process. The price itself is a Geometric Brownian motion between jumps, arising from a Poisson process. Here, we consider jumps with lognormal magnitude.  
 
 \medskip
 
 {\bf The model}
 
 \begin{eqnarray*}
+\label{eq:batesmodel}
 dS(t) &=& (r - \lambda \mu_Z) S(t) dt + \sqrt{v(t)} S(t) dW(t)^{(1)} + (J - 1) dN(t)\\
 dv(t) &=& \kappa(\theta - v(t)) dt + \sigma \sqrt{v(t)} dW(t)^{(2)}\\
 dW(t)^{(1)} dW(t)^{(2)} &=& \rho dt
@@ -415,7 +416,7 @@ sim_vol <- simdiff(n = n, horizon = horizon,
 esgplotts(sim_vol)
 @
 
-Finally, the price's simulation takes {\bf exactly the same parameters} \code{n, horizon, frequency} as \code{simshocks} and \code{simdiff}, and the volatility is embedded through \code{theta2}.
+Finally, price simulation takes {\bf exactly the same parameters} \code{n, horizon, frequency} as \code{simshocks} and \code{simdiff}, and diffusion's volatility is embedded through \code{theta2}.
 
 <<<example_SVJD_price>>=
 # prices simulation
@@ -427,7 +428,7 @@ sim_price <- simdiff(n = n, horizon = horizon,
                      eps = shocks[[2]])
 @
 
-We can clearly see the prices jumping with \code{matplot}. But \code{esgplotbands}, offering a view of the paths by percentiles, will be more useful for thousands of simulations : 
+In the figue below, we can clearly see asset prices jumping with \code{matplot}. \code{esgplotbands}, which depicts asset paths by percentiles, will be more useful for thousands of simulations : 
 
 <<<example_SVJD_4>>=
 par(mfrow=c(2, 1))
@@ -437,7 +438,7 @@ esgplotbands(sim_price, main = "with esgplotbands", xlab = "time",
              ylab = "values")
 @
 
-Now, we would like to verify the convergence of the estimated discounted prices to the initial asset price : 
+Now, we would like to study the convergence of estimated discounted prices to the initial asset price : 
 
 \begin{equation}
 \frac{1}{N}\sum_{i = 1}^N e^{-rT} S_T^{(i)} \longrightarrow \EE[e^{-rT}S_T] = S_0
@@ -447,11 +448,13 @@ where $N$ is the number of simulations, $r$ is the constant risk free rate, and 
 
 <<<example_SVJD_3>>=
 # Discounted Monte Carlo price
-as.numeric(esgmcprices(r0, sim_price, 2/52))
+print(as.numeric(esgmcprices(r0, sim_price, 2/52)))
+
 # Inital price
-S0
+print(S0)
+
 # pct. difference
-as.numeric((esgmcprices(r0, sim_price, 2/52)/S0 - 1)*100)
+print(as.numeric((esgmcprices(r0, sim_price, 2/52)/S0 - 1)*100))
 @
 
 One would also want to see how fast is the convergence towards $S0$ :
@@ -475,16 +478,15 @@ versus the alternative hypothesis that the mean is not $0$, at a given confidenc
 
 \medskip
 
-\code{esgmartingaletest} also provides p-values, and confidence intervals for the mean value. If all the confidence intervals contain $0$, then the null hypothesis is not rejected at the given level, let's say $95\%$. Which means that there are less than $5$ chances out of $100$ to be wrong by saying that the true mean of the distribution is $0$. 
-
-\medskip
-\code{esgplotbands} gives a visualization of the confidence intervals, as well as the average discounted prices. 
+\code{esgmartingaletest} also provides p-values, and confidence intervals for the mean value (print \code{martingaletest\underline{ }sim\underline{ }price}!). If all the confidence intervals contain $0$, then the null hypothesis is not rejected at the given level, let's say $95\%$. Which means that there are less than $5$ chances out of $100$ to be wrong by saying that the true mean of the distribution is $0$. \code{esgplotbands} is a companion function to \code{esgmartingaletest}, that gives a visualization of confidence intervals and average discounted prices. 
 
 <<<example_SVJD_martingale_2>>=
 esgplotbands(martingaletest_sim_price)
 @
 
-Now, we price a call option under the Bates model :
+\newpage
+
+Another interesting exercise is to price a \href{https://en.wikipedia.org/wiki/Call_option}{Call Option} under the Bates model described at the beginning of this section:
 
 <<<example_pricing>>=
 # Option pricing
@@ -515,11 +517,11 @@ c0 <- GBSOption("c", S = S0, X = K, Time = maturity, r = r0,
 print(c0@price)
 
 # Monte Carlo price
-as.numeric(esgmcprices(r = r0, X = payoff, maturity))
+print(as.numeric(esgmcprices(r = r0, X = payoff, maturity)))
 
 # pct. difference
-as.numeric((esgmcprices(r = r0, X = payoff, 
-             maturity = maturity)/c0@price - 1)*100)
+print(as.numeric((esgmcprices(r = r0, X = payoff, 
+             maturity = maturity)/c0@price - 1)*100))
 
 # Convergence towards the option price
 esgmccv(r = r0, X = payoff, maturity = maturity, 

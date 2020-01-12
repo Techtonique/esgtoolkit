@@ -2,12 +2,12 @@ Package: ESGtoolkit
 Type: Package
 Title: Toolkit for Monte Carlo Simulations
 Version: 0.2.0
-Date: 2014-06-13
+Date: 2020-01-12
 Author: Thierry Moudiki
 Maintainer: Thierry Moudiki <thierry.moudiki@gmail.com>
 Description: A toolkit for Monte Carlo Simulations in Finance, Economics, Insurance, Physics. Multiple simulation models can be created by combining building blocks provided in the package.   
 License: BSD_3_clause Clear + file LICENSE
-Depends: CDVine, ggplot2, gridExtra, reshape2, ycinterextra, qpdf
+Depends: CDVine, ggplot2, gridExtra, reshape2, ycinterextra
 Imports: Rcpp(>= 0.11.0)
 Suggests: knitr, fOptions
 LinkingTo: Rcpp
@@ -17,3 +17,4 @@ Packaged: 2014-06-12 23:32:30 UTC; Thierry
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2014-06-13 06:17:14
+RoxygenNote: 7.0.2

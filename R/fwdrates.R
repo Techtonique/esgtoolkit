@@ -30,7 +30,7 @@
 #'@references
 #'
 #' Thierry Moudiki (2013). ycinterextra: Yield curve or zero-coupon prices interpolation and extrapolation. R package version 0.1. URL 
-#'\url{http://CRAN.R-project.org/package=ycinterextra}
+#'\url{https://CRAN.R-project.org/package=ycinterextra}
 #'
 #'@examples
 #'

@@ -323,7 +323,8 @@ esgmccv <- cmpfun(esgmccv)
 #'                x0 = S0, theta1 = r0, theta2 = 0.1, 
 #'                eps = eps0)
 #' 
-#'mc.test <- esgmartingaletest(r = r0, X = sim.GBM, p0 = S0, alpha = 0.05)                               
+#'mc.test <- esgmartingaletest(r = r0, X = sim.GBM, p0 = S0, 
+#'alpha = 0.05)                               
 #'esgplotbands(mc.test)                
 #'
 esgmartingaletest <- function(r, X, p0, alpha = 0.05)

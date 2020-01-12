@@ -110,16 +110,16 @@ Thierry Moudiki\\ % Your name
 
 \subsection{Context}
 
-This package was initially developped for insurance in 2014. \textbf{If you're not working in insurance, this package is still relevant for stochastic simulation} in Finance, Economics, or Physics. In that case, you can start directly with \ref{sec:simdiff}. Oh, except maybe this paragraph: \ref{para}. 
+Initially, I developped this package for insurance. In 2014. \textbf{If you're not working in insurance, \code{ESGtoolkit} is still relevant for stochastic simulation} in Finance, Economics, or Physics (...). In that case, you can start directly by reading \ref{sec:simdiff}. Oh, in this section, read at least this paragraph: \ref{para}. 
 
 \medskip
 
-An \textit{Economic Scenario Generator} (ESG) is a tool for projection of plausible future paths for an insurer's financial risk factors. It helps in pricing its insurance products, and assessing current and future solvency. Two types of ESGs are generally needed, for different purposes : a \textit{real-world} ESG, and a  a \textit{market consistent} ESG.
+An \textit{Economic Scenario Generator} (ESG) is a tool for projection of plausible future paths of insurers' financial assets. It helps in pricing its products, and assessing its current and future solvency. Two types of ESGs are generally needed: a \textit{real-world} ESG, and a  a \textit{market consistent} ESG.
 
 
 \medskip
 
-The aim of a real-world ESG is to produce projections of risk factors, whose distribution patterns are  coherent with the past distribution of those risk factors. Real-world scenarios are mainly used for the valuation of solvency capital requirements.  
+The aim of a real-world ESG is to produce projections of risk factors, whose patterns are  coherent with the past distribution of those risk factors. Real-world scenarios are mainly used for the valuation of solvency requirements.  
 
 \medskip
 
@@ -153,7 +153,7 @@ d(e^{-rt}S(t)) &=& -r e^{-rt} S(t) dt + e^{-rt} dS(t) - \frac{1}{2}.0 <dS(t), dS
                &=&  e^{-rt} S(t) \left[  (\mu - r) dt + \sigma dW(t) \right]
 \end{eqnarray}
 
-Thus, the drift vanishes iff $\mu = r$. That is, if our asset with price $S(t)$ at time $t$ rewards the risk-free rate $r$. Under this martingale probability measure, the asset price evolution over time can thus be re-written as:
+Thus, the drift vanishes iff $\mu = r$. That is, if our asset with price $S(t)$ at time $t$ rewards the risk-free rate $r$. Under this martingale probability measure, asset price dynamics over time can be re-written as:
 
 \begin{equation}
 dS(t) = r S(t) dt + \sigma S(t) dW^*(t)
@@ -171,7 +171,7 @@ There are no perfect models, and the more sophisticated doesn't necessarily mean
 \subsection{\code{simdiff}}
 \label{sec:simdiff}
 
-Let $(W(t))_{t \geq 0}$ be a standard brownian motion. \code{simdiff} makes simulations of a  diffusion process $(X(t))_{t \geq 0}$, which evolves according to the following equation: 
+Let $(W(t))_{t \geq 0}$ be a standard brownian motion. \code{simdiff} makes simulations of a  diffusion process $(X(t))_{t \geq 0}$, which evolves through time according to the following equation: 
 
 \begin{equation}
 \label{eq:genericsde}
@@ -184,7 +184,7 @@ Actually, (Eq. \ref{eq:genericsde}) is a generic formulation of all \code{simdif
 
 \medskip
 
-$\textcolor{green}{\gamma(t, X(t-), J) dN(t)}$ is optional, and not available for all the models. It contains jumps of the process, that occur according to a homogeneous Poisson process $(N(t))_{t \geq 0}$ with  intensity $\lambda$. The time elasped between two jumping times follows an exponential $\epsilon(\lambda)$ distribution; and the number of jumps of the process on $[0, t[$ follows a Poisson distribution $\mathcal{P}(\lambda t)$. The magnitude of the jumps is controlled by $J$.    
+$\textcolor{green}{\gamma(t, X(t-), J) dN(t)}$ is optional. It contains jumps of the process, that occur according to a homogeneous Poisson process $(N(t))_{t \geq 0}$ with  intensity $\lambda$. The time elasped between two jumping times follows an exponential $\epsilon(\lambda)$ distribution; and the number of jumps of the process on $[0, t[$ follows a Poisson distribution $\mathcal{P}(\lambda t)$. The magnitude of the jumps is controlled by $J$.    
 
 \medskip
 
@@ -258,11 +258,11 @@ Hence for taking jumps into account when \code{model = "GBM"}, optional paramete
 
 \medskip
 
-\code{simdiff}'s core loops are written in C++ \textit{via} \href{http://cran.r-project.org/web/packages/Rcpp/index.html}{Rcpp} because: speed.  Currently, for an Ornstein-Uhlenbeck process with \code{model = "OU"}, a Cox-Ingersoll-Ross process with \code{model = "CIR"}, or a geometric brownian motion with \code{model = "GBM"}, an exact simulation is used, which means there's no discretization of $(X(t))_{t \geq 0}$ on a time grid. You can also choose an \code{horizon} of projection and a sampling \code{frequency} (annual, semi-annual, quarterly $\ldots$). \code{simdiff}'s output is a time series object created by base \proglang{R} function \code{ts()}. Since this output is a \code{ts()} object, it means you can use function such as \code{window.ts} or \code{frequency} on it. 
+\code{simdiff}'s core loops are written in C++ \textit{via} \href{http://cran.r-project.org/web/packages/Rcpp/index.html}{Rcpp} because: speed.  Currently, for an Ornstein-Uhlenbeck process with \code{model = "OU"}, a Cox-Ingersoll-Ross process with \code{model = "CIR"}, or a geometric brownian motion with \code{model = "GBM"}, an exact simulation is used, which means there's no discretization of $(X(t))_{t \geq 0}$ on a time grid. You can also choose an \code{horizon} of projection and a sampling \code{frequency} (annual, semi-annual, quarterly $\ldots$). \code{simdiff}'s output is a time series object created by base \proglang{R} function \code{ts()}. And since this output is a \code{ts()} object, it means you can use \proglang{R} functions such as \code{window.ts} or \code{frequency} on it. 
 
 \medskip
 
-For a customized simulation of $\textcolor{red}{\epsilon} \sim \MN(0, 1)$ embedded in (Eq. \ref{eq:genericsde}) \textit{via} $\textcolor{red}{dW(t) = \epsilon dt}$, you can fill \code{simdiff}'s parameter \code{eps} with an output of function \code{simshocks}. \code{simshocks} is described in the next section, \ref{sec:simshocks}.
+For a customized simulation of $\textcolor{red}{\epsilon} \sim \MN(0, 1)$ embedded in (Eq. \ref{eq:genericsde}) \textit{via} $\textcolor{red}{dW(t) = \epsilon dt}$, you can fill \code{simdiff}'s parameter \code{eps} with an output of function \code{simshocks}. \code{simshocks} is described in the next section, \ref{sec:simshocks}, and an example of such a procedure is described in \ref{sec:examples}.
 
 
 \subsection{\code{simshocks}}
@@ -306,7 +306,7 @@ Contrary to the multivariate Gaussian or Student-t copulas, vine copulas accurat
 \section{Examples}
 \label{sec:examples}
 
-The first section, \ref{sec:exampleshocks}, is related to \ref{sec:simshocks}. That is, to generating model shocks. Then, section \ref{sec:examplesimulation} presents a complete example of simulation using the package. 
+The first section of examples, \ref{sec:exampleshocks}, is related to \ref{sec:simshocks}. That is, to generating  correlated $\epsilon$'s from  $\textcolor{red}{dW(t) = \epsilon dt}$ in (Eq. \ref{eq:genericsde}). Then, section \ref{sec:examplesimulation} presents a complete example of simulation of  a Stochastic Volatility Jump Diffusion (SVJD) model. This SVJD model uses \ref{sec:simshocks}.
 
 \subsection{Generating dependent shocks $\epsilon$ with \code{simshocks}}
 \label{sec:exampleshocks}
@@ -344,7 +344,7 @@ To use \code{simshocks}, you need the specify the number of simulations of $\eps
 \end{knitrout}
 
 
-A correlation coefficient is provided to \code{simshocks} through argument \code{par}:
+A correlation coefficient is provided to \code{simshocks} through its argument \code{par}:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -361,7 +361,7 @@ A correlation coefficient is provided to \code{simshocks} through argument \code
 \end{kframe}
 \end{knitrout}
 
-You can make a correlation test with \code{esgcortest}, to assess whether correlation estimate is significantly close to the correlation you specified or not. If \code{esgcortest}'s confidence interval contains the true value at a given confidence level, the null hypothesis is not to be rejected at this level. 
+You can make a correlation test on \code{simshocks} outputs with \code{esgcortest}, to assess whether correlation estimate between shocks is significantly close to the correlation you specified or not. If \code{esgcortest}'s confidence interval contains the true value at a given confidence level, the null hypothesis is not to be rejected at this level. 
 
 
 \begin{knitrout}
@@ -376,18 +376,18 @@ You can make a correlation test with \code{esgcortest}, to assess whether correl
 ## Start = 1 
 ## End = 4 
 ## Frequency = 1 
-## [1] 0.09792913 0.04338998 0.09855444 0.10845163
+## [1] 0.02168139 0.13205902 0.10534299 0.06487379
 ## 
 ## $conf.int
 ## Time Series:
 ## Start = 1 
 ## End = 4 
 ## Frequency = 1 
-##      Series 1  Series 2
-## 1  0.03615555 0.1589572
-## 2 -0.01865328 0.1051004
-## 3  0.03678610 0.1595726
-## 4  0.04677301 0.1693064
+##       Series 1   Series 2
+## 1 -0.040365943 0.08356216
+## 2  0.070644283 0.19247635
+## 3  0.043634863 0.16625037
+## 4  0.002892336 0.12635869
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -460,13 +460,14 @@ There's a nice function from the package, \code{esgplotshocks}, that helps you i
 \subsection{Example with \code{simdiff} and \code{simshocks} : Option pricing under the  Bates model (SVJD) for equity}
 \label{sec:examplesimulation}
 
-SVJD stands for Stochastic Volatility with Jump Diffusion. In this model, the volatility of the asset's price evolves as a CIR process. The price itself is a Geometric Brownian motion between jumps, arising from a Poisson process. Here, we consider jumps with lognormal magnitude.  
+SVJD stands for Stochastic Volatility with Jump Diffusion. In this model, the volatility of our asset's price evolves as a CIR process. The price itself is a Geometric Brownian motion between jumps, arising from a Poisson process. Here, we consider jumps with lognormal magnitude.  
 
 \medskip
 
 {\bf The model}
 
 \begin{eqnarray*}
+\label{eq:batesmodel}
 dS(t) &=& (r - \lambda \mu_Z) S(t) dt + \sqrt{v(t)} S(t) dW(t)^{(1)} + (J - 1) dN(t)\\
 dv(t) &=& \kappa(\theta - v(t)) dt + \sigma \sqrt{v(t)} dW(t)^{(2)}\\
 dW(t)^{(1)} dW(t)^{(2)} &=& \rho dt
@@ -539,7 +540,7 @@ Now we make \code{300} simulations of shocks and diffusions, on a weekly basis, 
 
 \end{knitrout}
 
-Finally, the price's simulation takes {\bf exactly the same parameters} \code{n, horizon, frequency} as \code{simshocks} and \code{simdiff}, and the volatility is embedded through \code{theta2}.
+Finally, price simulation takes {\bf exactly the same parameters} \code{n, horizon, frequency} as \code{simshocks} and \code{simdiff}, and diffusion's volatility is embedded through \code{theta2}.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -552,12 +553,10 @@ Finally, the price's simulation takes {\bf exactly the same parameters} \code{n,
                      \hlkwc{sigma_z} \hlstd{= sigma_J,}
                      \hlkwc{eps} \hlstd{= shocks[[}\hlnum{2}\hlstd{]])}
 \end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in simdiff(n = n, horizon = horizon, frequency = freq, model = "{}GBM"{}, : unused arguments (mu\_z = mu\_J, sigma\_z = sigma\_J)}}\end{kframe}
+\end{kframe}
 \end{knitrout}
 
-We can clearly see the prices jumping with \code{matplot}. But \code{esgplotbands}, offering a view of the paths by percentiles, will be more useful for thousands of simulations : 
+In the figue below, we can clearly see asset prices jumping with \code{matplot}. \code{esgplotbands}, which depicts asset paths by percentiles, will be more useful for thousands of simulations : 
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -565,19 +564,15 @@ We can clearly see the prices jumping with \code{matplot}. But \code{esgplotband
 \hlkwd{par}\hlstd{(}\hlkwc{mfrow}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,} \hlnum{1}\hlstd{))}
 \hlkwd{matplot}\hlstd{(}\hlkwd{time}\hlstd{(sim_price), sim_price,} \hlkwc{type} \hlstd{=} \hlstr{'l'}\hlstd{,}
         \hlkwc{main} \hlstd{=} \hlstr{"with matplot"}\hlstd{)}
-\end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in time(sim\_price): object 'sim\_price' not found}}\begin{alltt}
 \hlkwd{esgplotbands}\hlstd{(sim_price,} \hlkwc{main} \hlstd{=} \hlstr{"with esgplotbands"}\hlstd{,} \hlkwc{xlab} \hlstd{=} \hlstr{"time"}\hlstd{,}
              \hlkwc{ylab} \hlstd{=} \hlstr{"values"}\hlstd{)}
 \end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/_example_SVJD_4-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in is.ts(x): object 'sim\_price' not found}}\end{kframe}
 \end{knitrout}
 
-Now, we would like to verify the convergence of the estimated discounted prices to the initial asset price : 
+Now, we would like to study the convergence of estimated discounted prices to the initial asset price : 
 
 \begin{equation}
 \frac{1}{N}\sum_{i = 1}^N e^{-rT} S_T^{(i)} \longrightarrow \EE[e^{-rT}S_T] = S_0
@@ -589,24 +584,26 @@ where $N$ is the number of simulations, $r$ is the constant risk free rate, and 
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{# Discounted Monte Carlo price}
-\hlkwd{as.numeric}\hlstd{(}\hlkwd{esgmcprices}\hlstd{(r0, sim_price,} \hlnum{2}\hlopt{/}\hlnum{52}\hlstd{))}
+\hlkwd{print}\hlstd{(}\hlkwd{as.numeric}\hlstd{(}\hlkwd{esgmcprices}\hlstd{(r0, sim_price,} \hlnum{2}\hlopt{/}\hlnum{52}\hlstd{)))}
 \end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in is.ts(X): object 'sim\_price' not found}}\begin{alltt}
+\begin{verbatim}
+## [1] 4477.961
+\end{verbatim}
+\begin{alltt}
 \hlcom{# Inital price}
-\hlstd{S0}
+\hlkwd{print}\hlstd{(S0)}
 \end{alltt}
 \begin{verbatim}
 ## [1] 4468.17
 \end{verbatim}
 \begin{alltt}
 \hlcom{# pct. difference}
-\hlkwd{as.numeric}\hlstd{((}\hlkwd{esgmcprices}\hlstd{(r0, sim_price,} \hlnum{2}\hlopt{/}\hlnum{52}\hlstd{)}\hlopt{/}\hlstd{S0} \hlopt{-} \hlnum{1}\hlstd{)}\hlopt{*}\hlnum{100}\hlstd{)}
+\hlkwd{print}\hlstd{(}\hlkwd{as.numeric}\hlstd{((}\hlkwd{esgmcprices}\hlstd{(r0, sim_price,} \hlnum{2}\hlopt{/}\hlnum{52}\hlstd{)}\hlopt{/}\hlstd{S0} \hlopt{-} \hlnum{1}\hlstd{)}\hlopt{*}\hlnum{100}\hlstd{))}
 \end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in is.ts(X): object 'sim\_price' not found}}\end{kframe}
+\begin{verbatim}
+## [1] 0.219129
+\end{verbatim}
+\end{kframe}
 \end{knitrout}
 
 One would also want to see how fast is the convergence towards $S0$ :
@@ -617,9 +614,9 @@ One would also want to see how fast is the convergence towards $S0$ :
 \hlkwd{esgmccv}\hlstd{(r0, sim_price,} \hlnum{2}\hlopt{/}\hlnum{52}\hlstd{,}
         \hlkwc{main} \hlstd{=} \hlstr{"Convergence towards the initial \textbackslash{}n asset price"}\hlstd{)}
 \end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/_example_SVJD_cvS0-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in is.ts(X): object 'sim\_price' not found}}\end{kframe}
 \end{knitrout}
 
 \code{esgmcprices} and \code{esgmccv} give information about the mean, but a statistical test gives more information.  
@@ -631,9 +628,7 @@ One would also want to see how fast is the convergence towards $S0$ :
                                               \hlkwc{X} \hlstd{= sim_price,}
                                               \hlkwc{p0} \hlstd{= S0)}
 \end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in deltat(X): object 'sim\_price' not found}}\end{kframe}
+\end{kframe}
 \end{knitrout}
 
 \code{esgmartingaletest} computes for each $T$, a Student's t-test of 
@@ -642,22 +637,21 @@ versus the alternative hypothesis that the mean is not $0$, at a given confidenc
 
 \medskip
 
-\code{esgmartingaletest} also provides p-values, and confidence intervals for the mean value. If all the confidence intervals contain $0$, then the null hypothesis is not rejected at the given level, let's say $95\%$. Which means that there are less than $5$ chances out of $100$ to be wrong by saying that the true mean of the distribution is $0$. 
-
-\medskip
-\code{esgplotbands} gives a visualization of the confidence intervals, as well as the average discounted prices. 
+\code{esgmartingaletest} also provides p-values, and confidence intervals for the mean value (print \code{martingaletest\underline{ }sim\underline{ }price}!). If all the confidence intervals contain $0$, then the null hypothesis is not rejected at the given level, let's say $95\%$. Which means that there are less than $5$ chances out of $100$ to be wrong by saying that the true mean of the distribution is $0$. \code{esgplotbands} is a companion function to \code{esgmartingaletest}, that gives a visualization of confidence intervals and average discounted prices. 
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlkwd{esgplotbands}\hlstd{(martingaletest_sim_price)}
 \end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/_example_SVJD_martingale_2-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in is.ts(x): object 'martingaletest\_sim\_price' not found}}\end{kframe}
 \end{knitrout}
 
-Now, we price a call option under the Bates model :
+\newpage
+
+Another interesting exercise is to price a \href{https://en.wikipedia.org/wiki/Call_option}{Call Option} under the Bates model described at the beginning of this section:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -670,10 +664,7 @@ Now, we price a call option under the Bates model :
                \hlkwc{start} \hlstd{=} \hlkwd{start}\hlstd{(sim_price),}
           \hlkwc{deltat} \hlstd{=} \hlkwd{deltat}\hlstd{(sim_price),}
           \hlkwc{end} \hlstd{=} \hlkwd{end}\hlstd{(sim_price))}
-\end{alltt}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in nrow(sim\_price): object 'sim\_price' not found}}\begin{alltt}
 \hlcom{# Implied volatility}
 \hlstd{sigma_imp} \hlkwb{<-} \hlnum{0.6625}
 
@@ -682,18 +673,11 @@ Now, we price a call option under the Bates model :
 
 \hlcom{# payoff at maturity}
 \hlstd{payoff_} \hlkwb{<-} \hlstd{(sim_price} \hlopt{-} \hlstd{Kts)}\hlopt{*}\hlstd{(sim_price} \hlopt{>} \hlstd{Kts)}
-\end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in eval(expr, envir, enclos): object 'sim\_price' not found}}\begin{alltt}
 \hlstd{payoff} \hlkwb{<-} \hlkwd{window}\hlstd{(payoff_,}
              \hlkwc{start} \hlstd{=} \hlkwd{deltat}\hlstd{(sim_price),}
              \hlkwc{deltat} \hlstd{=} \hlkwd{deltat}\hlstd{(sim_price),}
              \hlkwc{names} \hlstd{=} \hlkwd{paste0}\hlstd{(}\hlstr{"Series "}\hlstd{,} \hlnum{1}\hlopt{:}\hlstd{n))}
-\end{alltt}
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in window(payoff\_, start = deltat(sim\_price), deltat = deltat(sim\_price), : object 'payoff\_' not found}}\begin{alltt}
 \hlcom{# True price}
 \hlstd{c0} \hlkwb{<-} \hlkwd{GBSOption}\hlstd{(}\hlstr{"c"}\hlstd{,} \hlkwc{S} \hlstd{= S0,} \hlkwc{X} \hlstd{= K,} \hlkwc{Time} \hlstd{= maturity,} \hlkwc{r} \hlstd{= r0,}
                 \hlkwc{b} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{sigma} \hlstd{= sigma_imp)}
@@ -704,25 +688,27 @@ Now, we price a call option under the Bates model :
 \end{verbatim}
 \begin{alltt}
 \hlcom{# Monte Carlo price}
-\hlkwd{as.numeric}\hlstd{(}\hlkwd{esgmcprices}\hlstd{(}\hlkwc{r} \hlstd{= r0,} \hlkwc{X} \hlstd{= payoff, maturity))}
+\hlkwd{print}\hlstd{(}\hlkwd{as.numeric}\hlstd{(}\hlkwd{esgmcprices}\hlstd{(}\hlkwc{r} \hlstd{= r0,} \hlkwc{X} \hlstd{= payoff, maturity)))}
 \end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in is.ts(X): object 'payoff' not found}}\begin{alltt}
+\begin{verbatim}
+## [1] 1082.626
+\end{verbatim}
+\begin{alltt}
 \hlcom{# pct. difference}
-\hlkwd{as.numeric}\hlstd{((}\hlkwd{esgmcprices}\hlstd{(}\hlkwc{r} \hlstd{= r0,} \hlkwc{X} \hlstd{= payoff,}
-             \hlkwc{maturity} \hlstd{= maturity)}\hlopt{/}\hlstd{c0}\hlopt{@}\hlkwc{price} \hlopt{-} \hlnum{1}\hlstd{)}\hlopt{*}\hlnum{100}\hlstd{)}
+\hlkwd{print}\hlstd{(}\hlkwd{as.numeric}\hlstd{((}\hlkwd{esgmcprices}\hlstd{(}\hlkwc{r} \hlstd{= r0,} \hlkwc{X} \hlstd{= payoff,}
+             \hlkwc{maturity} \hlstd{= maturity)}\hlopt{/}\hlstd{c0}\hlopt{@}\hlkwc{price} \hlopt{-} \hlnum{1}\hlstd{)}\hlopt{*}\hlnum{100}\hlstd{))}
 \end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in is.ts(X): object 'payoff' not found}}\begin{alltt}
+\begin{verbatim}
+## [1] 1.185204
+\end{verbatim}
+\begin{alltt}
 \hlcom{# Convergence towards the option price}
 \hlkwd{esgmccv}\hlstd{(}\hlkwc{r} \hlstd{= r0,} \hlkwc{X} \hlstd{= payoff,} \hlkwc{maturity} \hlstd{= maturity,}
         \hlkwc{main} \hlstd{=} \hlstr{"Convergence towards the call \textbackslash{}n option price"}\hlstd{)}
 \end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/_example_pricing-1} 
 
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in is.ts(X): object 'payoff' not found}}\end{kframe}
 \end{knitrout}
 
 \newpage
