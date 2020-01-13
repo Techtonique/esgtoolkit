@@ -219,7 +219,7 @@ For a customized simulation of $\textcolor{red}{\epsilon} \sim \MN(0, 1)$ embedd
 \subsection{\code{simshocks}}
 \label{sec:simshocks}
 
-\code{simshocks} is the complementary function to \code{simdiff}, with which you can simulate  $\epsilon \sim \MN(0, 1)$ (that we call shocks). These shocks, $\epsilon$, are embedded into diffusion (Eq. \ref{eq:genericsde}) as:
+\code{simshocks} is the complementary function to \code{simdiff}, with which you can simulate  $\epsilon \sim \MN(0, 1)$ (that we call shocks), embedded into diffusion (Eq. \ref{eq:genericsde}) as:
 
 \begin{equation}
 \textcolor{red}{dW(t) = \epsilon dt}
@@ -416,7 +416,7 @@ sim_vol <- simdiff(n = n, horizon = horizon,
 esgplotts(sim_vol)
 @
 
-Finally, price simulation takes {\bf exactly the same parameters} \code{n, horizon, frequency} as \code{simshocks} and \code{simdiff}, and diffusion's volatility is embedded through \code{theta2}.
+To finish, the simulation of asset price $S$ takes {\bf exactly the same parameters} \code{n, horizon, frequency} as \code{simshocks} and \code{simdiff}, and diffusion's volatility is embedded through \code{theta2}.
 
 <<<example_SVJD_price>>=
 # prices simulation
@@ -428,7 +428,7 @@ sim_price <- simdiff(n = n, horizon = horizon,
                      eps = shocks[[2]])
 @
 
-In the figue below, we can clearly see asset prices jumping with \code{matplot}. \code{esgplotbands}, which depicts asset paths by percentiles, will be more useful for thousands of simulations : 
+In the figure below, we can clearly see asset prices jumping with \code{matplot}. \code{esgplotbands}, which depicts asset paths by percentiles, will be more useful for thousands of simulations : 
 
 <<<example_SVJD_4>>=
 par(mfrow=c(2, 1))

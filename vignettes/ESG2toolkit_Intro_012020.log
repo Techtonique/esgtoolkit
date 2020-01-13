@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2019.7.23)  12 JAN 2020 18:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2019.7.23)  13 JAN 2020 10:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1069,12 +1069,6 @@ Overfull \hbox (15.0pt too wide) in paragraph at lines 539--540
  []
 
 
-Overfull \hbox (42.40308pt too wide) in paragraph at lines 543--544
-[]\T1/pplx/m/n/10 Finally, price sim-u-la-tion takes \T1/pplx/b/n/10 ex-actly t
-he same pa-ram-e-ters []
- []
-
-
 Package xcolor Warning: Incompatible color definition on input line 546.
 
 [11 <./figure/_example_SVJD_2-1.pdf>]
@@ -1196,7 +1190,7 @@ hare/texlive/texmf-dist/fonts/type1/public/mathpazo/fplmri.pfb></usr/share/texl
 ive/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-di
 st/fonts/type1/urw/palatino/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/typ
 e1/urw/palatino/uplri8a.pfb>
-Output written on ESG2toolkit_Intro_012020.pdf (17 pages, 458400 bytes).
+Output written on ESG2toolkit_Intro_012020.pdf (17 pages, 458405 bytes).
 PDF statistics:
  436 PDF objects out of 1000 (max. 8388607)
  244 compressed objects within 3 object streams
