@@ -257,7 +257,25 @@ Contrary to the multivariate Gaussian or Student-t copulas, vine copulas accurat
 \section{Examples}
 \label{sec:examples}
 
-The first section of examples, \ref{sec:exampleshocks}, is related to \ref{sec:simshocks}. That is, to generating  correlated $\epsilon$'s from  $\textcolor{red}{dW(t) = \epsilon dt}$ in (Eq. \ref{eq:genericsde}). Then, section \ref{sec:examplesimulation} presents a complete example of simulation of  a Stochastic Volatility Jump Diffusion (SVJD) model. This SVJD model uses \ref{sec:simshocks}.
+Section \ref{sec:installation} is about \code{ESGtoolkit}'s installation. Section \ref{sec:exampleshocks} is related to \ref{sec:simshocks}. That is, to generating  correlated $\epsilon$'s from  $\textcolor{red}{dW(t) = \epsilon dt}$ in (Eq. \ref{eq:genericsde}). Then, section \ref{sec:examplesimulation} presents a complete example of simulation of  a Stochastic Volatility Jump Diffusion (SVJD) model. This SVJD model uses \ref{sec:simshocks}.
+
+\subsection{Installation}
+\label{sec:installation}
+
+\begin{itemize}
+\item From Github: 
+
+<<eval=FALSE>>=
+library(devtools)
+devtools::install_github("thierrymoudiki/ESGtoolkit")
+@
+
+\item From CRAN: 
+
+TBD
+
+\end{itemize}
+
 
 \subsection{Generating dependent shocks $\epsilon$ with \code{simshocks}}
 \label{sec:exampleshocks}

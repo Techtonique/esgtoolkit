@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2019.7.23)  13 JAN 2020 10:26
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2019.7.23)  13 JAN 2020 10:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -998,179 +998,183 @@ h [],
 
 [5]
 
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 311.
+Package xcolor Warning: Incompatible color definition on input line 318.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `\epsilon' on input line 311.
+(hyperref)                removing `math shift' on input line 333.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 311.
+(hyperref)                removing `\epsilon' on input line 333.
 
 
-Package xcolor Warning: Incompatible color definition on input line 317.
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 333.
 
 
-Package xcolor Warning: Incompatible color definition on input line 325.
+Package xcolor Warning: Incompatible color definition on input line 339.
+
+
+Package xcolor Warning: Incompatible color definition on input line 347.
 
 [6]
 
-Package xcolor Warning: Incompatible color definition on input line 350.
+Package xcolor Warning: Incompatible color definition on input line 372.
 
 
-Package xcolor Warning: Incompatible color definition on input line 368.
+Package xcolor Warning: Incompatible color definition on input line 390.
 
+[7]
 
-Package xcolor Warning: Incompatible color definition on input line 398.
+Package xcolor Warning: Incompatible color definition on input line 420.
 
-<figure/example_simshocks_3-1.pdf, id=105, 505.89pt x 325.215pt>
+<figure/example_simshocks_3-1.pdf, id=116, 505.89pt x 325.215pt>
 File: figure/example_simshocks_3-1.pdf Graphic file (type pdf)
 
 <use figure/example_simshocks_3-1.pdf>
-Package pdftex.def Info: figure/example_simshocks_3-1.pdf used on input line 40
-7.
+Package pdftex.def Info: figure/example_simshocks_3-1.pdf used on input line 42
+9.
 (pdftex.def)             Requested size: 345.0pt x 221.78838pt.
- [7]
-
-Package xcolor Warning: Incompatible color definition on input line 418.
 
 
-Package xcolor Warning: Incompatible color definition on input line 444.
+Package xcolor Warning: Incompatible color definition on input line 440.
 
-<figure/example_simshocks_5-1.pdf, id=112, 505.89pt x 433.62pt>
+[8 <./figure/example_simshocks_3-1.pdf>]
+
+Package xcolor Warning: Incompatible color definition on input line 466.
+
+<figure/example_simshocks_5-1.pdf, id=128, 505.89pt x 433.62pt>
 File: figure/example_simshocks_5-1.pdf Graphic file (type pdf)
 
 <use figure/example_simshocks_5-1.pdf>
-Package pdftex.def Info: figure/example_simshocks_5-1.pdf used on input line 45
-0.
+Package pdftex.def Info: figure/example_simshocks_5-1.pdf used on input line 47
+2.
 (pdftex.def)             Requested size: 345.0pt x 295.71785pt.
- [8 <./figure/example_simshocks_3-1.pdf>] [9 <./figure/example_simshocks_5-1.pd
-f>]
+ [9 <./figure/example_simshocks_5-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 478.
-
-
-Package xcolor Warning: Incompatible color definition on input line 487.
+Package xcolor Warning: Incompatible color definition on input line 500.
 
 
-Package xcolor Warning: Incompatible color definition on input line 516.
+Package xcolor Warning: Incompatible color definition on input line 509.
 
-[10] <figure/_example_SVJD_2-1.pdf, id=140, 505.89pt x 505.89pt>
+
+Package xcolor Warning: Incompatible color definition on input line 538.
+
+[10] <figure/_example_SVJD_2-1.pdf, id=146, 505.89pt x 505.89pt>
 File: figure/_example_SVJD_2-1.pdf Graphic file (type pdf)
 
 <use figure/_example_SVJD_2-1.pdf>
-Package pdftex.def Info: figure/_example_SVJD_2-1.pdf used on input line 539.
+Package pdftex.def Info: figure/_example_SVJD_2-1.pdf used on input line 561.
 (pdftex.def)             Requested size: 345.0pt x 345.00414pt.
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 539--540
+Overfull \hbox (15.0pt too wide) in paragraph at lines 561--562
 [][] 
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 546.
+Package xcolor Warning: Incompatible color definition on input line 568.
 
 [11 <./figure/_example_SVJD_2-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 562.
+Package xcolor Warning: Incompatible color definition on input line 584.
 
-LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 565
+LaTeX Font Info:    Try loading font information for TS1+cmtt on input line 587
 .
 (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmtt.fd
 File: ts1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-Overfull \hbox (1.4154pt too wide) in paragraph at lines 567--567
+Overfull \hbox (1.4154pt too wide) in paragraph at lines 589--589
 [][]\T1/cmtt/m/n/10 esgplotbands[][](sim_price,[] []main[] []=[] []"with esgplo
 tbands"[][],[] []xlab[] []=[] []"time"[][],[][] 
  []
 
-<figure/_example_SVJD_4-1.pdf, id=150, 505.89pt x 505.89pt>
+<figure/_example_SVJD_4-1.pdf, id=156, 505.89pt x 505.89pt>
 File: figure/_example_SVJD_4-1.pdf Graphic file (type pdf)
 
 <use figure/_example_SVJD_4-1.pdf>
-Package pdftex.def Info: figure/_example_SVJD_4-1.pdf used on input line 571.
+Package pdftex.def Info: figure/_example_SVJD_4-1.pdf used on input line 593.
 (pdftex.def)             Requested size: 345.0pt x 345.00414pt.
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 571--572
+Overfull \hbox (15.0pt too wide) in paragraph at lines 593--594
 [][] 
  []
 
-LaTeX Font Info:    Try loading font information for U+fplmbb on input line 578
+LaTeX Font Info:    Try loading font information for U+fplmbb on input line 600
 .
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ufplmbb.fd
 File: ufplmbb.fd 2003/10/30 Fontinst v1.914 font definitions for U/fplmbb.
 ) [12 <./figure/_example_SVJD_4-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 584.
+Package xcolor Warning: Incompatible color definition on input line 606.
 
 
-Package xcolor Warning: Incompatible color definition on input line 611.
+Package xcolor Warning: Incompatible color definition on input line 633.
 
-<figure/_example_SVJD_cvS0-1.pdf, id=162, 505.89pt x 289.08pt>
+<figure/_example_SVJD_cvS0-1.pdf, id=168, 505.89pt x 289.08pt>
 File: figure/_example_SVJD_cvS0-1.pdf Graphic file (type pdf)
 
 <use figure/_example_SVJD_cvS0-1.pdf>
-Package pdftex.def Info: figure/_example_SVJD_cvS0-1.pdf used on input line 618
+Package pdftex.def Info: figure/_example_SVJD_cvS0-1.pdf used on input line 640
 .
 (pdftex.def)             Requested size: 345.0pt x 197.14522pt.
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 618--619
+Overfull \hbox (15.0pt too wide) in paragraph at lines 640--641
 [][] 
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 625.
+Package xcolor Warning: Incompatible color definition on input line 647.
 
 [13 <./figure/_example_SVJD_cvS0-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 643.
+Package xcolor Warning: Incompatible color definition on input line 665.
 
-<figure/_example_SVJD_martingale_2-1.pdf, id=177, 505.89pt x 505.89pt>
+<figure/_example_SVJD_martingale_2-1.pdf, id=183, 505.89pt x 505.89pt>
 File: figure/_example_SVJD_martingale_2-1.pdf Graphic file (type pdf)
 
 <use figure/_example_SVJD_martingale_2-1.pdf>
 Package pdftex.def Info: figure/_example_SVJD_martingale_2-1.pdf used on input 
-line 648.
+line 670.
 (pdftex.def)             Requested size: 345.0pt x 345.00414pt.
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 648--649
+Overfull \hbox (15.0pt too wide) in paragraph at lines 670--671
 [][] 
  []
 
 [14 <./figure/_example_SVJD_martingale_2-1.pdf>]
 
-Package xcolor Warning: Incompatible color definition on input line 657.
+Package xcolor Warning: Incompatible color definition on input line 679.
 
-<figure/_example_pricing-1.pdf, id=189, 505.89pt x 505.89pt>
+<figure/_example_pricing-1.pdf, id=195, 505.89pt x 505.89pt>
 File: figure/_example_pricing-1.pdf Graphic file (type pdf)
 
 <use figure/_example_pricing-1.pdf>
-Package pdftex.def Info: figure/_example_pricing-1.pdf used on input line 710.
+Package pdftex.def Info: figure/_example_pricing-1.pdf used on input line 732.
 (pdftex.def)             Requested size: 345.0pt x 345.00414pt.
 
-Overfull \hbox (15.0pt too wide) in paragraph at lines 710--711
+Overfull \hbox (15.0pt too wide) in paragraph at lines 732--733
 [][] 
  []
 
 [15] [16 <./figure/_example_pricing-1.pdf>] (./ESG2toolkit_Intro_012020.bbl)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 733.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 755.
 
 [17]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 733.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 755.
  (./ESG2toolkit_Intro_012020.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 733.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 733.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 755.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 755.
 Package rerunfilecheck Info: File `ESG2toolkit_Intro_012020.out' has not change
 d.
-(rerunfilecheck)             Checksum: 1530D35CA5066B63B133305901E5799F;493.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 733.
+(rerunfilecheck)             Checksum: A9FAEBEA01BB56ED643028D02AC07691;554.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 755.
  ) 
 Here is how much of TeX's memory you used:
- 8821 strings out of 494944
- 122548 string characters out of 6180677
- 212853 words of memory out of 5000000
- 11838 multiletter control sequences out of 15000+600000
+ 8824 strings out of 494944
+ 122596 string characters out of 6180677
+ 212895 words of memory out of 5000000
+ 11840 multiletter control sequences out of 15000+600000
  51207 words of font info for 118 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  29i,12n,43p,951b,410s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1190,10 +1194,10 @@ hare/texlive/texmf-dist/fonts/type1/public/mathpazo/fplmri.pfb></usr/share/texl
 ive/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-di
 st/fonts/type1/urw/palatino/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/typ
 e1/urw/palatino/uplri8a.pfb>
-Output written on ESG2toolkit_Intro_012020.pdf (17 pages, 458405 bytes).
+Output written on ESG2toolkit_Intro_012020.pdf (17 pages, 458917 bytes).
 PDF statistics:
- 436 PDF objects out of 1000 (max. 8388607)
- 244 compressed objects within 3 object streams
- 52 named destinations out of 1000 (max. 500000)
- 92 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 442 PDF objects out of 1000 (max. 8388607)
+ 250 compressed objects within 3 object streams
+ 53 named destinations out of 1000 (max. 500000)
+ 100 words of extra memory for PDF output out of 10000 (max. 10000000)
 
