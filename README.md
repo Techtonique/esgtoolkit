@@ -1,6 +1,8 @@
 ESGtoolkit
 ==========
 
+[![Downloads](https://cranlogs.r-pkg.org/badges/ESGtoolkit)](https://cran.r-project.org/package=ESGtoolkit)
+
 Tools for Stochastic Simulations. For more details, please read the package  [vignette](/vignettes/ESG2toolkit_Intro_012020.pdf).
 
 # Installation
