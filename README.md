@@ -22,6 +22,8 @@ TBD
 
 Your contributions are welcome, and valuable. Please, make sure to __read__ the [Code of Conduct](CONTRIBUTING.md) first.
 
+If you're not comfortable with Git/Version Control yet, please use [this form](https://forms.gle/oqvuDU4JQnnmgevx6).
+
 # License
 
 [BSD 3-Clause Clear](LICENSE) © Thierry Moudiki, 2014. 
