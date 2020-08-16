@@ -9,7 +9,10 @@ Description: A toolkit for Monte Carlo Simulations in Finance, Economics, Insura
 License: BSD_3_clause Clear + file LICENSE
 Depends: CDVine, ggplot2, gridExtra, reshape2, ycinterextra
 Imports: Rcpp(>= 0.11.0)
-Suggests: knitr, fOptions
+Suggests: 
+    knitr,
+    fOptions,
+    testthat
 LinkingTo: Rcpp
 VignetteBuilder: knitr
 Collate: 'RcppExports.R' 'fwdrates.R' 'plots.R' 'simulations.R' 'tests.R' 'tools.R'
