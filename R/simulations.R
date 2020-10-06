@@ -1,6 +1,38 @@
 
 # simulation of gaussian shocks --------------------------------------------
 
+# util. function to reproduce results from package CDVine
+CDRVineSim <- function(N, family, par=NULL, 
+                       par2 = rep(0, length(par)), 
+                       type=c("CVine", "DVine", "RVine"), 
+                       RVM=NULL) 
+{
+  
+  type <- match.arg(type)
+  
+  if (type == "RVine")
+  {
+    
+    stopifnot(!is.null(RVM))
+    
+  } else {
+    
+    stopifnot(!(is.null(par)))
+    
+    # solve length(family) = d * (d - 1) / 2 for d
+    d <- (1 + sqrt(1 + 8 * length(family))) / 2
+    
+    order <- 1:d
+    
+    RVM <- switch(type, 
+                  "CVine" = VineCopula::C2RVine(order, family, par, par2), 
+                  "DVine" = VineCopula::D2RVine(order, family, par, par2))
+    
+  }
+    
+  return(VineCopula::RVineSim(N, RVM))
+}
+
 #'@title 
 #'
 #'Underlying gaussian shocks for risk factors' simulation.
@@ -60,16 +92,20 @@
 #' 39 = rotated BB7 copula (270 degrees), 
 #' 40 = rotated BB8 copula (270 degrees)  
 #'
-#'@param par the same as \code{\link{CDVineSim}} from package \code{CDVine}. 
-#'A d*(d-1)/2 vector of pair-copula parameters.
+#'@param par A d*(d-1)/2 vector of pair-copula parameters.
 #'
-#'@param par2 the same as \code{\link{CDVineSim}} from package \code{CDVine}. 
-#'A d*(d-1)/2 vector of second parameters for pair-copula families with two 
-#'parameters (t, BB1, BB6, BB7, BB8; no default).
+#'@param par2 A d*(d-1)/2 vector of second parameters for pair-copula 
+#'families with two parameters (optional; default:
+#' par2 = rep(0,length(family))), necessary for the t-, BB1, BB6, BB7, 
+#' BB8, Tawn type 1 and type 2 copulas.
 #'
-#'@param type type of the vine model:
-#' 1 : C-vine
-#' 2 : D-vine
+#'@param RVM An \code{\link{RVineMatrix()}} object containing the information of the R-vine 
+#'copula model. Optionally, a length-N list of \code{\link{RVineMatrix()}} 
+#'objects sharing the same structure, but possibly different family/parameter 
+#'can be supplied. Must be not NULL for 
+#'type == "RVine", not used otherwise. See also VineCopula::RVineMatrix.
+#'
+#'@param type type of vine model: "CVine", "DVine" or "RVine"
 #'
 #'@param seed reproducibility seed
 #'
@@ -138,14 +174,18 @@
 #' colMeans(s0[[5]])
 #' apply(s0[[3]], 2, sd)
 #' apply(s0[[4]], 2, sd)
-#'
+#' 
+#' 
 simshocks <- function(n, horizon, 
                       frequency = c("annual", "semi-annual", 
                                     "quarterly", "monthly", 
                                     "weekly", "daily"), 
                       method = c("classic", "antithetic", 
                                  "mm", "hybridantimm", "TAG"), 
-                      family = NULL, par = NULL, par2 = NULL, type = c("CVine", "DVine"),
+                      family = NULL, 
+                      par = NULL, par2 = rep(0, length(par)), 
+                      RVM = NULL, 
+                      type = c("CVine", "DVine", "RVine"),
                       seed = 123)
 {
   if (floor(n) != n) stop("'n' must be an integer")
@@ -159,6 +199,8 @@ simshocks <- function(n, horizon,
                   "monthly" = 1/12,
                   "weekly" = 1/52,
                   "daily" = 1/252)
+  type <- match.arg(type)
+  
   method <- match.arg(method)
   m <- horizon/delta  
   type <- match.arg(type)
@@ -203,63 +245,63 @@ simshocks <- function(n, horizon,
                 start = delta, end = horizon, deltat = delta))        
     }    
   } 
-  else # !is.null(family) && !is.null(par)
-  { 
+  else # !is.null(family) && !is.null(par) # C, D, R-Vine
+  {
     nb.sim <- n*m
-    
+
     if (method == "classic")
     {
-      shocks.sim <- qnorm(CDVineSim(N = nb.sim, 
-                                    family, par, par2, type)) 
-      d <- dim(shocks.sim)[2]  
-      return(lapply(1:d, function(i) 
-        ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n), 
-           start = delta, end = horizon, deltat = delta)))        
+      shocks.sim <- qnorm(CDRVineSim(N = nb.sim, RVM=RVM,
+                                    family, par, par2, type))
+      d <- dim(shocks.sim)[2]
+      return(lapply(1:d, function(i)
+        ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n),
+           start = delta, end = horizon, deltat = delta)))
     }
-    
+
     if (method == "antithetic")
     {
       half.nb.sim <- nb.sim/2
-      if(floor(half.nb.sim) != half.nb.sim) stop("'n' must be divisible by 2")      
-      temp <- qnorm(CDVineSim(N = half.nb.sim, 
-                              family, par, par2, type))         
+      if(floor(half.nb.sim) != half.nb.sim) stop("'n' must be divisible by 2")
+      temp <- qnorm(CDRVineSim(N = half.nb.sim, RVM=RVM,
+                              family, par, par2, type))
       shocks.sim <- rbind(temp, -temp)
-      d <- dim(shocks.sim)[2]  
-      return(lapply(1:d, function(i) 
-        ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n), 
+      d <- dim(shocks.sim)[2]
+      return(lapply(1:d, function(i)
+        ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n),
            start = delta, end = horizon, deltat = delta)))
     }
-    
-    if (method == "mm") 
+
+    if (method == "mm")
     {
-      shocks.sim <- qnorm(CDVineSim(N = nb.sim, 
-                                    family, par, par2, type)) 
-      d <- dim(shocks.sim)[2]  
-      return(lapply(1:d, function(i) 
-        ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)), 
-           start = delta, end = horizon, deltat = delta))) 
+      shocks.sim <- qnorm(CDRVineSim(N = nb.sim, RVM=RVM,
+                                    family, par, par2, type))
+      d <- dim(shocks.sim)[2]
+      return(lapply(1:d, function(i)
+        ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
+           start = delta, end = horizon, deltat = delta)))
     }
-    
+
     if (method == "hybridantimm")
     {
       half.nb.sim <- nb.sim/2
       if(floor(half.nb.sim) != half.nb.sim) stop("'n' must be divisible by 2")
-      temp <- qnorm(CDVineSim(N = half.nb.sim, 
-                              family, par, par2, type)) 
+      temp <- qnorm(CDRVineSim(N = half.nb.sim, RVM=RVM,
+                              family, par, par2, type))
       shocks.sim <- rbind(temp, -temp)
-      d <- dim(shocks.sim)[2]  
-      return(lapply(1:d, function(i) 
-        ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)), 
-           start = delta, end = horizon, deltat = delta)))  
+      d <- dim(shocks.sim)[2]
+      return(lapply(1:d, function(i)
+        ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
+           start = delta, end = horizon, deltat = delta)))
     }
-    
+
     if (method == "TAG")
     {
-      if (!is.null(family) && family > 0) warning("for method == 'TAG', only the independence copula is implemented")   
-      return(lapply(1:d, function(i) 
-        ts(data = TAG(n = n, m = m), 
-           start = delta, end = horizon, deltat = delta)))            
-    }    
+      if (!is.null(family) && family > 0) warning("for method == 'TAG', only the independence copula is implemented")
+      return(lapply(1:d, function(i)
+        ts(data = TAG(n = n, m = m),
+           start = delta, end = horizon, deltat = delta)))
+    }
   }
 }
 simshocks <- cmpfun(simshocks)
@@ -397,7 +439,7 @@ simshocks <- cmpfun(simshocks)
 #'                model = "OU", 
 #'                x0 = V0, theta1 = theta1, theta2 = theta2, theta3 = theta3)
 #'head(sim.OU)
-#'par(mfrow=c(2,1))
+#'#par(mfrow=c(2,1))
 #'esgplotbands(sim.OU, xlab = "time", ylab = "values", main = "with esgplotbands")                
 #'matplot(time(sim.OU), sim.OU, type = 'l', main = "with matplot")                
 #'
@@ -409,7 +451,7 @@ simshocks <- cmpfun(simshocks)
 #'                model = "OU", 
 #'                x0 = V0, theta1 = theta1, theta2 = theta2, theta3 = theta3, 
 #'                eps = eps0)
-#'par(mfrow=c(2,1))
+#'#par(mfrow=c(2,1))
 #'esgplotbands(sim.OU, xlab = "time", ylab = "values", main = "with esgplotbands")                
 #'matplot(time(sim.OU), sim.OU, type = 'l', main = "with matplot")
 #'# a different plot

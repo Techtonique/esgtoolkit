@@ -16,7 +16,9 @@ devtools::install_github("thierrymoudiki/ESGtoolkit")
 
 - From CRAN: 
 
-TBD
+```
+install.packages("ESGtoolkit")
+```
 
 # Contributing
 

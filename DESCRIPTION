@@ -1,21 +1,20 @@
 Package: ESGtoolkit
 Type: Package
 Title: Toolkit for Monte Carlo Simulations
-Version: 0.2.0
-Date: 2020-01-12
-Author: Thierry Moudiki
-Maintainer: Thierry Moudiki <thierry.moudiki@gmail.com>
+Version: 0.3.0
+Date: 2020-10-06
+Author: T. Moudiki
+URL: https://www.example.com
+Maintainer: T. Moudiki <thierry.moudiki@gmail.com>
 Description: A toolkit for Monte Carlo Simulations in Finance, Economics, Insurance, Physics. Multiple simulation models can be created by combining building blocks provided in the package.   
 License: BSD_3_clause Clear + file LICENSE
-Depends: CDVine, ggplot2, gridExtra, reshape2, ycinterextra
+Depends: ggplot2, gridExtra, reshape2, ycinterextra, VineCopula
 Imports: Rcpp(>= 0.11.0)
 Suggests: 
-    knitr,
-    fOptions,
+    devtools,
     testthat
 LinkingTo: Rcpp
-VignetteBuilder: knitr
-Collate: 'RcppExports.R' 'fwdrates.R' 'plots.R' 'simulations.R' 'tests.R' 'tools.R'
+Collate: 'RcppExports.R' 'fwdrates.R' 'plots.R' 'simulations.R' 'tests.R' 'tools.R' 'zzz.R'
 Packaged: 2014-06-12 23:32:30 UTC; Thierry
 NeedsCompilation: yes
 Repository: CRAN
