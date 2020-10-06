@@ -11,8 +11,9 @@ simshocks(
   method = c("classic", "antithetic", "mm", "hybridantimm", "TAG"),
   family = NULL,
   par = NULL,
-  par2 = NULL,
-  type = c("CVine", "DVine"),
+  par2 = rep(0, length(par)),
+  RVM = NULL, 
+  type = c("CVine", "DVine", "RVine"),
   seed = 123
 )
 }
@@ -28,7 +29,7 @@ simshocks(
 hybrid antithetic variates + moment matching or "TAG" (see the 4th reference for 
 the latter).}
 
-\item{family}{the same as \code{\link{CDVineSim}} from package \code{CDVine}. 
+\item{family}{
 A d*(d-1)/2 integer vector of C-/D-vine pair-copula families with values 
 0 = independence copula, 
 1 = Gaussian copula, 
@@ -63,16 +64,20 @@ A d*(d-1)/2 integer vector of C-/D-vine pair-copula families with values
 39 = rotated BB7 copula (270 degrees), 
 40 = rotated BB8 copula (270 degrees)}
 
-\item{par}{the same as \code{\link{CDVineSim}} from package \code{CDVine}. 
+\item{par}{
 A d*(d-1)/2 vector of pair-copula parameters.}
 
-\item{par2}{the same as \code{\link{CDVineSim}} from package \code{CDVine}. 
+\item{par2}{
 A d*(d-1)/2 vector of second parameters for pair-copula families with two 
 parameters (t, BB1, BB6, BB7, BB8; no default).}
 
-\item{type}{type of the vine model:
-1 : C-vine
-2 : D-vine}
+\item{RVM}{An \code{\link[VineCopula]{RVineMatrix}} object containing the 
+information of the R-vine copula model. Optionally, a length-N list 
+of \code{VineCopula::RVineMatrix} objects sharing the same structure, but 
+possibly different family/parameter can be supplied. Must be not NULL for 
+type == "RVine", not used otherwise. See also VineCopula::RVineMatrix.}
+
+\item{type}{type of vine model: "CVine", "DVine" or "RVine"}
 
 \item{seed}{reproducibility seed}
 }
@@ -139,6 +144,10 @@ mvtnorm: Multivariate Normal and t Distributions. R package version 0.9-9996.
 
 Genz, A. Bretz, F. (2009), Computation of Multivariate Normal and t Probabilities. 
 Lecture Notes in Statistics, Vol. 195., Springer-Verlag, Heidelberg. ISBN 978-3-642-01688-2.
+
+Thomas Nagler, Ulf Schepsmeier, Jakob Stoeber, Eike Christian Brechmann, Benedikt 
+Graeler and Tobias Erhardt (2020). VineCopula: Statistical Inference of Vine Copulas. 
+R package version 2.4.0. https://CRAN.R-project.org/package=VineCopula
 
 Nteukam T, O., & Planchet, F. (2012). Stochastic evaluation of life insurance 
 contracts: Model point on asset trajectories and measurement of the error 

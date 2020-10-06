@@ -41,7 +41,7 @@ family = 1, par = 0.8)
 
 (test1 <- esgcortest(s0.par1))
 (test2 <- esgcortest(s0.par2))
-par(mfrow=c(2, 1))
+#par(mfrow=c(2, 1))
 esgplotbands(test1)
 esgplotbands(test2)
 

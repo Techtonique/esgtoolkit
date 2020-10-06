@@ -31,9 +31,9 @@ frequency = "quart",
 model = "OU", 
 x0 = V0, theta1 = theta1, theta2 = theta2, theta3 = theta3)
 
-par(mfrow=c(2,1))
+#par(mfrow=c(2,1))
 esgplotbands(x, xlab = "time", ylab = "values")
-matplot(time(x), x, type = 'l', xlab = "time", ylab = "series values")
+matplot(as.vector(time(x)), x, type = 'l', xlab = "time", ylab = "series values")
 
 # Martingale test
 
@@ -64,7 +64,7 @@ family = 1, par = 0.8)
 
 (test1 <- esgcortest(s0.par1))
 (test2 <- esgcortest(s0.par2))
-par(mfrow=c(2, 1))
+#par(mfrow=c(2, 1))
 esgplotbands(test1)
 esgplotbands(test2)
 }
