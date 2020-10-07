@@ -13,8 +13,9 @@ esgplotbands(x, ...)
 }
 \description{
 This function plots colored bands for time series percentiles and confidence 
-intervals. You can use it for outputs from \code{link{simdiff}}, 
-\code{link{esgmartingaletest}}, \code{link{esgcortest}}.
+intervals. You can use it for outputs from \code{\link[ESGtoolkit]{simdiff}}, 
+\code{\link[ESGtoolkit]{esgmartingaletest}}, \code{\link[ESGtoolkit]{esgcortest}}.
+
 }
 \examples{
 
@@ -72,5 +73,5 @@ esgplotbands(test2)
 \code{\link{esgplotts}}
 }
 \author{
-Thierry Moudiki
+T. Moudiki
 }

@@ -196,5 +196,5 @@ Journal of Financial Economics, 5, 177-188.
 \code{\link{simshocks}}, \code{\link{esgplotts}}
 }
 \author{
-Thierry Moudiki
+T. Moudiki
 }

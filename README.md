@@ -3,22 +3,66 @@ ESGtoolkit
 
 [![Downloads](https://cranlogs.r-pkg.org/badges/ESGtoolkit)](https://cran.r-project.org/package=ESGtoolkit)
 
-Tools for Stochastic Simulations. For more details, please read the package  [vignette](https://www.researchgate.net/publication/338549100_ESGtoolkit_a_tool_for_stochastic_simulation_v020).
+A toolkit for Monte Carlo Simulations in Finance, Economics, Insurance, Physics. Multiple simulation models can be created by combining building blocks provided in the package. 
+
+For __more details__, you can read the package  [vignette on 
+ResearchGate](https://www.researchgate.net/publication/338549100_ESGtoolkit_a_tool_for_stochastic_simulation_v020). Functions' documentation can be found in section 'Reference' of the [website](https://techtonique.github.io/ESGtoolkit/). 
+
+# Table of Contents
+
+- [Installation](#Installation)
+- [Quickstart](#Quickstart)
+- [Contributing](#Contributing)
+- [License](#License)
+
 
 # Installation
 
 - From Github: 
 
-```
+```r
 library(devtools)
 devtools::install_github("thierrymoudiki/ESGtoolkit")
 ```
 
 - From CRAN: 
 
-```
+```r
 install.packages("ESGtoolkit")
 ```
+
+# Quickstart
+
+In addition to the example below, you can read:
+- [this blog](https://thierrymoudiki.wordpress.com/)'s archives 
+- the functions' examples in section 'Reference' on [the website](https://techtonique.github.io/ESGtoolkit/)
+contain code + a lot graphs
+
+
+```r
+library(ESGtoolkit)
+
+# Geometric Brownian Motion (https://en.wikipedia.org/wiki/Geometric_Brownian_motion)
+
+eps0 <- simshocks(n = 100, horizon = 5, frequency = "quart")
+sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",   
+               model = "GBM", 
+               x0 = 100, theta1 = 0.03, theta2 = 0.1, 
+               eps = eps0)
+esgplotbands(sim.GBM, xlab = "time", ylab = "values", main = "with esgplotbands")                
+matplot(as.vector(time(sim.GBM)), sim.GBM, type = 'l', main = "with matplot")
+
+
+eps0 <- simshocks(n = 100, horizon = 5, frequency = "quart")
+sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",   
+               model = "GBM", 
+               x0 = 100, theta1 = 0.03, theta2 = 0.1, 
+               eps = eps0)                
+esgplotbands(sim.GBM, xlab = "time", ylab = "values", main = "with esgplotbands")                
+matplot(as.vector(time(sim.GBM)), sim.GBM, type = 'l', main = "with matplot")
+
+```
+
 
 # Contributing
 

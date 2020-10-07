@@ -45,5 +45,5 @@ esgmcprices(r, sim.GBM, 2)
 \code{\link{esgdiscountfactor}}, \code{\link{esgmccv}}
 }
 \author{
-Thierry Moudiki
+T. Moudiki
 }

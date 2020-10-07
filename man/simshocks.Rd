@@ -8,7 +8,7 @@ simshocks(
   n,
   horizon,
   frequency = c("annual", "semi-annual", "quarterly", "monthly", "weekly", "daily"),
-  method = c("classic", "antithetic", "mm", "hybridantimm", "TAG"),
+  method = c("classic", "antithetic", "mm", "hybridantimm", "TAG", "sobol", "halton"),
   family = NULL,
   par = NULL,
   par2 = rep(0, length(par)),
@@ -26,8 +26,10 @@ simshocks(
 "weekly", or "daily" (1, 1/2, 1/4, 1/12, 1/52, 1/252).}
 
 \item{method}{either classic monte carlo, antithetic variates, moment matching, 
-hybrid antithetic variates + moment matching or "TAG" (see the 4th reference for 
-the latter).}
+hybrid antithetic variates + moment matching, "TAG" (see the 4th reference for 
+the latter, sobol, halton. Options: "classic", "antithetic", 
+                                 "mm", "hybridantimm", "TAG", 
+                                 "sobol", "halton".}
 
 \item{family}{
 A d*(d-1)/2 integer vector of C-/D-vine pair-copula families with values 
@@ -158,5 +160,5 @@ URL \url{http://www.ressources-actuarielles.net/EXT/ISFA/1226.nsf/0/ab539dcebcc4
 \code{\link{simdiff}}, \code{\link{esgplotshocks}}
 }
 \author{
-Thierry Moudiki
+T. Moudiki
 }

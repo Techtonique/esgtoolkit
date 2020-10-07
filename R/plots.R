@@ -2,75 +2,7 @@
 # Misc plots --------------------------------------------------------------
 
 
-#'@title Plot time series percentiles and confidence intervals
-#'
-#'@description
-#'
-#'This function plots colored bands for time series percentiles and confidence 
-#'intervals. You can use it for outputs from \code{link{simdiff}}, 
-#'\code{link{esgmartingaletest}}, \code{link{esgcortest}}.
-#'
-#'@param x a times series object 
-#'
-#'@param ... additionnal (optional) parameters provided to \code{plot}
-#'
-#'@export
-#'
-#'@author Thierry Moudiki
-#'
-#'@seealso \code{\link{esgplotts}}
-#'
-#'@examples
-#'
-#'# Times series
-#'
-#'kappa <- 1.5
-#'V0 <- theta <- 0.04
-#'sigma <- 0.2
-#'theta1 <- kappa*theta
-#'theta2 <- kappa
-#'theta3 <- sigma
-#'x <- simdiff(n = 100, horizon = 5, 
-#'frequency = "quart",  
-#'model = "OU", 
-#'x0 = V0, theta1 = theta1, theta2 = theta2, theta3 = theta3)
-#'
-#'#par(mfrow=c(2,1))
-#'esgplotbands(x, xlab = "time", ylab = "values")
-#'matplot(time(x), x, type = 'l', xlab = "time", ylab = "series values")
-#'
-#'# Martingale test
-#'
-#'r0 <- 0.03
-#'S0 <- 100
-#'sigma0 <- 0.1
-#'nbScenarios <- 100
-#'horizon0 <- 10
-#'eps0 <- simshocks(n = nbScenarios, horizon = horizon0, frequency = "quart",
-#' method = "anti")
-#'sim.GBM <- simdiff(n = nbScenarios, horizon = horizon0, frequency = "quart",   
-#'                  model = "GBM", 
-#'                  x0 = S0, theta1 = r0, theta2 = sigma0, 
-#'                  eps = eps0)
-#'
-#'mc.test <- esgmartingaletest(r = r0, X = sim.GBM, p0 = S0, alpha = 0.05)   
-#'esgplotbands(mc.test)
-#'
-#'# Correlation test
-#'
-#'nb <- 500
-#'
-#'s0.par1 <- simshocks(n = nb, horizon = 3, frequency = "semi",
-#'family = 1, par = 0.2)
-#'
-#'s0.par2 <- simshocks(n = nb, horizon = 3, frequency = "semi", 
-#'family = 1, par = 0.8)
-#'
-#'(test1 <- esgcortest(s0.par1))
-#'(test2 <- esgcortest(s0.par2))
-#'#par(mfrow=c(2, 1))
-#'esgplotbands(test1)
-#'esgplotbands(test2)
+# Plot time series percentiles and confidence intervals
 esgplotbands <- function(x, ...)
 {
   if (is.ts(x))
@@ -143,7 +75,7 @@ esgplotbands <- function(x, ...)
       abs <- as.numeric(time(x$conf.int))
       y.mean <- rep(0, length(abs))
       
-      par(mfrow = c(2, 1))
+      par(mfrow = c(1, 2))
       bands.plot(abs, y.mean, ci.upper = x$conf.int[, 2], ci.lower =  x$conf.int[, 1], 
                  col = "gray80", ylim = c(min(x$conf.int[, 1]), max(x$conf.int[, 2])), 
                  xlab = "time", ylab = "conf. int.", 
@@ -162,42 +94,7 @@ esgplotbands <- function(x, ...)
 }
 
 
-
-#'@title Plot time series objects
-#'
-#'@description This function plots outputs from \code{\link{simdiff}}.
-#'
-#'@details For a large number of simulations, it's preferable to use 
-#'\code{\link{esgplotbands}} for a synthetic view by percentiles.
-#'
-#'@param x a time series object, an output from \code{\link{simdiff}}.
-#'
-#'@seealso \code{\link{simdiff}}, \code{\link{esgplotbands}}
-#'
-#'@author
-#'
-#'Thierry Moudiki
-#'
-#'@export
-#'
-#'@references
-#'
-#'H. Wickham (2009), ggplot2: elegant graphics for data analysis. Springer 
-#'New York.
-#'
-#'@examples
-#'kappa <- 1.5
-#'V0 <- theta <- 0.04
-#'sigma <- 0.2
-#'theta1 <- kappa*theta
-#'theta2 <- kappa
-#'theta3 <- sigma
-#'x <- simdiff(n = 10, horizon = 5, frequency = "quart",  
-#'model = "OU", 
-#'x0 = V0, theta1 = theta1, theta2 = theta2, theta3 = theta3)
-#'
-#'esgplotts(x)
-#'
+# Plot time series objects
 esgplotts <- function(x)
 { 
   x0 <- start(x)[1]
@@ -209,77 +106,9 @@ esgplotts <- function(x)
     xlab("Maturity") + ylab("Values") + 
     ggplot2::theme(legend.position = "none")
 }
-esgplotts <- cmpfun(esgplotts)
 
 
-
-#'@title Visualize the dependence between 2 gaussian shocks
-#'
-#'@description
-#'
-#'This function helps you in visualizing the dependence between 2 gaussian
-#' shocks. 
-#'
-#'@param x an output from \code{\link{simshocks}}, a list with 2 components.
-#'
-#'@param y an output from \code{\link{simshocks}}, a list with 2 components 
-#'(Optional). 
-#'
-#'@export
-#'
-#'@seealso \code{\link{simshocks}}
-#'
-#'@author Thierry Moudiki + some nice blogs :) 
-#'
-#'@references
-#'
-#'H. Wickham (2009), ggplot2: elegant graphics for data analysis. Springer 
-#'New York.
-#'
-#'@examples
-#'
-#'# Number of risk factors
-#'d <- 2
-#'
-#'# Number of possible combinations of the risk factors
-#'dd <- d*(d-1)/2
-#'
-#'# Family : Gaussian copula 
-#'fam1 <- rep(1,dd)
-#'# Correlation coefficients between the risk factors (d*(d-1)/2)
-#'par0.1 <- 0.1
-#'par0.2 <- -0.9
-#'
-#'# Family : Rotated Clayton (180 degrees)
-#'fam2 <- 13
-#'par0.3 <- 2
-#'
-#'# Family : Rotated Clayton (90 degrees)
-#'fam3 <- 23
-#'par0.4 <- -2
-#'
-#'# number of simulations
-#'nb <- 500
-#'
-#'# Simulation of shocks for the d risk factors
-#'s0.par1 <- simshocks(n = nb, horizon = 4, 
-#'family = fam1, par = par0.1)
-#'
-#'s0.par2 <- simshocks(n = nb, horizon = 4, 
-#'family = fam1, par = par0.2)
-#'
-#'s0.par3 <- simshocks(n = nb, horizon = 4, 
-#'family = fam2, par = par0.3)
-#'
-#'s0.par4 <- simshocks(n = nb, horizon = 4, 
-#'family = fam3, par = par0.4)
-#'
-#'\dontrun{
-#'esgplotshocks(s0.par1, s0.par2)
-#'esgplotshocks(s0.par2, s0.par3)
-#'esgplotshocks(s0.par2, s0.par4)
-#'esgplotshocks(s0.par1, s0.par4)} 
-#'
+# Visualize the dependence between 2 gaussian shocks
 esgplotshocks <-  function(x, y = NULL)
 {
   x <- matrix(unlist(x), ncol = 2)
@@ -339,5 +168,3 @@ esgplotshocks <-  function(x, y = NULL)
   #arrange the plots together, with appropriate height and width for each row and column
   grid.arrange(plot_top, empty, scatter, plot_right, ncol=2, nrow=2, widths=c(4, 1), heights=c(1, 4))
 }
-esgplotshocks  <- cmpfun(esgplotshocks)
-

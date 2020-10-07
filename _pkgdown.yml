@@ -1,3 +1,19 @@
 template:
   params:
     bootswatch: darkly
+url: https://techtonique.github.io/ESGtoolkit/
+home:
+  title: A Toolkit for Monte Carlo Simulations
+  description: >
+    A toolkit for Monte Carlo Simulations in Finance, Economics, Insurance, Physics. 
+    Multiple simulation models can be created by combining building blocks provided in the package.
+authors:
+  T. Moudiki:
+    href: https://thierrymoudiki.github.io/
+repo:
+  url:
+    home: https://github.com/Techtonique/
+    source: https://github.com/Techtonique/ESGtoolkit/
+    issue: https://github.com/Techtonique/ESGtoolkit/issues
+    user: https://github.com/Techtonique/
+    
