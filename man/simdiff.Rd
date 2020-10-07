@@ -118,9 +118,9 @@ sim.OU <- simdiff(n = 10, horizon = 5,
                model = "OU", 
                x0 = V0, theta1 = theta1, theta2 = theta2, theta3 = theta3)
 head(sim.OU)
-par(mfrow=c(2,1))
+#par(mfrow=c(2,1))
 esgplotbands(sim.OU, xlab = "time", ylab = "values", main = "with esgplotbands")                
-matplot(time(sim.OU), sim.OU, type = 'l', main = "with matplot")                
+matplot(as.vector(time(sim.OU)), sim.OU, type = 'l', main = "with matplot")                
 
 
 # OU with simulated shocks (check the dimensions)
@@ -130,9 +130,9 @@ sim.OU <- simdiff(n = 50, horizon = 5, frequency = "quart",
                model = "OU", 
                x0 = V0, theta1 = theta1, theta2 = theta2, theta3 = theta3, 
                eps = eps0)
-par(mfrow=c(2,1))
+#par(mfrow=c(2,1))
 esgplotbands(sim.OU, xlab = "time", ylab = "values", main = "with esgplotbands")                
-matplot(time(sim.OU), sim.OU, type = 'l', main = "with matplot")
+matplot(as.vector(time(sim.OU)), sim.OU, type = 'l', main = "with matplot")
 # a different plot
 esgplotts(sim.OU)
 
@@ -144,7 +144,7 @@ sim.CIR <- simdiff(n = 50, horizon = 5,
                model = "CIR", 
                x0 = V0, theta1 = theta1, theta2 = theta2, theta3 = 0.05)
 esgplotbands(sim.CIR, xlab = "time", ylab = "values", main = "with esgplotbands")                  
-matplot(time(sim.CIR), sim.CIR, type = 'l', main = "with matplot")
+matplot(as.vector(time(sim.CIR)), sim.CIR, type = 'l', main = "with matplot")
 
 
 
@@ -156,7 +156,7 @@ sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",
                x0 = 100, theta1 = 0.03, theta2 = 0.1, 
                eps = eps0)
 esgplotbands(sim.GBM, xlab = "time", ylab = "values", main = "with esgplotbands")                
-matplot(time(sim.GBM), sim.GBM, type = 'l', main = "with matplot")
+matplot(as.vector(time(sim.GBM)), sim.GBM, type = 'l', main = "with matplot")
 
 
 eps0 <- simshocks(n = 100, horizon = 5, frequency = "quart")
@@ -165,7 +165,7 @@ sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",
                x0 = 100, theta1 = 0.03, theta2 = 0.1, 
                eps = eps0)                
 esgplotbands(sim.GBM, xlab = "time", ylab = "values", main = "with esgplotbands")                
-matplot(time(sim.GBM), sim.GBM, type = 'l', main = "with matplot")
+matplot(as.vector(time(sim.GBM)), sim.GBM, type = 'l', main = "with matplot")
 }
 \references{
 Black, F., Scholes, M.S. (1973) The pricing of options and corporate liabilities, 
@@ -196,5 +196,5 @@ Journal of Financial Economics, 5, 177-188.
 \code{\link{simshocks}}, \code{\link{esgplotts}}
 }
 \author{
-Thierry Moudiki
+T. Moudiki
 }

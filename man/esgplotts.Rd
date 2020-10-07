@@ -38,5 +38,5 @@ New York.
 \code{\link{simdiff}}, \code{\link{esgplotbands}}
 }
 \author{
-Thierry Moudiki
+T. Moudiki
 }

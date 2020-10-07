@@ -51,5 +51,5 @@ esgmcprices(r, sim.GBM)
 
 }
 \author{
-Thierry Moudiki
+T. Moudiki
 }

@@ -40,7 +40,7 @@ eps0 <- simshocks(n = 100, horizon = 3, frequency = "quart")
 sim.GBM <- simdiff(n = 100, horizon = 3, frequency = "quart",   
                model = "GBM", 
                x0 = S0, theta1 = r0, theta2 = 0.1, 
-               eps = eps0)
+               eps = eps0, seed=10)
 
 mc.test <- esgmartingaletest(r = r0, X = sim.GBM, p0 = S0, 
 alpha = 0.05)                               
@@ -51,5 +51,5 @@ esgplotbands(mc.test)
 \code{\link{esgplotbands}}
 }
 \author{
-Thierry Moudiki
+T. Moudiki
 }

@@ -8,3 +8,4 @@ src/*.dll
 ESGtoolkit.Rcheck/
 ESGtoolkit*.tar.gz
 ESGtoolkit*.tgz
+docs

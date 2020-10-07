@@ -1,51 +1,6 @@
 # Martingale Tests and Monte Carlo convergence --------------------------------------------------
 
-#'@title Stochastic discount factors or discounted values
-#'
-#'@description 
-#'
-#'This function provides calculation of stochastic discount factors 
-#'or discounted values
-#'
-#'@details
-#'
-#'The function result is : 
-#'
-#'\deqn{X_t exp(-\int_0^t r_s ds)}
-#'
-#'where \eqn{X_t} is an asset value at a given maturity \eqn{t}, and 
-#'\eqn{(r_s)_s} is the risk-free rate.
-#'
-#'@param r the short rate, a \code{numeric} (constant rate) or a time series object
-#'
-#'@param X the asset's price, a \code{numeric} (constant payoff or asset price) or a time series 
-#'object
-#'
-#'@seealso \code{\link{esgmcprices}}, \code{\link{esgmccv}}
-#'
-#'@author
-#'
-#'Thierry Moudiki
-#'
-#'@export
-#'
-#'@examples 
-#'
-#'kappa <- 1.5
-#'V0 <- theta <- 0.04
-#'sigma_v <- 0.2
-#'theta1 <- kappa*theta
-#'theta2 <- kappa
-#'theta3 <- sigma_v
-#'
-#'# OU
-#'r <- simdiff(n = 10, horizon = 5, 
-#'                frequency = "quart",  
-#'                model = "OU", 
-#'                x0 = V0, theta1 = theta1, theta2 = theta2, theta3 = theta3)
-#'
-#'# Stochastic discount factors
-#' esgdiscountfactor(r, 1)
+# Stochastic discount factors or discounted values
 esgdiscountfactor <- function(r, X)
 {
   if(missing(r) || missing(X))
@@ -114,54 +69,9 @@ esgdiscountfactor <- function(r, X)
     }
   }
 }
-esgdiscountfactor <- cmpfun(esgdiscountfactor)
 
-#'@title
-#'
-#'Estimation of discounted asset prices
-#'
-#'@description
-#'
-#'This function computes estimators (sample mean) of 
-#'
-#'\deqn{E[X_T exp(-\int_0^T r_s ds)]}
-#'
-#'where \eqn{X_T} is an asset value at given maturities \eqn{T}, and 
-#'\eqn{(r_s)_s} is the risk-free rate.
-#'
-#'@param r a \code{numeric} or a time series object, the risk-free rate(s).
-#'
-#'@param X asset prices obtained with \code{\link{simdiff}}
-#'
-#'@param maturity the corresponding maturity (optional). If missing, all the maturities 
-#'available in \code{X} are used.
-#'
-#'@seealso \code{\link{esgdiscountfactor}}, \code{\link{esgmccv}}
-#'
-#'@author
-#'
-#'Thierry Moudiki
-#'
-#'@export
-#'
-#'@examples
-#'
-#'# GBM
-#'
-#'r <- 0.03
-#'
-#'eps0 <- simshocks(n = 100, horizon = 5, frequency = "quart")
-#'sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",   
-#'                model = "GBM", 
-#'                x0 = 100, theta1 = 0.03, theta2 = 0.1, 
-#'                eps = eps0)
-#'
-#'# monte carlo prices
-#'esgmcprices(r, sim.GBM)
-#'
-#'# monte carlo price for a given maturity
-#'esgmcprices(r, sim.GBM, 2)
-#'
+
+# Estimation of discounted asset prices
 esgmcprices <- function(r, X, maturity = NULL)
 {
   if(missing(r) || missing(X))
@@ -193,59 +103,9 @@ esgmcprices <- function(r, X, maturity = NULL)
   }
   
 }
-esgmcprices <- cmpfun(esgmcprices)
 
-#'@title
-#'
-#'Convergence of Monte Carlo prices
-#'
-#'@description
-#'
-#'This function computes and plots confidence intervals around the estimated 
-#'average price, as functions of the number of simulations. 
-#'
-#'@details
-#'
-#'Studying the convergence of the sample mean of :
-#'
-#'\deqn{E[X_T exp(-\int_0^T r_s ds)]}
-#'
-#'towards its true value.
-#'
-#'@param r a \code{numeric} or a time series object, the risk-free rate(s).
-#'
-#'@param X asset prices obtained with \code{\link{simdiff}}
-#'
-#'@param maturity the corresponding maturity (optional). If missing, all the maturities 
-#'available in \code{X} are used.
-#'
-#'@param plot if \code{TRUE} (default), a plot of the convergence is displayed.
-#'
-#'@param ... additional parameters provided to \code{\link{matplot}}
-#'
-#'@return a list with estimated average prices and the confidence intervals around them.
-#'
-#'@author
-#'
-#'Thierry Moudiki
-#'
-#'@examples
-#'
-#'r <- 0.03
-#'
-#'set.seed(1)
-#'eps0 <- simshocks(n = 100, horizon = 5, frequency = "quart")
-#'sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",   
-#'                model = "GBM", 
-#'                x0 = 100, theta1 = 0.03, theta2 = 0.1, 
-#'                eps = eps0)
-#'
-#'# monte carlo prices
-#'esgmcprices(r, sim.GBM)
-#'
-#'# convergence to a specific price
-#'(esgmccv(r, sim.GBM, 2))
-#'
+
+# Convergence of Monte Carlo prices
 esgmccv <- function(r, X, maturity, plot = TRUE, ...)
 {
   if(missing(r) || missing(X) || missing(maturity))
@@ -277,56 +137,9 @@ esgmccv <- function(r, X, maturity, plot = TRUE, ...)
   invisible(list(avg.price = avg.price,
                  conf.int = conf.int))                  
 }
-esgmccv <- cmpfun(esgmccv)
 
 
-#'@title Martingale and market consistency tests
-#'
-#'@description
-#'
-#'This function performs martingale and market consistency (t-)tests.
-#'
-#'@param r a \code{numeric} or a time series object, the risk-free rate(s).
-#'
-#'@param X a time series object, containing payoffs or projected asset values.
-#' 
-#'@param p0 a \code{numeric} or a vector or a univariate time series containing  
-#'initial price(s) of an asset. 
-#'
-#'@param alpha 1 - confidence level for the test. Default value is 0.05.
-#'
-#'@return The function result can be just displayed. Otherwise, you can get a list 
-#'by an assignation, containing (for each maturity) : 
-#'\itemize{
-#'\item the Student t values 
-#'\item the p-values 
-#'\item the estimated mean
-#'of the martingale difference
-#'\item  Monte Carlo prices
-#'}
-#'
-#'@export
-#'
-#'@seealso \code{\link{esgplotbands}}
-#'
-#'@author Thierry Moudiki
-#'
-#'@examples
-#'
-#'r0 <- 0.03
-#'S0 <- 100
-#'
-#'set.seed(10)
-#'eps0 <- simshocks(n = 100, horizon = 3, frequency = "quart")
-#'sim.GBM <- simdiff(n = 100, horizon = 3, frequency = "quart",   
-#'                model = "GBM", 
-#'                x0 = S0, theta1 = r0, theta2 = 0.1, 
-#'                eps = eps0)
-#' 
-#'mc.test <- esgmartingaletest(r = r0, X = sim.GBM, p0 = S0, 
-#'alpha = 0.05)                               
-#'esgplotbands(mc.test)                
-#'
+# Martingale and market consistency tests
 esgmartingaletest <- function(r, X, p0, alpha = 0.05)
 {   
   delta_X <- deltat(X)
@@ -398,55 +211,8 @@ esgmartingaletest <- function(r, X, p0, alpha = 0.05)
 
 # Correlation test for shocks --------------------------------------------------------
 
-#'@title Correlation tests for the shocks
-#'
-#'@description
-#'
-#'This function performs correlation tests for the shocks generated by \code{\link{simshocks}}.
-#'
-#'@param x gaussian (bivariate) shocks, with correlation, generated by \code{\link{simshocks}}.
-#' 
-#'@param alternative indicates the alternative hypothesis and must be one of "two.sided", 
-#'"greater" or "less". 
-#'
-#'@param method which correlation coefficient is to be used for the test : 
-#'"pearson", "kendall", or "spearman".
-#'
-#'@param conf.level confidence level.
-#'
-#'@return a list with 2 components : estimated correlation coefficients, 
-#'and confidence intervals for the estimated correlations. 
-#'
-#'@export
-#'
-#'@seealso \code{\link{esgplotbands}}
-#'
-#'@references
-#'
-#'D. J. Best & D. E. Roberts (1975), Algorithm AS 89: The Upper Tail 
-#'Probabilities of Spearman's rho. Applied Statistics, 24, 377-379.
-#'
-#'Myles Hollander & Douglas A. Wolfe (1973), Nonparametric Statistical Methods.
-#' New York: John Wiley & Sons. Pages 185-194 (Kendall and Spearman tests).
-#'
-#'@author Thierry Moudiki + stats package 
-#'
-#'@examples
-#'
-#'nb <- 500
-#'
-#'s0.par1 <- simshocks(n = nb, horizon = 3, frequency = "semi",
-#'family = 1, par = 0.2)
-#'
-#'s0.par2 <- simshocks(n = nb, horizon = 3, frequency = "semi", 
-#'family = 1, par = 0.8)
-#'
-#'(test1 <- esgcortest(s0.par1))
-#'(test2 <- esgcortest(s0.par2))
-#'par(mfrow=c(2, 1))
-#'esgplotbands(test1)
-#'esgplotbands(test2)
-#'
+
+# Correlation tests for the shocks
 esgcortest <- function(x, alternative = c("two.sided", "less", "greater"),
                        method = c("pearson", "kendall", "spearman"),
                        conf.level = 0.95)
@@ -469,5 +235,3 @@ esgcortest <- function(x, alternative = c("two.sided", "less", "greater"),
                                                                      conf.level = conf.level)$conf.int)), start = delta_x, 
                             deltat = delta_x)))
 }
-esgcortest <- cmpfun(esgcortest)
-

@@ -1,23 +1,26 @@
 Package: ESGtoolkit
 Type: Package
 Title: Toolkit for Monte Carlo Simulations
-Version: 0.2.0
-Date: 2020-01-12
-Author: Thierry Moudiki
-Maintainer: Thierry Moudiki <thierry.moudiki@gmail.com>
+Version: 0.3.0
+Date: 2020-10-07
+Authors@R: c(
+        person("T.", "Moudiki", , "thierry.moudiki@gmail.com", role = c("aut", "cre")
+        )
+      )
+URL: https://techtonique.github.io/ESGtoolkit/
+BugReports: https://github.com/Techtonique/ESGtoolkit/issues
+Maintainer: T. Moudiki <thierry.moudiki@gmail.com>
 Description: A toolkit for Monte Carlo Simulations in Finance, Economics, Insurance, Physics. Multiple simulation models can be created by combining building blocks provided in the package.   
 License: BSD_3_clause Clear + file LICENSE
-Depends: CDVine, ggplot2, gridExtra, reshape2, ycinterextra
+Depends: ggplot2, gridExtra, reshape2, ycinterextra, VineCopula, randtoolbox
 Imports: Rcpp(>= 0.11.0)
 Suggests: 
-    knitr,
-    fOptions,
+    devtools,
     testthat
 LinkingTo: Rcpp
-VignetteBuilder: knitr
-Collate: 'RcppExports.R' 'fwdrates.R' 'plots.R' 'simulations.R' 'tests.R' 'tools.R'
+Collate: 'RcppExports.R' 'fwdrates.R' 'plots.R' 'simulations_risks.R' 'simulations_shocks.R' 'tests.R' 'tools.R' 'zzz.R'
 Packaged: 2014-06-12 23:32:30 UTC; Thierry
 NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2014-06-13 06:17:14
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1

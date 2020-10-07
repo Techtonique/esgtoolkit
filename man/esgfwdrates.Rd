@@ -41,33 +41,29 @@ txZC <- c(0.01422,0.01309,0.01380,0.01549,0.01747,0.01940,0.02104,0.02236,0.0234
 # Observed maturities
 u <- 1:30
 
-\dontrun{
 par(mfrow=c(2,2))
 fwdNS <- esgfwdrates(in.maturities = u, in.zerorates = txZC, 
                     n = 10, horizon = 20, 
                     out.frequency = "semi-annual", method = "NS")
-matplot(time(fwdNS), fwdNS, type = 'l')
+matplot(as.vector(time(fwdNS)), fwdNS, type = 'l')
 
 fwdSV <- esgfwdrates(in.maturities = u, in.zerorates = txZC, 
                     n = 10, horizon = 20, 
                     out.frequency = "semi-annual", method = "SV")
-matplot(time(fwdSV), fwdSV, type = 'l')
+matplot(as.vector(time(fwdSV)), fwdSV, type = 'l')
 
 fwdSW <- esgfwdrates(in.maturities = u, in.zerorates = txZC, 
                     n = 10, horizon = 20, 
                     out.frequency = "semi-annual", method = "SW")
-matplot(time(fwdSW), fwdSW, type = 'l')
+matplot(as.vector(time(fwdSW)), fwdSW, type = 'l')
 
 fwdHCSPL <- esgfwdrates(in.maturities = u, in.zerorates = txZC, 
                        n = 10, horizon = 20, 
                        out.frequency = "semi-annual", method = "HCSPL")
-matplot(time(fwdHCSPL), fwdHCSPL, type = 'l')
+matplot(as.vector(time(fwdHCSPL)), fwdHCSPL, type = 'l')
+
 }
-}
-\references{
-Thierry Moudiki (2013). ycinterextra: Yield curve or zero-coupon prices interpolation and extrapolation. R package version 0.1. URL 
-\url{https://CRAN.R-project.org/package=ycinterextra}
-}
+
 \author{
-Thierry Moudiki
+T. Moudiki
 }

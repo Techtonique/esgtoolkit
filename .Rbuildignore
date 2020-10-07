@@ -3,3 +3,6 @@
 ^ESGtoolkit\.Rcheck$
 ^ESGtoolkit.*\.tar\.gz$
 ^ESGtoolkit.*\.tgz$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

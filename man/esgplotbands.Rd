@@ -13,8 +13,9 @@ esgplotbands(x, ...)
 }
 \description{
 This function plots colored bands for time series percentiles and confidence 
-intervals. You can use it for outputs from \code{link{simdiff}}, 
-\code{link{esgmartingaletest}}, \code{link{esgcortest}}.
+intervals. You can use it for outputs from \code{\link[ESGtoolkit]{simdiff}}, 
+\code{\link[ESGtoolkit]{esgmartingaletest}}, \code{\link[ESGtoolkit]{esgcortest}}.
+
 }
 \examples{
 
@@ -31,9 +32,9 @@ frequency = "quart",
 model = "OU", 
 x0 = V0, theta1 = theta1, theta2 = theta2, theta3 = theta3)
 
-par(mfrow=c(2,1))
+#par(mfrow=c(2,1))
 esgplotbands(x, xlab = "time", ylab = "values")
-matplot(time(x), x, type = 'l', xlab = "time", ylab = "series values")
+matplot(as.vector(time(x)), x, type = 'l', xlab = "time", ylab = "series values")
 
 # Martingale test
 
@@ -64,7 +65,7 @@ family = 1, par = 0.8)
 
 (test1 <- esgcortest(s0.par1))
 (test2 <- esgcortest(s0.par2))
-par(mfrow=c(2, 1))
+#par(mfrow=c(2, 1))
 esgplotbands(test1)
 esgplotbands(test2)
 }
@@ -72,5 +73,5 @@ esgplotbands(test2)
 \code{\link{esgplotts}}
 }
 \author{
-Thierry Moudiki
+T. Moudiki
 }

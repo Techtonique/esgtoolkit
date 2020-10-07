@@ -54,11 +54,11 @@ family = fam2, par = par0.3)
 s0.par4 <- simshocks(n = nb, horizon = 4, 
 family = fam3, par = par0.4)
 
-\dontrun{
+
 esgplotshocks(s0.par1, s0.par2)
 esgplotshocks(s0.par2, s0.par3)
 esgplotshocks(s0.par2, s0.par4)
-esgplotshocks(s0.par1, s0.par4)} 
+esgplotshocks(s0.par1, s0.par4) 
 
 }
 \references{
@@ -69,5 +69,5 @@ New York.
 \code{\link{simshocks}}
 }
 \author{
-Thierry Moudiki + some nice blogs :)
+T. Moudiki + some nice blogs :)
 }
