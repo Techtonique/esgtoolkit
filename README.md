@@ -3,6 +3,9 @@ ESGtoolkit
 
 [![Downloads](https://cranlogs.r-pkg.org/badges/ESGtoolkit)](https://cran.r-project.org/package=ESGtoolkit)
 
+[![Last Commit](https://img.shields.io/github/last-commit/Techtonique/ESGtoolkit)](https://github.com/Techtonique/ESGtoolkit)
+
+
 A toolkit for Monte Carlo Simulations in Finance, Economics, Insurance, Physics. Multiple simulation models can be created by combining building blocks provided in the package. 
 
 For __more details__, you can read the package  [vignette on 
@@ -72,4 +75,4 @@ If you're not comfortable with Git/Version Control yet, please use [this form](h
 
 # License
 
-[BSD 3-Clause Clear](LICENSE) © Thierry Moudiki, 2014. 
+[BSD 3-Clause Clear](https://techtonique.github.io/ESGtoolkit/LICENSE-text.html) © Thierry Moudiki, 2014. 

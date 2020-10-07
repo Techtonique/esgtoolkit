@@ -16,4 +16,10 @@ repo:
     source: https://github.com/Techtonique/ESGtoolkit/
     issue: https://github.com/Techtonique/ESGtoolkit/issues
     user: https://github.com/Techtonique/
-    
+navbar:
+  structure:
+    left:  [home, intro, reference, articles, tutorials, news, Techtonique]
+    right: [github] 
+  components:
+    Techtonique: 
+      href: ../  
