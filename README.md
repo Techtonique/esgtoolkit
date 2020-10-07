@@ -25,7 +25,7 @@ ResearchGate](https://www.researchgate.net/publication/338549100_ESGtoolkit_a_to
 
 ```r
 library(devtools)
-devtools::install_github("thierrymoudiki/ESGtoolkit")
+devtools::install_github("Techtonique/ESGtoolkit")
 ```
 
 - From CRAN: 
