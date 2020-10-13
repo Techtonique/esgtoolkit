@@ -1,4 +1,4 @@
-ESGtoolkit
+ESGtoolkit | <a class="github-button" href="https://github.com/Techtonique/esgtoolkit/stargazers" data-color-scheme="no-preference: light; light: light; dark: dark;" data-size="large" aria-label="Star esgtoolkit/esgtoolkit on GitHub">Star</a>
 ==========
 
 [![Downloads](https://cranlogs.r-pkg.org/badges/ESGtoolkit)](https://cran.r-project.org/package=ESGtoolkit)
@@ -55,15 +55,6 @@ sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",
 esgplotbands(sim.GBM, xlab = "time", ylab = "values", main = "with esgplotbands")                
 matplot(as.vector(time(sim.GBM)), sim.GBM, type = 'l', main = "with matplot")
 
-
-eps0 <- simshocks(n = 100, horizon = 5, frequency = "quart")
-sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",   
-               model = "GBM", 
-               x0 = 100, theta1 = 0.03, theta2 = 0.1, 
-               eps = eps0)                
-esgplotbands(sim.GBM, xlab = "time", ylab = "values", main = "with esgplotbands")                
-matplot(as.vector(time(sim.GBM)), sim.GBM, type = 'l', main = "with matplot")
-
 ```
 
 
@@ -76,3 +67,6 @@ If you're not comfortable with Git/Version Control yet, please use [this form](h
 # License
 
 [BSD 3-Clause Clear](https://techtonique.github.io/ESGtoolkit/LICENSE-text.html) © Thierry Moudiki, 2014. 
+
+
+<script async defer src="https://buttons.github.io/buttons.js"></script>

@@ -8,7 +8,7 @@ simshocks(
   n,
   horizon,
   frequency = c("annual", "semi-annual", "quarterly", "monthly", "weekly", "daily"),
-  method = c("classic", "antithetic", "mm", "hybridantimm", "TAG", "sobol", "halton"),
+  method = c("classic", "antithetic", "mm", "hybridantimm", "TAG"),
   family = NULL,
   par = NULL,
   par2 = rep(0, length(par)),
@@ -27,9 +27,8 @@ simshocks(
 
 \item{method}{either classic monte carlo, antithetic variates, moment matching, 
 hybrid antithetic variates + moment matching, "TAG" (see the 4th reference for 
-the latter, sobol, halton. Options: "classic", "antithetic", 
-                                 "mm", "hybridantimm", "TAG", 
-                                 "sobol", "halton".}
+the latter. Options: "classic", "antithetic", 
+                                 "mm", "hybridantimm", "TAG".}
 
 \item{family}{
 A d*(d-1)/2 integer vector of C-/D-vine pair-copula families with values 
@@ -149,7 +148,7 @@ Lecture Notes in Statistics, Vol. 195., Springer-Verlag, Heidelberg. ISBN 978-3-
 
 Thomas Nagler, Ulf Schepsmeier, Jakob Stoeber, Eike Christian Brechmann, Benedikt 
 Graeler and Tobias Erhardt (2020). VineCopula: Statistical Inference of Vine Copulas. 
-R package version 2.4.0. https://CRAN.R-project.org/package=VineCopula
+R package version 2.4.0. \url{https://CRAN.R-project.org/package=VineCopula}
 
 Nteukam T, O., & Planchet, F. (2012). Stochastic evaluation of life insurance 
 contracts: Model point on asset trajectories and measurement of the error 

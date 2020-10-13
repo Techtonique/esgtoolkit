@@ -1,6 +1,7 @@
 template:
   params:
     bootswatch: darkly
+    ganalytics: UA-146345113-2
 url: https://techtonique.github.io/ESGtoolkit/
 home:
   title: A Toolkit for Monte Carlo Simulations
