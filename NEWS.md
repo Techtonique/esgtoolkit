@@ -1,3 +1,8 @@
+# version 0.4.0
+
+- use spline interpolation (stats::splinefun) for forward rates 
+
+
 # version 0.3.0
 
 - Use [VineCopula](http://tnagler.github.io/VineCopula/) package instead of CDVine (archived) for dependency simulation (means there's also now VineCopula's R-Vine Copulas simulation)
