@@ -25,7 +25,7 @@ esgfwdrates(
 \item{out.frequency}{either "annual", "semi-annual", "quarterly", "monthly", 
 "weekly", or "daily" (1, 1/2, 1/4, 1/12, 1/52, 1/252)}
 
-\item{...}{additional parameters provided to \code{\link{ycinter}}}
+\item{...}{additional parameters provided to \code{\link{splinefun}}}
 }
 \description{
 This function provides instantaneous forward rates. They can be used 
@@ -42,25 +42,20 @@ txZC <- c(0.01422,0.01309,0.01380,0.01549,0.01747,0.01940,0.02104,0.02236,0.0234
 u <- 1:30
 
 par(mfrow=c(2,2))
-fwdNS <- esgfwdrates(in.maturities = u, in.zerorates = txZC, 
+fwd1 <- esgfwdrates(in.maturities = u, in.zerorates = txZC, 
                     n = 10, horizon = 20, 
-                    out.frequency = "semi-annual", method = "NS")
-matplot(as.vector(time(fwdNS)), fwdNS, type = 'l')
+                    out.frequency = "semi-annual", method = "fmm")
+matplot(as.vector(time(fwd1)), fwd1, type = 'l')
 
-fwdSV <- esgfwdrates(in.maturities = u, in.zerorates = txZC, 
+fwd2 <- esgfwdrates(in.maturities = u, in.zerorates = txZC, 
                     n = 10, horizon = 20, 
-                    out.frequency = "semi-annual", method = "SV")
-matplot(as.vector(time(fwdSV)), fwdSV, type = 'l')
+                    out.frequency = "semi-annual", method = "natural")
+matplot(as.vector(time(fwd2)), fwd2, type = 'l')
 
-fwdSW <- esgfwdrates(in.maturities = u, in.zerorates = txZC, 
-                    n = 10, horizon = 20, 
-                    out.frequency = "semi-annual", method = "SW")
-matplot(as.vector(time(fwdSW)), fwdSW, type = 'l')
-
-fwdHCSPL <- esgfwdrates(in.maturities = u, in.zerorates = txZC, 
+fwd4 <- esgfwdrates(in.maturities = u, in.zerorates = txZC, 
                        n = 10, horizon = 20, 
-                       out.frequency = "semi-annual", method = "HCSPL")
-matplot(as.vector(time(fwdHCSPL)), fwdHCSPL, type = 'l')
+                       out.frequency = "semi-annual", method = "hyman")
+matplot(as.vector(time(fwd4)), fwd4, type = 'l')
 
 }
 

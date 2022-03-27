@@ -44,10 +44,10 @@ esgfwdrates <- function(in.maturities, in.zerorates,
   tt <- seq(from = min(in.maturities), to = max.in.maturities, by = delta)
   nn <- length(tt)
   
-  yc <- ycinter(matsin = in.maturities, matsout = tt, p = p, 
-                typeres="prices", ...)  
-  
-  ZC.prices <- fitted(yc)
+  # yc <- ycinter(matsin = in.maturities, matsout = tt, p = p, 
+  #               typeres="prices", ...)  
+  # ZC.prices <- fitted(yc)
+  ZC.prices <- stats::spline(x = in.maturities, y = p, xout = tt, ...)$y
   
   ZC.prices <- c(1 + ((p[1] - 1)/(in.maturities[1] - 0))*(seq(0, 1, by = delta) - 0), 
                  ZC.prices[-1])
