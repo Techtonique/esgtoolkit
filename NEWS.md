@@ -1,6 +1,6 @@
 # version 0.4.0
 
-- use spline interpolation (stats::splinefun) for forward rates 
+- use spline interpolation (stats::spline) for forward rates 
 
 
 # version 0.3.0
