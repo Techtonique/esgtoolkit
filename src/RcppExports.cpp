@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // rnormESGcpp
 NumericMatrix rnormESGcpp(const int N, const int M);
 RcppExport SEXP _ESGtoolkit_rnormESGcpp(SEXP NSEXP, SEXP MSEXP) {

@@ -28,10 +28,16 @@ library(devtools)
 devtools::install_github("Techtonique/ESGtoolkit")
 ```
 
-- From CRAN: 
+- From R universe: 
 
 ```r
-install.packages("ESGtoolkit")
+# Enable universe(s) by techtonique
+options(repos = c(
+  techtonique = 'https://techtonique.r-universe.dev',
+  CRAN = 'https://cloud.r-project.org'))
+
+# Install some packages
+install.packages('ESGtoolkit')
 ```
 
 # Quickstart

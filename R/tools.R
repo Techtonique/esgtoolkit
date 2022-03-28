@@ -30,7 +30,7 @@ quantileESG <- function (x, probs)
   }
   qs
 }
-quantileESG <- cmpfun(quantileESG)
+quantileESG <- compiler::cmpfun(quantileESG)
 
 # normal distrib. with mean = 0, sd = 1 
 rnormESG <- function(n, m = NULL)
@@ -44,7 +44,7 @@ rnormESG <- function(n, m = NULL)
     return(rnormESGcpp(N = n, M = m))
   }
 }
-rnormESG <- cmpfun(rnormESG)
+rnormESG <- compiler::cmpfun(rnormESG)
 
 # simulation with TAG
 TAG <- function(n, m) 
@@ -70,7 +70,7 @@ TAG <- function(n, m)
     return(t(replicate(m, TAGbase(n))))
   }
 }
-TAG <- cmpfun(TAG)
+TAG <- compiler::cmpfun(TAG)
 
 # scaling a matrix
 scaleESG <- function (x, center = TRUE, scale = TRUE) 
@@ -101,7 +101,7 @@ scaleESG <- function (x, center = TRUE, scale = TRUE)
   else stop("length of 'scale' must equal the number of columns of 'x'")
   return(x)
 }
-scaleESG <- cmpfun(scaleESG)
+scaleESG <- compiler::cmpfun(scaleESG)
 
 # plot bands
 bands.plot <- function(x, y.mean, ci.upper, ci.lower, col, y.goal = NULL, goal.col = "blue", ...)

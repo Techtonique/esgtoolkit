@@ -1,8 +1,8 @@
 Package: ESGtoolkit
 Type: Package
 Title: Toolkit for Monte Carlo Simulations
-Version: 0.3.0
-Date: 2020-10-07
+Version: 0.4.0
+Date: 2022-03-28
 Authors@R: c(
         person("T.", "Moudiki", , "thierry.moudiki@gmail.com", role = c("aut", "cre")
         )
@@ -12,7 +12,7 @@ BugReports: https://github.com/Techtonique/ESGtoolkit/issues
 Maintainer: T. Moudiki <thierry.moudiki@gmail.com>
 Description: A toolkit for Monte Carlo Simulations in Finance, Economics, Insurance, Physics. Multiple simulation models can be created by combining building blocks provided in the package.   
 License: BSD_3_clause Clear + file LICENSE
-Depends: ggplot2, gridExtra, reshape2, ycinterextra, VineCopula, randtoolbox
+Depends: ggplot2, gridExtra, reshape2, VineCopula, randtoolbox
 Imports: Rcpp(>= 0.11.0)
 Suggests: 
     devtools,
