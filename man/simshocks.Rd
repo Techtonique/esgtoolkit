@@ -14,6 +14,7 @@ simshocks(
   par2 = rep(0, length(par)),
   RVM = NULL, 
   type = c("CVine", "DVine", "RVine"),
+  start = NULL,
   seed = 123
 )
 }
@@ -79,6 +80,8 @@ possibly different family/parameter can be supplied. Must be not NULL for
 type == "RVine", not used otherwise. See also VineCopula::RVineMatrix.}
 
 \item{type}{type of vine model: "CVine", "DVine" or "RVine"}
+
+\item{start}{the time of the first observation. Either a single number or a vector of two numbers (the second of which is an integer), which specify a natural time unit and a (1-based) number of samples into the time unit. See `?ts`.}
 
 \item{seed}{reproducibility seed}
 }

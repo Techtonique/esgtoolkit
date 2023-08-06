@@ -46,6 +46,7 @@ simshocks <- function(n, horizon,
                       par = NULL, par2 = rep(0, length(par)), 
                       RVM = NULL, 
                       type = c("CVine", "DVine", "RVine"),
+                      start = NULL, 
                       seed = 123)
 {
   if (floor(n) != n) stop("'n' must be an integer")
@@ -56,9 +57,9 @@ simshocks <- function(n, horizon,
                   "annual" = 1, 
                   "semi-annual" = 0.5, 
                   "quarterly" = 0.25, 
-                  "monthly" = 1/12,
-                  "weekly" = 1/52,
-                  "daily" = 1/252)
+                  "monthly" = 1/12L,
+                  "weekly" = 1/52L,
+                  "daily" = 1/252L)
   type <- match.arg(type)
   
   method <- match.arg(method)
@@ -71,8 +72,12 @@ simshocks <- function(n, horizon,
   {
     if (method == "classic")
     {
+      if (!is.null(start))
+        return(ts(data = rnormESGcpp(N = n, M = m), 
+           start = start, deltat = delta))
+        
       return(ts(data = rnormESGcpp(N = n, M = m), 
-                start = delta, end = horizon, deltat = delta))  
+                start = delta, deltat = delta))  
     }
     
     if (method == "antithetic")
@@ -80,14 +85,23 @@ simshocks <- function(n, horizon,
       half.n <- n/2
       if(floor(half.n) != half.n) stop("'n' must be divisible by 2")        
       temp <- rnormESGcpp(N = half.n, M = m)        
+      
+      if (!is.null(start))
+        return(ts(data = cbind(temp, -temp), 
+                  start = start, deltat = delta))
+      
       return(ts(data = cbind(temp, -temp), 
-                start = delta, end = horizon, deltat = delta))
+                start = delta, deltat = delta))
     }
     
     if (method == "mm") 
     {
+      if (!is.null(start))
+        return(ts(data = scaleESG(rnormESGcpp(N = n, M = m)), 
+                  start = start, deltat = delta))  
+        
       return(ts(data = scaleESG(rnormESGcpp(N = n, M = m)), 
-                start = delta, end = horizon, deltat = delta))  
+                start = delta, deltat = delta))  
     }
     
     if (method == "hybridantimm")
@@ -95,14 +109,23 @@ simshocks <- function(n, horizon,
       half.n <- n/2
       if(floor(half.n) != half.n) stop("'n' must be divisible by 2")
       temp <- rnormESGcpp(N = half.n, M = m)
+      
+      if (!is.null(start))
+        return(ts(data = scaleESG(cbind(temp, -temp)), 
+                  start = start, deltat = delta))
+      
       return(ts(data = scaleESG(cbind(temp, -temp)), 
-                start = delta, end = horizon, deltat = delta))
+                start = delta, deltat = delta))
     }
     
     if (method == "TAG")
     {
+      if (!is.null(start))
+        return(ts(data = TAG(n, m), 
+                  start = start, deltat = delta))        
+        
       return(ts(data = TAG(n, m), 
-                start = delta, end = horizon, deltat = delta))        
+                start = delta, deltat = delta))        
     }    
   } 
   else # !is.null(family) && !is.null(par) # C, D, R-Vine
@@ -114,9 +137,15 @@ simshocks <- function(n, horizon,
       shocks.sim <- qnorm(CDRVineSim(N = nb.sim, RVM=RVM,
                                     family, par, par2, type))
       d <- dim(shocks.sim)[2]
+      
+      if (!is.null(start))
+        return(lapply(1:d, function(i)
+          ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n),
+             start = start, deltat = delta)))
+      
       return(lapply(1:d, function(i)
         ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n),
-           start = delta, end = horizon, deltat = delta)))
+           start = delta, deltat = delta)))
     }
     
     if (method == "antithetic")
@@ -127,9 +156,15 @@ simshocks <- function(n, horizon,
                               family, par, par2, type))
       shocks.sim <- rbind(temp, -temp)
       d <- dim(shocks.sim)[2]
+      
+      if (!is.null(start))
+        return(lapply(1:d, function(i)
+          ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n),
+             start = start, deltat = delta)))
+      
       return(lapply(1:d, function(i)
         ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n),
-           start = delta, end = horizon, deltat = delta)))
+           start = delta, deltat = delta)))
     }
 
     if (method == "mm")
@@ -137,9 +172,15 @@ simshocks <- function(n, horizon,
       shocks.sim <- qnorm(CDRVineSim(N = nb.sim, RVM=RVM,
                                     family, par, par2, type))
       d <- dim(shocks.sim)[2]
+      
+      if (!is.null(start))
+        return(lapply(1:d, function(i)
+          ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
+             start = start, deltat = delta)))
+        
       return(lapply(1:d, function(i)
         ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
-           start = delta, end = horizon, deltat = delta)))
+           start = delta, deltat = delta)))
     }
 
     if (method == "hybridantimm")
@@ -150,17 +191,29 @@ simshocks <- function(n, horizon,
                               family, par, par2, type))
       shocks.sim <- rbind(temp, -temp)
       d <- dim(shocks.sim)[2]
+      
+      if (!is.null(start))
+        return(lapply(1:d, function(i)
+          ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
+             start = start, deltat = delta)))
+      
       return(lapply(1:d, function(i)
         ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
-           start = delta, end = horizon, deltat = delta)))
+           start = delta, deltat = delta)))
     }
 
     if (method == "TAG")
     {
       if (!is.null(family) && family > 0) warning("for method == 'TAG', only the independence copula is implemented")
+      
+      if (!is.null(start))
+        return(lapply(1:d, function(i)
+          ts(data = TAG(n = n, m = m),
+             start = start, deltat = delta)))
+        
       return(lapply(1:d, function(i)
         ts(data = TAG(n = n, m = m),
-           start = delta, end = horizon, deltat = delta)))
+           start = delta, deltat = delta)))
     }
   }
 }

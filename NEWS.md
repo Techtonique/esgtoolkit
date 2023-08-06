@@ -1,3 +1,8 @@
+# version 0.5.0
+
+- Calculate returns or log-returns for multivariate time series with `calculatereturns`
+- Specify `start` (the time of the first observation, see `stats::ts` for examples) for simulations in `simdiff` and `simshocks`
+
 # version 0.4.0
 
 - use spline interpolation (stats::spline) for forward rates 

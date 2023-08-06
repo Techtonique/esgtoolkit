@@ -10,7 +10,9 @@ simdiff <- function(n, horizon,
                     x0, theta1 = NULL, theta2 = NULL, theta3 = NULL,
                     lambda = NULL, mu_z = NULL, sigma_z = NULL, 
                     p = NULL, eta_up = NULL, eta_down = NULL,
-                    eps = NULL, seed = 123)
+                    eps = NULL, 
+                    start = NULL,
+                    seed = 123)
 {
   if (floor(n) != n) stop("'n' must be an integer")
   if (n <= 1) stop("'n' must be > 1")
@@ -40,6 +42,9 @@ simdiff <- function(n, horizon,
                  , m, "\n and ncol (number of scenarios) = ", n, ".\n Use 'simshocks' function
                  with same number of observations, horizon and frequency to obtain 'eps'"))
   }
+  
+  if (!is.null(start))
+    stopifnot(identical(start(eps), start))
   
   if(model == "GBM")
   {
@@ -77,11 +82,18 @@ simdiff <- function(n, horizon,
     if(length(theta1) != 1 || length(theta2) != 1 || length(theta3) != 1) 
       stop(paste("length required for 'theta1', 'theta2' and 'theta3' : 1"))
     
+    if (!is.null(start))
+      {# rCIRESGcpp(const int N, const int horizon, const double Delta, const double x0, 
+      # NumericVector theta, NumericMatrix eps)
+      return(ts(rCIRESGcppexact(N = n, horizon = horizon, Delta = delta, x0 = x0, 
+                                theta = c(theta1, theta2, theta3), eps = eps), 
+                start = start, deltat = delta))}
+    
     # rCIRESGcpp(const int N, const int horizon, const double Delta, const double x0, 
     # NumericVector theta, NumericMatrix eps)
     return(ts(rCIRESGcppexact(N = n, horizon = horizon, Delta = delta, x0 = x0, 
                               theta = c(theta1, theta2, theta3), eps = eps), 
-              start = 0, end = horizon, deltat = delta))
+              start = 0, deltat = delta))
   }
   
   if (model == "OU")
@@ -92,26 +104,56 @@ simdiff <- function(n, horizon,
     if(length(theta1) != 1 || length(theta2) != 1 || length(theta3) != 1) 
       stop(paste("length required for 'theta1', 'theta2' and 'theta3' : 1"))
     
+    if (!is.null(start))
+    {
+      # rOUESGcpp(const int N, const int horizon, const double Delta, const double x0, 
+      # NumericVector theta, NumericMatrix eps)     
+      return(ts(rOUESGcppexact(N = n, horizon = horizon, Delta = delta, x0 = x0, 
+                               theta = c(theta1, theta2, theta3), eps = eps), 
+                start = start, deltat = delta))
+    }
+    
     # rOUESGcpp(const int N, const int horizon, const double Delta, const double x0, 
     # NumericVector theta, NumericMatrix eps)     
     return(ts(rOUESGcppexact(N = n, horizon = horizon, Delta = delta, x0 = x0, 
                              theta = c(theta1, theta2, theta3), eps = eps), 
-              start = 0, end = horizon, deltat = delta))
+              start = 0, deltat = delta))
   }
   
   if (model == "GBM")
   {
     if (is.null(mu_z) && is.null(sigma_z) && is.null(p) && is.null(eta_up) && is.null(eta_down))
     {
+      if (!is.null(start))
+      {
+        # rGBMESGcpp(const int N, const int horizon, const double Delta, const double x0, 
+        # NumericMatrix theta1, NumericMatrix theta2, NumericMatrix eps)       
+        return(ts(rGBMESGcpp(N = n, horizon = horizon, Delta = delta, x0 = x0, 
+                             theta1 = theta1, theta2 = theta2, eps = eps), 
+                  start = start, deltat = delta))
+      }
+        
       # rGBMESGcpp(const int N, const int horizon, const double Delta, const double x0, 
       # NumericMatrix theta1, NumericMatrix theta2, NumericMatrix eps)       
       return(ts(rGBMESGcpp(N = n, horizon = horizon, Delta = delta, x0 = x0, 
                            theta1 = theta1, theta2 = theta2, eps = eps), 
-                start = 0, end = horizon, deltat = delta))
+                start = 0, deltat = delta))
     }
     
     if (!is.null(lambda) && !is.null(mu_z) && !is.null(sigma_z))
     {
+      if (!is.null(start))
+      {
+        # rGBMjumpsnormESGcpp(const int N, const int horizon, const double Delta,
+        # const double x0, NumericMatrix theta1, NumericMatrix theta2,
+        # const double lambda, const double mu, const double sigma, 
+        # NumericMatrix eps)       
+        return(ts(rGBMjumpsnormESGcpp(N = n, horizon = horizon, Delta = delta, x0 = x0, 
+                                      theta1 = theta1, theta2 = theta2,
+                                      lambda = lambda, mu = mu_z, sigma = sigma_z, 
+                                      eps = eps), start = start, deltat = delta))
+      }
+        
       # rGBMjumpsnormESGcpp(const int N, const int horizon, const double Delta,
       # const double x0, NumericMatrix theta1, NumericMatrix theta2,
       # const double lambda, const double mu, const double sigma, 
@@ -119,11 +161,24 @@ simdiff <- function(n, horizon,
       return(ts(rGBMjumpsnormESGcpp(N = n, horizon = horizon, Delta = delta, x0 = x0, 
                                     theta1 = theta1, theta2 = theta2,
                                     lambda = lambda, mu = mu_z, sigma = sigma_z, 
-                                    eps = eps), start = 0, end = horizon, deltat = delta))
+                                    eps = eps), start = 0, deltat = delta))
     }
     
     if (!is.null(lambda) && !is.null(p) && !is.null(eta_up) && !is.null(eta_down))
     {
+      if (!is.null(start))
+      {
+        # rGBMjumpskouESGcpp(const int N, const int horizon, const double Delta,
+        # const double x0, NumericMatrix theta1, NumericMatrix theta2,
+        # const double lambda, const double eta_up, const double eta_down,
+        # const double p, NumericMatrix eps)
+        return(ts(rGBMjumpskouESGcpp(N = n, horizon = horizon, Delta = delta, x0 = x0, 
+                                     theta1 = theta1, theta2 = theta2,
+                                     lambda = lambda, eta_up = eta_up, eta_down = eta_down,
+                                     p = p, eps = eps), 
+                  start = start, deltat = delta))
+      }
+        
       # rGBMjumpskouESGcpp(const int N, const int horizon, const double Delta,
       # const double x0, NumericMatrix theta1, NumericMatrix theta2,
       # const double lambda, const double eta_up, const double eta_down,
@@ -132,7 +187,7 @@ simdiff <- function(n, horizon,
                                    theta1 = theta1, theta2 = theta2,
                                    lambda = lambda, eta_up = eta_up, eta_down = eta_down,
                                    p = p, eps = eps), 
-                start = 0, end = horizon, deltat = delta))
+                start = 0, deltat = delta))
     }
   }
 }                                                                                                                                  

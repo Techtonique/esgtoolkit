@@ -10,6 +10,7 @@ esgfwdrates(
   n,
   horizon,
   out.frequency = c("annual", "semi-annual", "quarterly", "monthly", "weekly", "daily"),
+  method = c("fmm", "periodic", "natural", "monoH.FC", "hyman"),
   ...
 )
 }
@@ -24,6 +25,9 @@ esgfwdrates(
 
 \item{out.frequency}{either "annual", "semi-annual", "quarterly", "monthly", 
 "weekly", or "daily" (1, 1/2, 1/4, 1/12, 1/52, 1/252)}
+
+\item{method}{specifies the type of spline to be used for interpolation. Possible values are "fmm", "natural", "periodic", "monoH.FC" and "hyman".
+See \code{\link{spline}}.}
 
 \item{...}{additional parameters provided to \code{\link{splinefun}}}
 }

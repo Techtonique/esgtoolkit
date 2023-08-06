@@ -20,6 +20,7 @@ simdiff(
   eta_up = NULL,
   eta_down = NULL,
   eps = NULL,
+  start = NULL,
   seed = 123
 )
 }
@@ -92,6 +93,8 @@ Optional.}
 \item{eps}{gaussian shocks. If not provided, independent shocks are 
 generated internally by the function. Otherwise, for custom shocks, 
 must be an output from \code{\link{simshocks}}.}
+
+\item{start}{the time of the first observation. Either a single number or a vector of two numbers (the second of which is an integer), which specify a natural time unit and a (1-based) number of samples into the time unit. See `?ts`.}
 
 \item{seed}{reproducibility seed}
 }
@@ -166,6 +169,21 @@ sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",
                eps = eps0)                
 esgplotbands(sim.GBM, xlab = "time", ylab = "values", main = "with esgplotbands")                
 matplot(as.vector(time(sim.GBM)), sim.GBM, type = 'l', main = "with matplot")
+
+
+
+# GBM log returns (haha) with starting date 
+
+eps0 <- simshocks(n = 100, horizon = 5, frequency = "quart", start = c(1995, 1))
+sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",   
+               model = "GBM", 
+               x0 = 100, theta1 = 0.03, theta2 = 0.1, 
+               eps = eps0, start = c(1995, 1))
+log_returns_GBM <-  calculatereturns(sim.GBM)  
+par(mfrow=c(1, 2))
+esgplotbands(log_returns_GBM , xlab = "time", ylab = "values", main = "with esgplotbands")
+matplot(as.vector(time(log_returns_GBM)), log_returns_GBM, type = 'l', 
+main = "with matplot", xlab = "time")
 }
 \references{
 Black, F., Scholes, M.S. (1973) The pricing of options and corporate liabilities, 
