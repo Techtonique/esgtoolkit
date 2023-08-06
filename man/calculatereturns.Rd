@@ -28,7 +28,7 @@ sim_GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",
                 x0 = 100, theta1 = 0.03, theta2 = 0.1, eps = eps0) 
 
 returns <- calculatereturns(sim_GBM)
-log_returns <- diff(log(sim_GBM))
+log_returns <- calculatereturns(sim_GBM, type = "log")
 
 print(identical(returns, log_returns))
 

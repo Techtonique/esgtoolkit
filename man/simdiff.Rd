@@ -179,7 +179,7 @@ sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",
                model = "GBM", 
                x0 = 100, theta1 = 0.03, theta2 = 0.1, 
                eps = eps0, start = c(1995, 1))
-log_returns_GBM <-  calculatereturns(sim.GBM)  
+log_returns_GBM <-  calculatereturns(sim.GBM, type = "log")  
 par(mfrow=c(1, 2))
 esgplotbands(log_returns_GBM , xlab = "time", ylab = "values", main = "with esgplotbands")
 matplot(as.vector(time(log_returns_GBM)), log_returns_GBM, type = 'l', 
