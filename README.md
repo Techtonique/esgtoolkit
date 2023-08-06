@@ -1,7 +1,7 @@
 ESGtoolkit | <a class="github-button" href="https://github.com/Techtonique/esgtoolkit/stargazers" data-color-scheme="no-preference: light; light: light; dark: dark;" data-size="large" aria-label="Star esgtoolkit/esgtoolkit on GitHub">Star</a>
 ==========
 
-[![Downloads](https://cranlogs.r-pkg.org/badges/ESGtoolkit)](https://cran.r-project.org/package=ESGtoolkit)
+[![Downloads](https://cranlogs.r-pkg.org/badges/ESGtoolkit)](https://cran.r-project.org/package=ESGtoolkit) (Not on CRAN anymore, so this is certainly not accurate... )
 
 [![Last Commit](https://img.shields.io/github/last-commit/Techtonique/ESGtoolkit)](https://github.com/Techtonique/ESGtoolkit)
 
