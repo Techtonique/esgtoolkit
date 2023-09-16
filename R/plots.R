@@ -166,5 +166,7 @@ esgplotshocks <-  function(x, y = NULL)
     ggplot2::theme(legend.position = "none") 
   
   #arrange the plots together, with appropriate height and width for each row and column
-  grid.arrange(plot_top, empty, scatter, plot_right, ncol=2, nrow=2, widths=c(4, 1), heights=c(1, 4))
+  grid.arrange(plot_top, empty, scatter, plot_right, 
+               ncol=2, nrow=2, widths=c(4, 1), 
+               heights=c(1, 4))
 }

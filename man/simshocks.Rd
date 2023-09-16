@@ -141,7 +141,7 @@ apply(s0[[4]], 2, sd)
 \references{
 Brechmann, E., Schepsmeier, U. (2013). Modeling Dependence with C-
 and D-Vine Copulas: The R Package CDVine. Journal of Statistical Software,
-52(3), 1-27. URL \url{http://www.jstatsoft.org/v52/i03/}.
+52(3), 1-27. URL \url{https://www.jstatsoft.org/v52/i03/}.
 
 Genz, A. Bretz, F., Miwa, T. Mi, X., Leisch, F., Scheipl, F., Hothorn, T. (2013).
 mvtnorm: Multivariate Normal and t Distributions. R package version 0.9-9996.

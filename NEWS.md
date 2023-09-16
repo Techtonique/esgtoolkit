@@ -1,3 +1,7 @@
+# version 0.6.0
+
+- include hermite cubic spline and Smith-Wilson methods for curve interpolation
+
 # version 0.5.0
 
 - Calculate returns or log-returns for multivariate time series with `calculatereturns`

@@ -1,8 +1,8 @@
 Package: ESGtoolkit
 Type: Package
 Title: Toolkit for Monte Carlo Simulations
-Version: 0.5.0
-Date: 2023-08-06
+Version: 0.6.0
+Date: 2023-09-16
 Authors@R: c(
         person("T.", "Moudiki", , "thierry.moudiki@gmail.com", role = c("aut", "cre")
         )
@@ -18,7 +18,7 @@ Suggests:
     devtools,
     testthat
 LinkingTo: Rcpp
-Collate: 'RcppExports.R' 'calculatereturns.R' 'fwdrates.R' 'plots.R' 'simulations_risks.R' 'simulations_shocks.R' 'tests.R' 'tools.R' 'zzz.R'
+Collate: 'RcppExports.R' 'calculatereturns.R' 'fwdrates.R' 'plots.R' 'rates_interpolation.R' 'simulations_risks.R' 'simulations_shocks.R' 'tests.R' 'tools.R' 'zzz.R'
 Packaged: 2014-06-12 23:32:30 UTC; Thierry
 NeedsCompilation: yes
 Repository: CRAN
