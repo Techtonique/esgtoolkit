@@ -27,9 +27,9 @@ scale(rank(c("toto", "tata", "tete", "tete", "titi", "le tonton", "la tata", "la
 scale(rank(c("toto", "tata", "tete", "tete", "titi", "le tonton", "la tata", "la tata de", " toto", "tata ")))
 scale(rank(c("toto", "tata", "tete", "tete", "titi", "le tonton", "la tata", "la tata de", " toto", "tete ")))
 scale(rank(c("toto", "tata", "tete", "tete", "titi", "le tonton", "la tata", "la tata de", " toto", "tete2")))
-install.packages("/Users/moudiki/Downloads/ESGtoolkit_0.2.0.tar.gz")
-install.packages("/Users/moudiki/Downloads/ESGtoolkit_0.2.0.tar.gz", repos='NULL')
-install.packages("/Users/moudiki/Downloads/ESGtoolkit_0.2.0.tar.gz", repos=NULL)
+install.packages("/Users/moudiki/Downloads/esgtoolkit_0.2.0.tar.gz")
+install.packages("/Users/moudiki/Downloads/esgtoolkit_0.2.0.tar.gz", repos='NULL')
+install.packages("/Users/moudiki/Downloads/esgtoolkit_0.2.0.tar.gz", repos=NULL)
 load(".RData")
 pwd
 pwd()

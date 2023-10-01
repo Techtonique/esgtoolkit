@@ -1,15 +1,15 @@
-ESGtoolkit | <a class="github-button" href="https://github.com/Techtonique/esgtoolkit/stargazers" data-color-scheme="no-preference: light; light: light; dark: dark;" data-size="large" aria-label="Star esgtoolkit/esgtoolkit on GitHub">Star</a>
+esgtoolkit | <a class="github-button" href="https://github.com/Techtonique/esgtoolkit/stargazers" data-color-scheme="no-preference: light; light: light; dark: dark;" data-size="large" aria-label="Star esgtoolkit/esgtoolkit on GitHub">Star</a>
 ==========
 
-[![Downloads](https://cranlogs.r-pkg.org/badges/ESGtoolkit)](https://cran.r-project.org/package=ESGtoolkit) (Not on CRAN anymore, so this is certainly not accurate... )
+[![Downloads](https://cranlogs.r-pkg.org/badges/esgtoolkit)](https://cran.r-project.org/package=esgtoolkit) (Not on CRAN anymore, so this is certainly not accurate... )
 
-[![Last Commit](https://img.shields.io/github/last-commit/Techtonique/ESGtoolkit)](https://github.com/Techtonique/ESGtoolkit)
+[![Last Commit](https://img.shields.io/github/last-commit/Techtonique/esgtoolkit)](https://github.com/Techtonique/esgtoolkit)
 
 
 A toolkit for Monte Carlo Simulations in Finance, Economics, Insurance, Physics. Multiple simulation models can be created by combining building blocks provided in the package. 
 
 For __more details__, you can read the package  [vignette on 
-ResearchGate](https://www.researchgate.net/publication/338549100_ESGtoolkit_a_tool_for_stochastic_simulation_v020). Functions' documentation can be found in section 'Reference' of the [website](https://techtonique.github.io/ESGtoolkit/). 
+ResearchGate](https://www.researchgate.net/publication/338549100_esgtoolkit_a_tool_for_stochastic_simulation_v020). Functions' documentation can be found in section 'Reference' of the [website](https://techtonique.github.io/esgtoolkit/). 
 
 # Table of Contents
 
@@ -25,7 +25,7 @@ ResearchGate](https://www.researchgate.net/publication/338549100_ESGtoolkit_a_to
 
 ```r
 library(devtools)
-devtools::install_github("Techtonique/ESGtoolkit")
+devtools::install_github("Techtonique/esgtoolkit")
 ```
 
 - From R universe: 
@@ -37,19 +37,19 @@ options(repos = c(
   CRAN = 'https://cloud.r-project.org'))
 
 # Install some packages
-install.packages('ESGtoolkit')
+install.packages('esgtoolkit')
 ```
 
 # Quickstart
 
 In addition to the example below, you can read:
 - [this blog](https://thierrymoudiki.wordpress.com/)'s archives 
-- the functions' examples in section 'Reference' on [the website](https://techtonique.github.io/ESGtoolkit/)
+- the functions' examples in section 'Reference' on [the website](https://techtonique.github.io/esgtoolkit/)
 contain code + a lot graphs
 
 
 ```r
-library(ESGtoolkit)
+library(esgtoolkit)
 
 # Geometric Brownian Motion (https://en.wikipedia.org/wiki/Geometric_Brownian_motion)
 
@@ -72,7 +72,7 @@ If you're not comfortable with Git/Version Control yet, please use [this form](h
 
 # License
 
-[BSD 3-Clause Clear](https://techtonique.github.io/ESGtoolkit/LICENSE-text.html) © Thierry Moudiki, 2014. 
+[BSD 3-Clause Clear](https://techtonique.github.io/esgtoolkit/LICENSE-text.html) © Thierry Moudiki, 2014. 
 
 
 <script async defer src="https://buttons.github.io/buttons.js"></script>

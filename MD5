@@ -6,7 +6,7 @@ bcea8f7f125c410c074fcfed5e5d231f *R/code.R
 c51ab6dbaac015a16d4512d5866837f1 *inst/doc/ESG2toolkit_Intro_062014.R
 880168dc230aa7957b9cc31ceff958c8 *inst/doc/ESG2toolkit_Intro_062014.Rnw
 581d3fabc65d377f810e644fddc558dd *inst/doc/ESG2toolkit_Intro_062014.pdf
-8774fb4162fa3cd724772344ee306c3c *man/ESGtoolkit-package.Rd
+8774fb4162fa3cd724772344ee306c3c *man/esgtoolkit-package.Rd
 5764f8de5c2aa624a33f047afa42be2a *man/esgcortest.Rd
 215c32904a0a7dee44de6a40486c1574 *man/esgdiscountfactor.Rd
 cc94c35f09ec13153b53cc13f2c5d3fc *man/esgfwdrates.Rd

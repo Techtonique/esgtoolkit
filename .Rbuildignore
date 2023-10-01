@@ -1,8 +1,8 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^ESGtoolkit\.Rcheck$
-^ESGtoolkit.*\.tar\.gz$
-^ESGtoolkit.*\.tgz$
+^esgtoolkit\.Rcheck$
+^esgtoolkit.*\.tar\.gz$
+^esgtoolkit.*\.tgz$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
