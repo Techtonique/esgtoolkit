@@ -1,10 +1,9 @@
 ESGtoolkit | <a class="github-button" href="https://github.com/Techtonique/esgtoolkit/stargazers" data-color-scheme="no-preference: light; light: light; dark: dark;" data-size="large" aria-label="Star esgtoolkit/esgtoolkit on GitHub">Star</a>
 ==========
 
-[![Downloads](https://cranlogs.r-pkg.org/badges/ESGtoolkit)](https://cran.r-project.org/package=ESGtoolkit) (Not on CRAN anymore, so this is certainly not accurate... )
-
 [![Last Commit](https://img.shields.io/github/last-commit/Techtonique/ESGtoolkit)](https://github.com/Techtonique/ESGtoolkit)
 
+**Important:** Starting with 1.0.0, the next version, it will be renamed as: lower case 'esgtoolkit' (to finally remove all my active packages from CRAN)
 
 A toolkit for Monte Carlo Simulations in Finance, Economics, Insurance, Physics. Multiple simulation models can be created by combining building blocks provided in the package. 
 
