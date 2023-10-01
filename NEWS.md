@@ -1,3 +1,7 @@
+# version 0.6.2
+
+- **Important:** Starting with 1.0.0, the next version, it will be renamed as: 'esgtoolkit' (to finally remove all my active packages from CRAN)
+
 # version 0.6.0
 
 - include hermite cubic spline and Smith-Wilson methods for curve interpolation
