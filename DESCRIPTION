@@ -1,24 +1,23 @@
-Package: ESGtoolkit
+Package: esgtoolkit
 Type: Package
 Title: Toolkit for Monte Carlo Simulations
-Version: 0.6.2
-Date: 2023-10-01
+Version: 1.0.0
+Date: 2023-10-09
 Authors@R: c(
         person("T.", "Moudiki", , "thierry.moudiki@gmail.com", role = c("aut", "cre")
         )
       )
-URL: https://techtonique.github.io/ESGtoolkit/
-BugReports: https://github.com/Techtonique/ESGtoolkit/issues
+URL: https://github.com/Techtonique/esgtoolkit
+BugReports: https://github.com/Techtonique/esgtoolkit/issues
 Maintainer: T. Moudiki <thierry.moudiki@gmail.com>
 Description: A toolkit for Monte Carlo Simulations in Finance, Economics, Insurance, Physics. Multiple simulation models can be created by combining building blocks provided in the package.   
 License: BSD_3_clause Clear + file LICENSE
-Depends: ggplot2, gridExtra, reshape2, VineCopula, randtoolbox
+Depends: ggplot2, gridExtra, methods, reshape2, VineCopula, randtoolbox
 Imports: Rcpp(>= 0.11.0)
 Suggests: 
     devtools,
     testthat
 LinkingTo: Rcpp
-Collate: 'RcppExports.R' 'calculatereturns.R' 'fwdrates.R' 'discount_factors.R' 'plots.R' 'rates_interpolation.R' 'simulations_risks.R' 'simulations_shocks.R' 'tests.R' 'tools.R' 'zzz.R'
 Packaged: 2014-06-12 23:32:30 UTC; Thierry
 NeedsCompilation: yes
 Repository: CRAN

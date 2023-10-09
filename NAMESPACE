@@ -10,6 +10,14 @@ export(esgplotshocks)
 export(esgplotts)
 export(simdiff)
 export(simshocks)
+export(forwardrates)
+export(ycextra)
+export(ycinter)
+importFrom("graphics", "hist")
+importFrom("methods", "new")
+importFrom("stats", "density", "median", "nlminb", "optim", "pf",
+               "qqline", "qqnorm", "shapiro.test")
+importFrom("utils", "setTxtProgressBar", "txtProgressBar")
 importFrom(ggplot2, ggplot)
 importFrom(ggplot2, qplot)
 importFrom(gridExtra, grid.arrange)
@@ -27,5 +35,5 @@ importFrom("graphics", "abline", "lines", "matplot", "par", "plot",
 importFrom("stats", "cor", "cor.test", "deltat", "end", "is.ts", "pt",
              "qnorm", "qt", "quantile", "sd", "start", "t.test", "time",
              "ts", "tsp", "window")
-useDynLib("ESGtoolkit")
+useDynLib("esgtoolkit")
 

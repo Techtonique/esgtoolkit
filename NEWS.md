@@ -1,3 +1,8 @@
+# version 1.0.0
+
+- rename `ESGtoolkit` to `esgtoolkit` (announced [here](https://thierrymoudiki.github.io/blog/2023/10/02/r/esgtoolkit-v062))
+- include `ycinter` and `ycextra` (from package `ycinterextra`, discontinued and unilaterally removed from CRAN)
+
 # version 0.6.2
 
 - **Important:** Starting with 1.0.0, the next version, it will be renamed as: 'esgtoolkit' (to finally remove all my active packages from CRAN)
@@ -20,7 +25,7 @@
 
 - Use [VineCopula](http://tnagler.github.io/VineCopula/) package instead of CDVine (archived) for dependency simulation (means there's also now VineCopula's R-Vine Copulas simulation)
 - Remove roxygen2 comments
-- Create website with pkgdown, including docs --> https://techtonique.github.io/ESGtoolkit/
+- Create website with pkgdown, including docs --> https://techtonique.github.io/esgtoolkit/
 
 
 # version 0.2.0
