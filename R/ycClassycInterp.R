@@ -467,133 +467,133 @@ fitted<- function(.Object)
   return(ts(getFittedvalues(.Object), deltat=t[2]-t[1]))
 }
 
-ycsummary <-   function(.Object)
-{
-   y <- list(obs = .Object@observedvalues, matsin = .Object@matsin, 
-   coeff = .Object@coefficients, fitted =.Object@fittedvalues, 
-   matsout = .Object@matsout, resid = .Object@residuals, 
-   typeres = .Object@typeres)
-   
-   if(max(y$obs) < 0.2 && (y$typeres != "rates"))
-   {
-     y$fitted <- euriborfromprice(0, y$matsout, y$fitted) 
-   }
-     
-   if(max(y$obs) > 0.2 && (y$typeres != "prices"))
-   {
-     y$fitted <- pricefromeuribor(0, y$matsout, y$fitted)
-   }       
-               
-   n <- length(y$obs)
-   if (.Object@method == "SW")
-   {p <- length(y$coeff) - 1}
-   else {p <- length(y$coeff)}
-   
-   cat("Residuals:", "\n")
-   print(summary(y$resid))
-   cat("\n")
-               
-   cat("Coefficients:", "\n")
-   cat(y$coeff, "\n")
-   cat("\n")
-   
-   # Total sum of squares
-   yobs <- y$obs
-   ybar <- mean(y$obs)
-   typeres <- y$typeres
-   u <- y$matsin
-   t <- y$matsout
-   indicemat <- pmatch(u, t)
-   
-   ychapeau <- y$fitted[indicemat]
-   
-   resid <- y$resid
-   
-   ESS <- crossprod(rep.int(ybar, n) - ychapeau)[1,1]
-   SSR <- crossprod(yobs - ychapeau)[1,1]
-   SST <- ESS + SSR
-   
-    cat("Total sum of squares:", "\n")
-    cat(SST, "\n")                             
-    cat("with", n - 1,"degrees of freedom","\n")      
-    cat("\n")
-               
-    cat("Explained sum of squares:", "\n")
-    cat(ESS, "\n")               
-    cat("with", p - 1,"degrees of freedom","\n")      
-    cat("\n")
-               
-    cat("Residual sum of squares:", "\n")
-    cat(SSR, "\n")
-    cat("with", n - p,"degrees of freedom","\n")
-    cat("\n")
-               
-    Rsquared <- 1 - SSR/SST
-    cat("Multiple R-squared ", "*", "Adjusted R-squared", "\n")
-    cat(Rsquared, "*", 1 - ((n-1)/(n-p))*(1 - Rsquared), "\n")
-    cat("\n")               
-               
-    if (try(shapiro.test(y$resid)$p.value, TRUE) >= 0.05 || n >= 30)
-    {
-     Fstat <- ((n-p)/(p-1))*(Rsquared/(1 - Rsquared))
-     suppressWarnings(cat("F-statistic:", Fstat, "on", 
-     n - p,"and", p-1, "degrees of freedom, p-value:", pf(Fstat, n-p, p-1), "\n"))
-    }
-}
+# ycsummary <-   function(.Object)
+# {
+#    y <- list(obs = .Object@observedvalues, matsin = .Object@matsin, 
+#    coeff = .Object@coefficients, fitted =.Object@fittedvalues, 
+#    matsout = .Object@matsout, resid = .Object@residuals, 
+#    typeres = .Object@typeres)
+#    
+#    if(max(y$obs) < 0.2 && (y$typeres != "rates"))
+#    {
+#      y$fitted <- euriborfromprice(0, y$matsout, y$fitted) 
+#    }
+#      
+#    if(max(y$obs) > 0.2 && (y$typeres != "prices"))
+#    {
+#      y$fitted <- pricefromeuribor(0, y$matsout, y$fitted)
+#    }       
+#                
+#    n <- length(y$obs)
+#    if (.Object@method == "SW")
+#    {p <- length(y$coeff) - 1}
+#    else {p <- length(y$coeff)}
+#    
+#    cat("Residuals:", "\n")
+#    print(summary(y$resid))
+#    cat("\n")
+#                
+#    cat("Coefficients:", "\n")
+#    cat(y$coeff, "\n")
+#    cat("\n")
+#    
+#    # Total sum of squares
+#    yobs <- y$obs
+#    ybar <- mean(y$obs)
+#    typeres <- y$typeres
+#    u <- y$matsin
+#    t <- y$matsout
+#    indicemat <- pmatch(u, t)
+#    
+#    ychapeau <- y$fitted[indicemat]
+#    
+#    resid <- y$resid
+#    
+#    ESS <- crossprod(rep.int(ybar, n) - ychapeau)[1,1]
+#    SSR <- crossprod(yobs - ychapeau)[1,1]
+#    SST <- ESS + SSR
+#    
+#     cat("Total sum of squares:", "\n")
+#     cat(SST, "\n")                             
+#     cat("with", n - 1,"degrees of freedom","\n")      
+#     cat("\n")
+#                
+#     cat("Explained sum of squares:", "\n")
+#     cat(ESS, "\n")               
+#     cat("with", p - 1,"degrees of freedom","\n")      
+#     cat("\n")
+#                
+#     cat("Residual sum of squares:", "\n")
+#     cat(SSR, "\n")
+#     cat("with", n - p,"degrees of freedom","\n")
+#     cat("\n")
+#                
+#     Rsquared <- 1 - SSR/SST
+#     cat("Multiple R-squared ", "*", "Adjusted R-squared", "\n")
+#     cat(Rsquared, "*", 1 - ((n-1)/(n-p))*(1 - Rsquared), "\n")
+#     cat("\n")               
+#                
+#     if (try(shapiro.test(y$resid)$p.value, TRUE) >= 0.05 || n >= 30)
+#     {
+#      Fstat <- ((n-p)/(p-1))*(Rsquared/(1 - Rsquared))
+#      suppressWarnings(cat("F-statistic:", Fstat, "on", 
+#      n - p,"and", p-1, "degrees of freedom, p-value:", pf(Fstat, n-p, p-1), "\n"))
+#     }
+# }
 
-ycplot <- function(.Object){               
-               
-indicatrice <- pmatch(.Object@matsin, .Object@matsout)               
-
-par(mfrow=c(2,2))
-
-ord <- .Object@fittedvalues
-x <- .Object@observedvalues
-
-    if(.Object@typeres == "rates")
-    {       
-                      if (max(.Object@observedvalues) > 0.2) 
-                      {x <- euriborfromprice(0, .Object@matsin, .Object@observedvalues)}                  
-                       
-                       plot(x = .Object@matsout, y = ord, 
-                            main = "(Red) Observed values and (Black) Fitted values", xlab = "Maturity",
-                            ylab = "Yield to maturity")               
-                       points(x = .Object@matsin, y = x, col="red", pch=3)
-                        
-                       plot(x = x, y = ord[indicatrice], 
-                            main = "Observed vs Fitted values", xlab="observed values", ylab="fitted values")
-                       abline(0, 1, col="red")                                    
-    } 
-    else 
-    { 
-                     if (max(.Object@observedvalues) < 0.2) 
-                     {x <- pricefromeuribor(0, .Object@matsin, .Object@observedvalues)}                  
-                     
-                       plot(x = .Object@matsout, y = ord, 
-                            main = "(Red) Observed values and (Black) Fitted values", xlab = "Maturity",
-                            ylab = "Zero-coupon price")               
-                       points(x = .Object@matsin, y = x, col="red", pch=3)
-                     
-                       plot(x = x, y = ord[indicatrice], 
-                            main = "Observed vs Fitted values", xlab="observed values", ylab="fitted values")
-                       abline(0, 1, col="red")                 
-    }               
-               
-               hist(.Object@residuals, main = paste("Histogram and density", "\n","of residuals"), 
-                    xlab = "residuals")
-               lines(density(.Object@residuals), col="red")
-
-              if(max(.Object@matsout) <= max(.Object@matsin))
-              {
-               qqnorm(.Object@residuals, main = "Residuals' Normal Q-Q plot")
-               qqline(.Object@residuals, col="red")
-              }
-              else
-              {
-                plot(forwardrates(.Object), main = "Extrapolated forward rates")
-              }
-}
-
+# ycplot <- function(.Object){               
+#                
+# indicatrice <- pmatch(.Object@matsin, .Object@matsout)               
+# 
+# par(mfrow=c(2,2))
+# 
+# ord <- .Object@fittedvalues
+# x <- .Object@observedvalues
+# 
+#     if(.Object@typeres == "rates")
+#     {       
+#                       if (max(.Object@observedvalues) > 0.2) 
+#                       {x <- euriborfromprice(0, .Object@matsin, .Object@observedvalues)}                  
+#                        
+#                        plot(x = .Object@matsout, y = ord, 
+#                             main = "(Red) Observed values and (Black) Fitted values", xlab = "Maturity",
+#                             ylab = "Yield to maturity")               
+#                        points(x = .Object@matsin, y = x, col="red", pch=3)
+#                         
+#                        plot(x = x, y = ord[indicatrice], 
+#                             main = "Observed vs Fitted values", xlab="observed values", ylab="fitted values")
+#                        abline(0, 1, col="red")                                    
+#     } 
+#     else 
+#     { 
+#                      if (max(.Object@observedvalues) < 0.2) 
+#                      {x <- pricefromeuribor(0, .Object@matsin, .Object@observedvalues)}                  
+#                      
+#                        plot(x = .Object@matsout, y = ord, 
+#                             main = "(Red) Observed values and (Black) Fitted values", xlab = "Maturity",
+#                             ylab = "Zero-coupon price")               
+#                        points(x = .Object@matsin, y = x, col="red", pch=3)
+#                      
+#                        plot(x = x, y = ord[indicatrice], 
+#                             main = "Observed vs Fitted values", xlab="observed values", ylab="fitted values")
+#                        abline(0, 1, col="red")                 
+#     }               
+#                
+#                hist(.Object@residuals, main = paste("Histogram and density", "\n","of residuals"), 
+#                     xlab = "residuals")
+#                lines(density(.Object@residuals), col="red")
+# 
+#               if(max(.Object@matsout) <= max(.Object@matsin))
+#               {
+#                qqnorm(.Object@residuals, main = "Residuals' Normal Q-Q plot")
+#                qqline(.Object@residuals, col="red")
+#               }
+#               else
+#               {
+#                 plot(forwardrates(.Object), main = "Extrapolated forward rates")
+#               }
+# }
+# 
 
 forwardrates <- function(.Object)
 {
@@ -601,10 +601,10 @@ forwardrates <- function(.Object)
   return(ts(getFwdrates(.Object), deltat=t[2]-t[1]))
 }
 
-tolist <- function(.Object)
-{
-   y <- list(matsin = .Object@matsin, obs = .Object@observedvalues, method = .Object@method, typeres = .Object@typeres,
-             coeff = .Object@coefficients, matsout = .Object@matsout, fitted =.Object@fittedvalues, fwdrates = .Object@fwdrates,
-             resid = .Object@residuals, UFR = .Object@UFR, T_UFR = .Object@T_UFR, extra = .Object@extrapvalues)
-   return(y)
-}
+# tolist <- function(.Object)
+# {
+#    y <- list(matsin = .Object@matsin, obs = .Object@observedvalues, method = .Object@method, typeres = .Object@typeres,
+#              coeff = .Object@coefficients, matsout = .Object@matsout, fitted =.Object@fittedvalues, fwdrates = .Object@fwdrates,
+#              resid = .Object@residuals, UFR = .Object@UFR, T_UFR = .Object@T_UFR, extra = .Object@extrapvalues)
+#    return(y)
+# }

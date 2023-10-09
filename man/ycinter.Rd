@@ -27,8 +27,7 @@
   return. Either "prices" or "rates".}
 }
 \value{
-  An S4 Object, that can be easily converted into a list with
-  \code{\link{tolist}}
+  An S4 Object
 }
 \description{
   Yield curve or zero-coupon bonds prices curve
