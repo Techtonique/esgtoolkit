@@ -1,7 +1,7 @@
 # version 1.0.0
 
 - rename `ESGtoolkit` to `esgtoolkit`
-- include `ycinter` and `ycextra` (?)
+- include `ycinter` and `ycextra` (from package `ycinterextra`, discontinued and unilaterally removed from CRAN)
 
 # version 0.6.0
 
