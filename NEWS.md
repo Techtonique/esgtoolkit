@@ -1,3 +1,8 @@
+# version 1.0.0
+
+- rename `ESGtoolkit` to `esgtoolkit`
+- include `ycinter` and `ycextra` (?)
+
 # version 0.6.0
 
 - include hermite cubic spline and Smith-Wilson methods for curve interpolation
