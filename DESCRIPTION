@@ -1,14 +1,14 @@
-Package: ESGtoolkit
+Package: esgtoolkit
 Type: Package
 Title: Toolkit for Monte Carlo Simulations
-Version: 0.6.0
-Date: 2023-09-16
+Version: 1.0.0
+Date: 2023-10-09
 Authors@R: c(
         person("T.", "Moudiki", , "thierry.moudiki@gmail.com", role = c("aut", "cre")
         )
       )
-URL: https://techtonique.github.io/ESGtoolkit/
-BugReports: https://github.com/Techtonique/ESGtoolkit/issues
+URL: https://github.com/Techtonique/esgtoolkit
+BugReports: https://github.com/Techtonique/esgtoolkit/issues
 Maintainer: T. Moudiki <thierry.moudiki@gmail.com>
 Description: A toolkit for Monte Carlo Simulations in Finance, Economics, Insurance, Physics. Multiple simulation models can be created by combining building blocks provided in the package.   
 License: BSD_3_clause Clear + file LICENSE

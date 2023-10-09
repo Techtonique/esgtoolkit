@@ -27,5 +27,5 @@ importFrom("graphics", "abline", "lines", "matplot", "par", "plot",
 importFrom("stats", "cor", "cor.test", "deltat", "end", "is.ts", "pt",
              "qnorm", "qt", "quantile", "sd", "start", "t.test", "time",
              "ts", "tsp", "window")
-useDynLib("ESGtoolkit")
+useDynLib("esgtoolkit")
 
