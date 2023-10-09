@@ -1,0 +1,150 @@
+---
+title: "G2++"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{G2++}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+rm(list=ls()) # beware, removes everything in your environment
+
+library(esgtoolkit)
+
+# Observed maturities
+u <- 1:30
+
+# Yield to maturities
+txZC <- c(0.01422,0.01309,0.01380,0.01549,0.01747,0.01940,
+          0.02104,0.02236,0.02348, 0.02446,0.02535,0.02614,
+          0.02679,0.02727,0.02760,0.02779,0.02787,0.02786,
+          0.02776,0.02762,0.02745,0.02727,0.02707,0.02686,
+          0.02663,0.02640,0.02618,0.02597,0.02578,0.02563)
+
+# discount factors
+p <- c(0.9859794,0.9744879,0.9602458,0.9416551,0.9196671,
+       0.8957363,0.8716268,0.8482628,0.8255457,0.8034710,
+       0.7819525,0.7612204,0.7416912,0.7237042,0.7072136
+       ,0.6922140,0.6785227,0.6660095,0.6546902,0.6441639,
+       0.6343366,0.6250234,0.6162910,0.6080358,0.6003302,
+       0.5929791,0.5858711,0.5789852,0.5722068,0.5653231)
+
+# Creating a function for the simulation of G2++
+# Function of the number of scenarios, the method (
+# antithetic or not)
+simG2plus <- function(n, methodyc = c("fmm", "hyman", "HCSPL", "SW"))
+{
+    # Horizon, number of simulations, frequency
+    horizon <- 20
+    freq <- "semi-annual" 
+    delta_t <- 1/2
+    # Parameters found for the G2++
+    a_opt <- 0.50000000
+    b_opt <- 0.35412030
+    sigma_opt <- 0.09416266
+    rho_opt <- -0.99855687
+    eta_opt <- 0.08439934
+    # Simulation of gaussian correlated shocks
+    eps <- esgtoolkit::simshocks(n = n, horizon = horizon,
+                     frequency = "semi-annual",
+                     family = 1, par = rho_opt)
+    # Simulation of the factor x
+    x <- esgtoolkit::simdiff(n = n, horizon = horizon, 
+                 frequency = freq,  
+                 model = "OU", 
+                 x0 = 0, theta1 = 0, theta2 = a_opt, theta3 = sigma_opt,
+                 eps = eps[[1]])
+    # Simulation of the factor y
+    y <- esgtoolkit::simdiff(n = n, horizon = horizon, 
+                 frequency = freq,  
+                 model = "OU", 
+                 x0 = 0, theta1 = 0, theta2 = b_opt, theta3 = eta_opt,
+                 eps = eps[[2]])
+    # Instantaneous forward rates, with spline interpolation
+    methodyc <- match.arg(methodyc)
+    fwdrates <- esgtoolkit::esgfwdrates(n = n, horizon = horizon, 
+    out.frequency = freq, in.maturities = u, 
+    in.zerorates = txZC, method = methodyc)
+    fwdrates <- window(fwdrates, end = horizon)
+    # phi
+    t.out <- seq(from = 0, to = horizon, 
+                 by = delta_t)
+    param.phi <- 0.5*(sigma_opt^2)*(1 - exp(-a_opt*t.out))^2/(a_opt^2) + 
+    0.5*(eta_opt^2)*(1 - exp(-b_opt*t.out))^2/(b_opt^2) +
+      (rho_opt*sigma_opt*eta_opt)*(1 - exp(-a_opt*t.out))*
+      (1 - exp(-b_opt*t.out))/(a_opt*b_opt)
+    param.phi <- ts(replicate(n, param.phi), 
+                    start = start(x), deltat = deltat(x))
+    phi <- fwdrates + param.phi
+    colnames(phi) <- c(paste0("Series ", 1:n))
+    # The short rates
+    r <- x + y + phi
+    colnames(r) <- c(paste0("Series ", 1:n))
+    return(r)
+}
+```
+
+```{r}
+set.seed(3)
+# 4 types of simulations, by changing the number of scenarios
+ptm <- proc.time()
+r_SW <- simG2plus(n = 100, methodyc = "hyman")
+proc.time() - ptm
+```
+
+```{r fig.width=7.2}
+par(mfrow=c(1, 2))
+esgtoolkit::esgplotbands(r_SW, xlab = 'time', ylab = 'short rate')
+matplot(r_SW, type = 'l', xlab = 'time', ylab = 'short rate')
+```
+
+```{r}
+# Stochastic deflators :
+deltat_r <- deltat(r_SW)
+Dt_SW <- esgtoolkit::esgdiscountfactor(r = r_SW, X = 1)
+Dt_SW <- window(Dt_SW, start = deltat_r, deltat = 2*deltat_r)
+```
+
+```{r}
+# Market prices
+horizon <- 20
+marketprices <- p[1:horizon]
+# Monte Carlo prices
+montecarloprices_SW <- rowMeans(Dt_SW)
+montecarlo_ci <- apply(Dt_SW, 1, function(x) t.test(x)$conf.int)
+
+# Confidence intervals
+estim_SW <- apply(Dt_SW - marketprices, 1, function(x) t.test(x)$estimate)
+conf_int_SW <- apply(Dt_SW - marketprices, 1, function(x) t.test(x)$conf.int)
+conf_int_SW
+```
+
+```{r fig.width=7.2}
+par(mfrow=c(1, 2))
+plot(marketprices, col = "blue", type = 'l', 
+     xlab = "time", ylab = "prices", main = "Prices")
+points(montecarloprices_SW, col = "red")
+#lines(montecarlo_ci[1, ], color = "red", lty = 2)
+#lines(montecarlo_ci[2, ], color = "red", lty = 2)
+matplot(t(conf_int_SW), type = "l", xlab = "time", 
+        ylab = "", main = "Confidence Interval \n for the price difference")
+lines(estim_SW, col = "blue")
+```
+
+
+```{r}
+difference <- (Dt_SW - marketprices)
+```
+
+**test for the "martingale" difference** (this implementation is very slow)
+
+```{r echo=TRUE, cache=TRUE}
+lapply(1:nrow(difference), function(i) vrtest::DL.test(difference[i, ]))
+```
+
+```{r fig.width=7.2}
+boxplot(t(difference))
+abline(h = 0, color = "red", lty = 2)
+```
+
