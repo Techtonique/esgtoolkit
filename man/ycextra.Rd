@@ -83,9 +83,6 @@
 \author{
   Thierry Moudiki
 }
-\seealso{
-  \code{\link{ycsummary}}
-}
 \keyword{curve}
 \keyword{extrapolation,}
 \keyword{yield}

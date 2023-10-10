@@ -80,9 +80,6 @@
 \author{
   Thierry Moudiki
 }
-\seealso{
-  \code{\link{ycsummary}}
-}
 \keyword{curve}
 \keyword{interpolation,}
 \keyword{yield}
