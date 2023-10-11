@@ -138,8 +138,8 @@ difference <- (Dt_SW - marketprices)
 ```
 
 
-```{r eval=FALSE, include=FALSE}
-lapply(1:nrow(difference), function(i) vrtest::DL.test(difference[i, ]))
+```{r}
+lapply(1:nrow(difference), function(i) esgtoolkit::dltest(difference[i, ]))
 ```
 
 ```{r fig.width=7.2}
