@@ -159,6 +159,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Mammen_cpp
+NumericVector Mammen_cpp(const unsigned long int n);
+RcppExport SEXP _esgtoolkit_Mammen_cpp(SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const unsigned long int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(Mammen_cpp(n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// DLtest_cpp
+List DLtest_cpp(NumericVector y, const unsigned long int p);
+RcppExport SEXP _esgtoolkit_DLtest_cpp(SEXP ySEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const unsigned long int >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(DLtest_cpp(y, p));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_esgtoolkit_rnormESGcpp", (DL_FUNC) &_esgtoolkit_rnormESGcpp, 2},
@@ -170,6 +193,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_esgtoolkit_rGBMjumpsnormESGcpp", (DL_FUNC) &_esgtoolkit_rGBMjumpsnormESGcpp, 10},
     {"_esgtoolkit_rGBMjumpskouESGcpp", (DL_FUNC) &_esgtoolkit_rGBMjumpskouESGcpp, 11},
     {"_esgtoolkit_TAGcorecpp", (DL_FUNC) &_esgtoolkit_TAGcorecpp, 5},
+    {"_esgtoolkit_Mammen_cpp", (DL_FUNC) &_esgtoolkit_Mammen_cpp, 1},
+    {"_esgtoolkit_DLtest_cpp", (DL_FUNC) &_esgtoolkit_DLtest_cpp, 2},
     {NULL, NULL, 0}
 };
 

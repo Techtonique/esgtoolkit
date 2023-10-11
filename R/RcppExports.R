@@ -37,3 +37,11 @@ TAGcorecpp <- function(sim, sj_down, sj_up, n, p) {
     .Call('_esgtoolkit_TAGcorecpp', PACKAGE = 'esgtoolkit', sim, sj_down, sj_up, n, p)
 }
 
+Mammen_cpp <- function(n) {
+    .Call('_esgtoolkit_Mammen_cpp', PACKAGE = 'esgtoolkit', n)
+}
+
+DLtest_cpp <- function(y, p) {
+    .Call('_esgtoolkit_DLtest_cpp', PACKAGE = 'esgtoolkit', y, p)
+}
+

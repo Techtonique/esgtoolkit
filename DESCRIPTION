@@ -15,6 +15,8 @@ License: BSD_3_clause Clear + file LICENSE
 Depends: ggplot2, gridExtra, methods, reshape2, VineCopula, randtoolbox
 Imports: Rcpp(>= 0.11.0)
 Suggests: 
+    knitr,
+    rmarkdown,
     devtools,
     testthat
 LinkingTo: Rcpp
@@ -23,3 +25,4 @@ NeedsCompilation: yes
 Repository: CRAN
 Date/Publication: 2014-06-13 06:17:14
 RoxygenNote: 7.2.2
+VignetteBuilder: knitr

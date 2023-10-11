@@ -4,6 +4,6 @@
     utils::packageVersion(pkgname),
     " of ",
     pkgname,
-    ". Starting with 1.0.0, the next version, it will be renamed as: 'esgtoolkit' (to finally remove all my active packages from CRAN) \n \n "
+    ". Starting with 1.0.0, it will be renamed as: 'esgtoolkit' (to finally remove all my active packages from CRAN) \n \n "
   )
 } 

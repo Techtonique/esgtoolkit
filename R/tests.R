@@ -104,6 +104,37 @@ esgmartingaletest <- function(r, X, p0, alpha = 0.05)
 }
 
 
+# Martingale difference test (adapted from vrtest::DL.test)
+dltest <- function(y, B = 300, p = 1)
+{
+  n <- length(y)
+  Stat <- DLtest_cpp(y, p)
+  statmat1 <- statmat2 <- rep(0, B)
+  
+  for(i in 1:B){
+    m <- Mammen_cpp(n)
+    ys <- (y- mean(y))*(m - mean(m))
+    Stats <- DLtest_cpp(ys, p)
+    statmat1[i] = Stats$Cpstat
+    statmat2[i] = Stats$Kpstat
+  }
+  
+  tem <- abs(statmat1) > abs(Stat$Cpstat)
+  tem[tem == "TRUE"] <- 1
+  p1 <- mean(tem)
+  
+  tem <- abs(statmat2) > abs(Stat$Kpstat)
+  tem[tem == "TRUE"] <- 1
+  p2 <- mean(tem)
+  
+  return(list(
+    Cp = Stat$Cpstat,
+    Kp = Stat$Kpstat,
+    Cp_pval = p1,
+    Kp_pval = p2
+  ))
+}
+
 # Correlation test for shocks --------------------------------------------------------
 
 
