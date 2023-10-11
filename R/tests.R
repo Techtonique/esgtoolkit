@@ -109,15 +109,11 @@ dltest <- function(y, B = 300, p = 1)
 {
   n <- length(y)
   Stat <- DLtest_cpp(y, p)
-  statmat1 <- statmat2 <- rep(0, B)
-  
-  for(i in 1:B){
-    m <- Mammen_cpp(n)
-    ys <- (y- mean(y))*(m - mean(m))
-    Stats <- DLtest_cpp(ys, p)
-    statmat1[i] = Stats$Cpstat
-    statmat2[i] = Stats$Kpstat
-  }
+  #statmat1 <- statmat2 <- rep(0, B)
+
+  list_statmat <- getStats_cpp(y, B, p)
+  statmat1 <- list_statmat$statmat1
+  statmat2 <- list_statmat$statmat2
   
   tem <- abs(statmat1) > abs(Stat$Cpstat)
   tem[tem == "TRUE"] <- 1

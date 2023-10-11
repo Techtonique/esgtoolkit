@@ -45,3 +45,7 @@ DLtest_cpp <- function(y, p) {
     .Call('_esgtoolkit_DLtest_cpp', PACKAGE = 'esgtoolkit', y, p)
 }
 
+getStats_cpp <- function(y, B, p) {
+    .Call('_esgtoolkit_getStats_cpp', PACKAGE = 'esgtoolkit', y, B, p)
+}
+

@@ -16,13 +16,18 @@ double crossprod_cpp(NumericVector x, NumericVector y)
   return(res);
 }
 
-double prod(NumericVector x)
+NumericVector vectProd(NumericVector x, NumericVector y)
 {
   const unsigned long int n = x.size();
-  double res = 0;
+  if (y.size() != n) {
+    ::Rf_error("you must have x.size() == y.size()");
+  }
+  
+  NumericVector res(n);
+  
   for (unsigned long int i = 0; i < n; i++)
   {
-    res *= x(i);
+    res(i) = x(i)*y(i);
   }
   return(res);
 }
@@ -140,6 +145,41 @@ List DLtest_cpp(NumericVector y, const unsigned long int p)
   
   return(res);
 }
+
+// [[Rcpp::export]]
+List getStats_cpp(NumericVector y, const unsigned long int B, const unsigned int p)
+{
+  const unsigned long int n = y.size(); 
+  NumericVector m(n);
+  NumericVector ys(n);
+  List Stats = List::create(Named("Cpstat") =  0, _["Kpstat"] = 0);;
+  NumericVector statmat1(B);
+  NumericVector statmat2(B);
+  
+  for (unsigned long int i = 0; i < B; i++) {
+    m = Mammen_cpp(n);
+    // Rprintf("the value of m[%i] : %f \n", 0, m[0]);
+    // Rprintf("the value of m[%i] : %f \n", 1, m[1]);
+    // Rprintf("the value of m[%i] : %f \n", 2, m[2]);
+    ys = vectProd(y- mean(y), m - mean(m));
+    // Rprintf("the value of ys[%i] : %f \n", 0, ys[0]);
+    // Rprintf("the value of ys[%i] : %f \n", 1, ys[1]);
+    // Rprintf("the value of ys[%i] : %f \n", 2, ys[2]);
+    Stats = DLtest_cpp(ys, p);
+    statmat1(i) = Stats["Cpstat"];
+    statmat2(i) = Stats["Kpstat"];
+  }
+  return(List::create(Named("statmat1") = statmat1, 
+                      _["statmat2"] = statmat2));
+}
+
+// for (i in 1:B) {
+//   m <- Mammen(n)
+//   ys <- (y - mean(y)) * (m - mean(m))
+//   Stats <- DLtest(ys, p)
+//   statmat1[i, 1] = Stats$Cpstat
+//   statmat2[i, 1] = Stats$Kpstat
+// }
 
 /*** R
 #set.seed(123); Mammen_cpp(10)

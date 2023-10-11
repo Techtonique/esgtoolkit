@@ -182,6 +182,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getStats_cpp
+List getStats_cpp(NumericVector y, const unsigned long int B, const unsigned int p);
+RcppExport SEXP _esgtoolkit_getStats_cpp(SEXP ySEXP, SEXP BSEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const unsigned long int >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const unsigned int >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(getStats_cpp(y, B, p));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_esgtoolkit_rnormESGcpp", (DL_FUNC) &_esgtoolkit_rnormESGcpp, 2},
@@ -195,6 +208,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_esgtoolkit_TAGcorecpp", (DL_FUNC) &_esgtoolkit_TAGcorecpp, 5},
     {"_esgtoolkit_Mammen_cpp", (DL_FUNC) &_esgtoolkit_Mammen_cpp, 1},
     {"_esgtoolkit_DLtest_cpp", (DL_FUNC) &_esgtoolkit_DLtest_cpp, 2},
+    {"_esgtoolkit_getStats_cpp", (DL_FUNC) &_esgtoolkit_getStats_cpp, 3},
     {NULL, NULL, 0}
 };
 
