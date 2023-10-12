@@ -137,13 +137,26 @@ lines(estim_SW, col = "blue")
 difference <- (Dt_SW - marketprices)
 ```
 
-
 ```{r}
+print(dim(difference))
+```
+
+**A test of the martingale hypothesis**
+
+```{r cache=TRUE}
 lapply(1:nrow(difference), function(i) esgtoolkit::dltest(difference[i, ]))
 ```
 
+**A 2nd test of the martingale hypothesis**
+
+```{r}
+print(str(HDTSA::MartG_test(t(difference))))
+```
+
+**Distribution of the difference**
+
 ```{r fig.width=7.2}
 boxplot(t(difference))
-abline(h = 0, color = "red", lty = 2)
+abline(h = 0, col = "red", lty = 2)
 ```
 

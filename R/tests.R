@@ -104,7 +104,7 @@ esgmartingaletest <- function(r, X, p0, alpha = 0.05)
 }
 
 
-# Martingale difference test (adapted from vrtest::DL.test)
+# Martingale difference test (adapted from vrtest::DL.test in Rcpp)
 dltest <- function(y, B = 300, p = 1)
 {
   n <- length(y)
