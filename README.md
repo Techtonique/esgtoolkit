@@ -2,6 +2,7 @@ esgtoolkit | <a class="github-button" href="https://github.com/Techtonique/esgto
 ==========
 
 [![Last Commit](https://img.shields.io/github/last-commit/Techtonique/esgtoolkit)](https://github.com/Techtonique/esgtoolkit)
+[![HitCount](https://hits.dwyl.com/Techtonique/esgtoolkit.svg?style=flat-square)](http://hits.dwyl.com/Techtonique/esgtoolkit)
 
 **Important:** Starting with 1.0.0, the package is renamed as lower case 'esgtoolkit' (to finally remove all my active packages from CRAN)
 
