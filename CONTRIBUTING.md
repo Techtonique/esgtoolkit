@@ -1,4 +1,4 @@
-# `ESGtoolkit` Code of Conduct
+# `esgtoolkit` Code of Conduct
 
 ## 1. Purpose
 

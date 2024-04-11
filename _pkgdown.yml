@@ -2,7 +2,7 @@ template:
   params:
     bootswatch: darkly
     ganalytics: UA-146345113-2
-url: https://techtonique.github.io/ESGtoolkit/
+url: https://techtonique.github.io/esgtoolkit/
 home:
   title: A Toolkit for Monte Carlo Simulations
   description: >
@@ -14,8 +14,8 @@ authors:
 repo:
   url:
     home: https://github.com/Techtonique/
-    source: https://github.com/Techtonique/ESGtoolkit/
-    issue: https://github.com/Techtonique/ESGtoolkit/issues
+    source: https://github.com/Techtonique/esgtoolkit/
+    issue: https://github.com/Techtonique/esgtoolkit/issues
     user: https://github.com/Techtonique/
 navbar:
   structure:
