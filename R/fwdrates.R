@@ -23,7 +23,7 @@ esgfwdrates <- function(in.maturities, in.zerorates,
   
   max.in.maturities <- max(in.maturities)
   
-  if (horizon > max.in.maturities)
+  if (horizon > (max.in.maturities + .Machine$double.eps))
     stop("not enough maturities for the provided horizon")
   
   frequency <- match.arg(out.frequency)

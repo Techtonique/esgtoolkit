@@ -1,3 +1,7 @@
+# version 0.6.3
+
+- Fix weird bug on `horizon > max.in.maturities`
+
 # version 0.6.2
 
 - **Important:** Starting with 1.0.0, the next version, it will be renamed as: 'esgtoolkit' (to finally remove all my active packages from CRAN)
