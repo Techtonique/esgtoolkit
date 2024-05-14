@@ -6,7 +6,6 @@
 
 - rename `ESGtoolkit` to `esgtoolkit` (announced [here](https://thierrymoudiki.github.io/blog/2023/10/02/r/esgtoolkit-v062))
 - include `ycinter` and `ycextra` (from package `ycinterextra`, discontinued and unilaterally removed from CRAN)
->>>>>>> b49f83e81d96d0c95c7710bf103775fa2873a988
 
 # version 0.6.2
 

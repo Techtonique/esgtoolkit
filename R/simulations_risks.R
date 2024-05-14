@@ -43,9 +43,6 @@ simdiff <- function(n, horizon,
                  with same number of observations, horizon and frequency to obtain 'eps'"))
   }
   
-  if (!is.null(start))
-    stopifnot(identical(start(eps), start))
-  
   if(model == "GBM")
   {
     if (!is.null(theta3)) 
