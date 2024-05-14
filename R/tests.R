@@ -53,12 +53,13 @@ esgmartingaletest <- function(r, X, p0, alpha = 0.05)
   {
     Y <- ts(matrix(data = rep(p0, nrow.r*ncol.r), 
                    nrow = nrow.r, ncol = ncol.r), 
-            start = 0, deltat = delta_X)
+            start = start(r), 
+            deltat = delta_X)
   }
   else
   {
     Y <- ts(data = replicate(ncol.r, p0), 
-            start = 0, deltat = delta_X)    
+            start = start(r), deltat = delta_X)    
   }
   
   delta_Y <- delta_X  
