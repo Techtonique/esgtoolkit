@@ -132,7 +132,7 @@ esgplotshocks <-  function(x, y = NULL)
   }
   
   #placeholder plot - prints nothing at all
-  empty <- ggplot()+ggplot2::geom_point(ggplot2::aes(1,1), colour="white") +
+  empty <- ggplot2::ggplot()+ggplot2::geom_point(ggplot2::aes(1,1), colour="white") +
     ggplot2::theme(                              
       plot.background = ggplot2::element_blank(), 
       panel.grid.major = ggplot2::element_blank(), 
@@ -147,19 +147,19 @@ esgplotshocks <-  function(x, y = NULL)
     )
   
   #scatterplot of x and y variables
-  scatter <- ggplot(xy, ggplot2::aes(xvar, yvar)) + 
+  scatter <- ggplot2::ggplot(xy, ggplot2::aes(xvar, yvar)) + 
     ggplot2::geom_point(ggplot2::aes(color=zvar)) + 
     ggplot2::scale_color_manual(values = c("blue", "red")) + 
     ggplot2::theme(legend.position=c(1,1),legend.justification=c(1,1)) 
   
   #marginal density of x - plot on top
-  plot_top <- ggplot(xy, ggplot2::aes(xvar, fill=zvar)) + 
+  plot_top <- ggplot2::ggplot(xy, ggplot2::aes(xvar, fill=zvar)) + 
     ggplot2::geom_density(alpha=.5) + 
     ggplot2::scale_fill_manual(values = c("blue", "red")) + 
     ggplot2::theme(legend.position = "none")
   
   #marginal density of y - plot on the right
-  plot_right <- ggplot(xy, ggplot2::aes(yvar, fill=zvar)) + 
+  plot_right <- ggplot2::ggplot(xy, ggplot2::aes(yvar, fill=zvar)) + 
     ggplot2::geom_density(alpha=.5) + 
     ggplot2::coord_flip() + 
     ggplot2::scale_fill_manual(values = c("blue", "red")) + 
