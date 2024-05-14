@@ -13,6 +13,7 @@ export(simshocks)
 export(forwardrates)
 export(ycextra)
 export(ycinter)
+export(debug_print)
 importFrom("graphics", "hist")
 importFrom("methods", "new")
 importFrom("stats", "density", "median", "nlminb", "optim", "pf",

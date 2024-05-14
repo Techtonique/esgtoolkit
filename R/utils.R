@@ -8,6 +8,13 @@ euriborfromprice <- function(t, T, ZC)
 }
 euriborfromprice <- compiler::cmpfun(euriborfromprice)
 
+#' @export
+debug_print <- function(x) {
+  cat("\n")
+  print(paste0(deparse(substitute(x)), "'s value:"))
+  print(x)
+  cat("\n")
+}
 
 # simply coumpounded zero-coupon price
 pricefromeuribor <- function(t, T, L)

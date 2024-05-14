@@ -42,7 +42,7 @@ esgmartingaletest <- function(r, X, p0, alpha = 0.05)
   if (length(r) == 1) 
   {
     r <- ts(data = matrix(data = r, nrow = nrow(X), ncol = ncol(X)), 
-            start = 0, deltat = delta_X)
+            start = start(X), deltat = delta_X)
   }  
   nrow.r <- nrow(r)
   ncol.r <- ncol(r)  
@@ -59,7 +59,8 @@ esgmartingaletest <- function(r, X, p0, alpha = 0.05)
   else
   {
     Y <- ts(data = replicate(ncol.r, p0), 
-            start = start(r), deltat = delta_X)    
+            start = start(r), 
+            deltat = delta_X)    
   }
   
   delta_Y <- delta_X  
@@ -68,7 +69,16 @@ esgmartingaletest <- function(r, X, p0, alpha = 0.05)
   
   n <- ncol(MartingaleDiff) 
   meanMartingaleDiff <- rowMeans(MartingaleDiff[-1, ])  
-  sdMartingaleDiff <- apply(MartingaleDiff[-1, ], 1, sd)  
+  sdMartingaleDiff <- apply(MartingaleDiff[-1, ], 1, sd)
+  if (is.ts(MartingaleDiff))
+  {
+    meanMartingaleDiff <- ts(meanMartingaleDiff, 
+                             deltat = deltat(MartingaleDiff),
+                             end = end(MartingaleDiff))  
+    sdMartingaleDiff <- ts(sdMartingaleDiff, 
+                           deltat = deltat(MartingaleDiff),
+                           end = end(MartingaleDiff))
+  }
   qtStudent <- qt(p = 1 - alpha/2, df = (n - 1))  
   stat_t <- meanMartingaleDiff/(sdMartingaleDiff/sqrt(n))  
   p_value <- pt(q = abs(stat_t), df = (n - 1), lower.tail = F) + 
@@ -79,14 +89,20 @@ esgmartingaletest <- function(r, X, p0, alpha = 0.05)
                 samplemean = meanMartingaleDiff, 
                 conf.int = ts(cbind(c(0, meanMartingaleDiff - qtStudent * sdMartingaleDiff/sqrt(n)), 
                                     c(0, meanMartingaleDiff + qtStudent * sdMartingaleDiff/sqrt(n))),
-                              start = 0, deltat = delta_Y),
+                              deltat = deltat(MartingaleDiff),
+                              end = end(MartingaleDiff)),
                 truemean = rep.int(0, dim(MartingaleDiff)[1]), 
-                true_prices = Y[1:nrow(MartingaleDiff), 1], mc.prices = rowMeans(Dt))  
+                true_prices = Y[1:nrow(MartingaleDiff), 1], mc.prices = rowMeans(Dt)) 
+  
   start_Y <- start(Y)  
   
-  mat.ci <- ts(mc.ci$conf.int, start = 0, deltat = delta_Y)  
+  mat.ci <- ts(mc.ci$conf.int, 
+               deltat = deltat(MartingaleDiff),
+               end = end(MartingaleDiff))  
   colnames(mat.ci) <- c("c.i lower bound", "c.i upper bound")  
-  t_val_p_val <- ts(cbind(mc.ci$t, mc.ci$p.value), start = delta_Y, deltat = delta_Y)  
+  t_val_p_val <- ts(cbind(mc.ci$t, mc.ci$p.value), 
+                    deltat = deltat(MartingaleDiff),
+                    end = end(MartingaleDiff))  
   colnames(t_val_p_val) <- c("t", "p-value")
   
   cat("\n")
