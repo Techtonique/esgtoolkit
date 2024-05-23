@@ -94,7 +94,9 @@ esgmcprices <- function(r, X, maturity = NULL)
     return(Y) 
   }
   
-  Z <- ts(rowMeans(Y), start = start(Y), deltat = deltat(Y))
+  Z <- ts(rowMeans(Y), 
+          start = start(Y), 
+          deltat = deltat(Y))
   
   if(!is.null(maturity))
   {
