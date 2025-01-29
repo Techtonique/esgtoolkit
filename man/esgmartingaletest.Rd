@@ -4,7 +4,9 @@
 \alias{esgmartingaletest}
 \title{Martingale and market consistency tests}
 \usage{
-esgmartingaletest(r, X, p0, alpha = 0.05)
+esgmartingaletest(r, X, p0, alpha = 0.05, method=c("onevsone", 
+                                       "trend",
+                                       "ratio"))
 }
 \arguments{
 \item{r}{a \code{numeric} or a time series object, the risk-free rate(s).}
@@ -15,6 +17,9 @@ esgmartingaletest(r, X, p0, alpha = 0.05)
 initial price(s) of an asset.}
 
 \item{alpha}{1 - confidence level for the test. Default value is 0.05.}
+
+\item{method}{"onevsone", "trend", "ratio".}
+
 }
 \value{
 The function result can be just displayed. Otherwise, you can get a list 
