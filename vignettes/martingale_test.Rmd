@@ -1,0 +1,34 @@
+---
+title: "Martingale tests"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Martingale tests}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r fig.width=7.5}
+rm(list=ls()) # beware, removes everything in your environment
+
+library(esgtoolkit)
+
+r0 <- 0.03
+S0 <- 100
+
+set.seed(10)
+eps0 <- simshocks(n = 100, horizon = 3, frequency = "quart")
+sim.GBM <- simdiff(n = 100, horizon = 3, frequency = "quart",   
+                   model = "GBM", 
+                   x0 = S0, theta1 = r0, theta2 = 0.1, 
+                   eps = eps0, seed=10001)
+
+(mc.test <- esgmartingaletest(r = r0, X = sim.GBM, p0 = S0, 
+                             alpha = 0.05, method = "trend"))
+
+(mc.test <- esgmartingaletest(r = r0, X = sim.GBM, p0 = S0, 
+                             alpha = 0.05, method = "ratio"))
+
+(mc.test <- esgmartingaletest(r = r0, X = sim.GBM, p0 = S0, alpha = 0.05))
+esgplotbands(mc.test) 
+```
+

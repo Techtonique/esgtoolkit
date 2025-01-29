@@ -35,8 +35,12 @@ esgmccv <- function(r, X, maturity, plot = TRUE, ...)
 
 
 # Martingale and market consistency tests
-esgmartingaletest <- function(r, X, p0, alpha = 0.05)
+esgmartingaletest <- function(r, X, p0, alpha = 0.05, 
+                              method=c("onevsone", 
+                                       "trend",
+                                       "ratio"))
 {   
+  method <- match.arg(method)
   delta_X <- deltat(X)
   
   if (length(r) == 1) 
@@ -65,7 +69,15 @@ esgmartingaletest <- function(r, X, p0, alpha = 0.05)
   
   delta_Y <- delta_X  
   Dt <- esgdiscountfactor(r, X)
+  if (method == "ratio")
+  {
+    return(t.test(x=-log(Dt/Y), conf.level = (1 - alpha)))
+  }
   MartingaleDiff <- Dt - Y
+  if (method == "trend")
+  {
+    return(suppressWarnings(martingale_test(MartingaleDiff, level = 100*(1 - alpha))))
+  }
   
   n <- ncol(MartingaleDiff) 
   meanMartingaleDiff <- rowMeans(MartingaleDiff[-1, ])  
@@ -147,3 +159,98 @@ esgcortest <- function(x, alternative = c("two.sided", "less", "greater"),
                                                                      conf.level = conf.level)$conf.int)), start = delta_x, 
                             deltat = delta_x)))
 }
+
+
+
+
+martingale_test <- function(X) {
+  n <- nrow(X)
+  p <- ncol(X)
+  
+  # Compute Y as the difference between the last two rows
+  Y <- X[n, ] - X[n-1, ]
+  
+  # Create predictors (past values of X up to t_n-1)
+  X_past <- X[1:(n-1), ]
+  
+  # Fit the multiple regression model
+  model <- lm(Y ~ X_past)
+  
+  # Compute F-statistic
+  f_stat <- summary(model)$fstatistic
+  F_obs <- f_stat[1]
+  df1 <- f_stat[2]
+  df2 <- f_stat[3]
+  
+  # Compute p-value
+  p_value <- pf(F_obs, df1, df2, lower.tail = FALSE)
+  
+  # Compute critical value at 5% significance level
+  F_critical <- qf(0.95, df1, df2)
+  
+  # Extract residuals
+  residuals <- residuals(model)
+  
+  # Perform ADF test for stationarity on the residuals
+  adf_result <- adf.test(residuals)
+
+  # Perform Ljung-Box test for autocorrelation on the residuals
+  lb_test <- Box.test(residuals, lag = 10, type = "Ljung-Box")
+  lb_p_value <- lb_test$p.value
+
+  return(list(
+    F_statistic = F_obs,
+    Critical_value = F_critical,
+    P_value = p_value,
+    ADF_p_value = adf_result$p.value,
+    Stationarity = stationarity_decision,
+    Ljung_Box_P_value = lb_p_value,
+    Ljung_Box_Decision = lb_decision
+  ))
+}
+
+martingale_test <- function(X, level=95) {
+  n <- nrow(X)
+  p <- ncol(X)
+  
+  # Compute Y as the difference between the last two rows
+  Y <- X[n, ] - X[n-1, ]
+  
+  # Create predictors (past values of X up to t_n-1)
+  X_past <- t(X[1:(n-1), ])
+  
+  # Fit the multiple regression model
+  model <- lm(Y ~ X_past)
+  
+  # Compute F-statistic
+  f_stat <- summary(model)$fstatistic
+  F_obs <- f_stat[1]
+  df1 <- f_stat[2]
+  df2 <- f_stat[3]
+  
+  # Compute p-value
+  p_value <- pf(F_obs, df1, df2, lower.tail = FALSE)
+  
+  # Compute critical value at 5% significance level
+  F_critical <- qf(level/100, df1, df2)
+  
+  # Extract residuals
+  residuals <- model$residuals
+  
+  # Perform ADF test for stationarity on the residuals
+  adf_result <- tseries::adf.test(residuals)
+  
+  # Perform Ljung-Box test for autocorrelation on the residuals
+  lb_test <- stats::Box.test(residuals, lag = 1L, 
+                             type = "Ljung-Box")
+  lb_p_value <- lb_test$p.value
+  
+  return(list(
+    F_statistic = F_obs,
+    F_critical_value = F_critical,
+    F_p_value = p_value,
+    ADF_p_value = 1 - adf_result$p.value,
+    Ljung_Box_p_value = lb_p_value
+  ))
+}
+
