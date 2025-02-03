@@ -52,6 +52,9 @@ alpha = 0.05)
 esgplotbands(mc.test)                
 
 }
+\references{
+T. Moudiki (2024), A test of the Martingale Hypothesis, https://www.researchgate.net/publication/388490056_A_test_of_the_martingale_hypothesis
+}
 \seealso{
 \code{\link{esgplotbands}}
 }

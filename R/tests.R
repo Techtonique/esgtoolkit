@@ -161,54 +161,6 @@ esgcortest <- function(x, alternative = c("two.sided", "less", "greater"),
 }
 
 
-
-
-martingale_test <- function(X) {
-  n <- nrow(X)
-  p <- ncol(X)
-  
-  # Compute Y as the difference between the last two rows
-  Y <- X[n, ] - X[n-1, ]
-  
-  # Create predictors (past values of X up to t_n-1)
-  X_past <- X[1:(n-1), ]
-  
-  # Fit the multiple regression model
-  model <- lm(Y ~ X_past)
-  
-  # Compute F-statistic
-  f_stat <- summary(model)$fstatistic
-  F_obs <- f_stat[1]
-  df1 <- f_stat[2]
-  df2 <- f_stat[3]
-  
-  # Compute p-value
-  p_value <- pf(F_obs, df1, df2, lower.tail = FALSE)
-  
-  # Compute critical value at 5% significance level
-  F_critical <- qf(0.95, df1, df2)
-  
-  # Extract residuals
-  residuals <- residuals(model)
-  
-  # Perform ADF test for stationarity on the residuals
-  adf_result <- adf.test(residuals)
-
-  # Perform Ljung-Box test for autocorrelation on the residuals
-  lb_test <- Box.test(residuals, lag = 10, type = "Ljung-Box")
-  lb_p_value <- lb_test$p.value
-
-  return(list(
-    F_statistic = F_obs,
-    Critical_value = F_critical,
-    P_value = p_value,
-    ADF_p_value = adf_result$p.value,
-    Stationarity = stationarity_decision,
-    Ljung_Box_P_value = lb_p_value,
-    Ljung_Box_Decision = lb_decision
-  ))
-}
-
 martingale_test <- function(X, level=95) {
   n <- nrow(X)
   p <- ncol(X)
@@ -217,13 +169,14 @@ martingale_test <- function(X, level=95) {
   Y <- X[n, ] - X[n-1, ]
   
   # Create predictors (past values of X up to t_n-1)
-  X_past <- t(X[1:(n-1), ])
+  X_past <- t(X[1:(n-2), ])
   
   # Fit the multiple regression model
-  model <- lm(Y ~ X_past)
+  model <- lm(Y ~ X_past - 1)
   
   # Compute F-statistic
-  f_stat <- summary(model)$fstatistic
+  regression_summary <- summary(model)
+  f_stat <- regression_summary$fstatistic
   F_obs <- f_stat[1]
   df1 <- f_stat[2]
   df2 <- f_stat[3]
@@ -246,6 +199,9 @@ martingale_test <- function(X, level=95) {
   lb_p_value <- lb_test$p.value
   
   return(list(
+    model = model,
+    confint = confint(model),
+    regression_summary = regression_summary,
     F_statistic = F_obs,
     F_critical_value = F_critical,
     F_p_value = p_value,
