@@ -383,24 +383,25 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 
 ## Coefficients:
 ##  X_past1   X_past2   X_past3   X_past4   X_past5   X_past6   X_past7   X_past8  
-## -0.06572   0.16730  -0.26443  -0.18877   0.19323  -0.02259   0.13619  -0.11573  
-##  X_past9  X_past10  X_past11  
-##  0.03115   0.15059  -0.16763  
+## -0.14911   0.16504  -0.25267  -0.20162   0.18199  -0.01611   0.15397  -0.12724  
+##  X_past9  X_past10  X_past11  X_past12  
+##  0.03833   0.15083  -0.07937  -0.09135  
 ## 
 ## 
 ## $confint
 ##               2.5 %     97.5 %
-## X_past1  -1.5677993 1.43636442
-## X_past2  -0.1809456 0.51555444
-## X_past3  -0.5508806 0.02202036
-## X_past4  -0.4761764 0.09862776
-## X_past5  -0.1314138 0.51787217
-## X_past6  -0.3278961 0.28271931
-## X_past7  -0.1975848 0.46996836
-## X_past8  -0.4314591 0.20000013
-## X_past9  -0.2941281 0.35641929
-## X_past10 -0.1642687 0.46545036
-## X_past11 -0.4260530 0.09078976
+## X_past1  -1.6705836 1.37236886
+## X_past2  -0.1841338 0.51422004
+## X_past3  -0.5414766 0.03612904
+## X_past4  -0.4916885 0.08844394
+## X_past5  -0.1447822 0.50876978
+## X_past6  -0.3226561 0.29042713
+## X_past7  -0.1838445 0.49177573
+## X_past8  -0.4451835 0.19070439
+## X_past9  -0.2883042 0.36495517
+## X_past10 -0.1648232 0.46648312
+## X_past11 -0.4258725 0.26714026
+## X_past12 -0.3295031 0.14679911
 ## 
 ## $regression_summary
 ## 
@@ -409,45 +410,46 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -12.9643  -3.4212   0.0955   2.9126  13.3615 
+## -12.3141  -3.4157   0.1431   3.0048  13.7746 
 ## 
 ## Coefficients:
 ##          Estimate Std. Error t value Pr(&gt;|t|)  
-## X_past1  -0.06572    0.75596  -0.087    0.931  
-## X_past2   0.16730    0.17527   0.955    0.342  
-## X_past3  -0.26443    0.14416  -1.834    0.070 .
-## X_past4  -0.18877    0.14464  -1.305    0.195  
-## X_past5   0.19323    0.16339   1.183    0.240  
-## X_past6  -0.02259    0.15365  -0.147    0.883  
-## X_past7   0.13619    0.16798   0.811    0.420  
-## X_past8  -0.11573    0.15890  -0.728    0.468  
-## X_past9   0.03115    0.16370   0.190    0.850  
-## X_past10  0.15059    0.15846   0.950    0.345  
-## X_past11 -0.16763    0.13006  -1.289    0.201  
+## X_past1  -0.14911    0.76560  -0.195   0.8460  
+## X_past2   0.16504    0.17571   0.939   0.3501  
+## X_past3  -0.25267    0.14532  -1.739   0.0856 .
+## X_past4  -0.20162    0.14596  -1.381   0.1707  
+## X_past5   0.18199    0.16443   1.107   0.2714  
+## X_past6  -0.01611    0.15425  -0.104   0.9170  
+## X_past7   0.15397    0.16999   0.906   0.3675  
+## X_past8  -0.12724    0.15999  -0.795   0.4286  
+## X_past9   0.03833    0.16436   0.233   0.8162  
+## X_past10  0.15083    0.15884   0.950   0.3449  
+## X_past11 -0.07937    0.17436  -0.455   0.6501  
+## X_past12 -0.09135    0.11984  -0.762   0.4479  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 5.418 on 89 degrees of freedom
-## Multiple R-squared:  0.118,  Adjusted R-squared:  0.008978 
-## F-statistic: 1.082 on 11 and 89 DF,  p-value: 0.3845
+## Residual standard error: 5.43 on 88 degrees of freedom
+## Multiple R-squared:  0.1238, Adjusted R-squared:  0.004291 
+## F-statistic: 1.036 on 12 and 88 DF,  p-value: 0.424
 ## 
 ## 
 ## $F_statistic
 ##    value 
-## 1.082356 
+## 1.035915 
 ## 
 ## $F_critical_value
-## [1] 1.897906
+## [1] 1.86387
 ## 
 ## $F_p_value
 ##     value 
-## 0.3845351 
+## 0.4240198 
 ## 
 ## $ADF_p_value
 ## [1] 0.99
 ## 
 ## $Ljung_Box_p_value
-## [1] 0.5478898</code></pre>
+## [1] 0.5998307</code></pre>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>(test2 <span class="ot">&lt;-</span> esgtoolkit<span class="sc">::</span><span class="fu">esgmartingaletest</span>(<span class="at">r =</span> r0, <span class="at">X =</span> sim.GBM_trend, <span class="at">p0 =</span> S0, </span>
 <span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>                            <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">method =</span> <span class="st">&quot;trend&quot;</span>))</span></code></pre></div>
 <pre><code>## $model
@@ -457,24 +459,25 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 
 ## Coefficients:
 ##   X_past1    X_past2    X_past3    X_past4    X_past5    X_past6    X_past7  
-## -10.29737    0.24375   -0.37384   -0.28232    0.26141   -0.02530    0.19617  
-##   X_past8    X_past9   X_past10   X_past11  
-##  -0.15802    0.04407    0.17779   -0.12494  
+## -10.57510    0.24255   -0.36764   -0.28899    0.25569   -0.02208    0.20474  
+##   X_past8    X_past9   X_past10   X_past11   X_past12  
+##  -0.16338    0.04728    0.17789   -0.08904   -0.03516  
 ## 
 ## 
 ## $confint
 ##                2.5 %      97.5 %
-## X_past1  -15.4669678 -5.12776227
-## X_past2   -0.2665785  0.75408750
-## X_past3   -0.7894330  0.04175475
-## X_past4   -0.6930818  0.12845125
-## X_past5   -0.1933910  0.71621916
-## X_past6   -0.4424541  0.39186025
-## X_past7   -0.2464075  0.63874666
-## X_past8   -0.5622693  0.24622708
-## X_past9   -0.3560678  0.44420838
-## X_past10  -0.1924981  0.54806926
-## X_past11  -0.4140250  0.16415292
+## X_past1  -16.1430911 -5.00710403
+## X_past2   -0.2706056  0.75570513
+## X_past3   -0.7878438  0.05256744
+## X_past4   -0.7047516  0.12676931
+## X_past5   -0.2034114  0.71479488
+## X_past6   -0.4421226  0.39796047
+## X_past7   -0.2444695  0.65394469
+## X_past8   -0.5716269  0.24486928
+## X_past9   -0.3556745  0.45023718
+## X_past10  -0.1943914  0.55016698
+## X_past11  -0.4777750  0.29969756
+## X_past12  -0.2880419  0.21771320
 ## 
 ## $regression_summary
 ## 
@@ -483,45 +486,46 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -18.5358  -5.0704   0.1687   4.6036  20.1236 
+## -18.1876  -5.0450   0.2114   4.4381  20.3448 
 ## 
 ## Coefficients:
 ##           Estimate Std. Error t value Pr(&gt;|t|)    
-## X_past1  -10.29737    2.60174  -3.958 0.000152 ***
-## X_past2    0.24375    0.25684   0.949 0.345162    
-## X_past3   -0.37384    0.20916  -1.787 0.077286 .  
-## X_past4   -0.28232    0.20673  -1.366 0.175497    
-## X_past5    0.26141    0.22889   1.142 0.256484    
-## X_past6   -0.02530    0.20995  -0.120 0.904364    
-## X_past7    0.19617    0.22274   0.881 0.380844    
-## X_past8   -0.15802    0.20345  -0.777 0.439388    
-## X_past9    0.04407    0.20138   0.219 0.827275    
-## X_past10   0.17779    0.18636   0.954 0.342660    
-## X_past11  -0.12494    0.14549  -0.859 0.392804    
+## X_past1  -10.57510    2.80180  -3.774 0.000291 ***
+## X_past2    0.24255    0.25822   0.939 0.350138    
+## X_past3   -0.36764    0.21145  -1.739 0.085588 .  
+## X_past4   -0.28899    0.20921  -1.381 0.170670    
+## X_past5    0.25569    0.23102   1.107 0.271398    
+## X_past6   -0.02208    0.21136  -0.104 0.917035    
+## X_past7    0.20474    0.22604   0.906 0.367537    
+## X_past8   -0.16338    0.20543  -0.795 0.428577    
+## X_past9    0.04728    0.20277   0.233 0.816162    
+## X_past10   0.17789    0.18733   0.950 0.344919    
+## X_past11  -0.08904    0.19561  -0.455 0.650099    
+## X_past12  -0.03516    0.12725  -0.276 0.782930    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 7.979 on 89 degrees of freedom
-## Multiple R-squared:  0.5878, Adjusted R-squared:  0.5368 
-## F-statistic: 11.54 on 11 and 89 DF,  p-value: 4.801e-13
+## Residual standard error: 8.021 on 88 degrees of freedom
+## Multiple R-squared:  0.5881, Adjusted R-squared:  0.532 
+## F-statistic: 10.47 on 12 and 88 DF,  p-value: 1.63e-12
 ## 
 ## 
 ## $F_statistic
 ##    value 
-## 11.53593 
+## 10.47123 
 ## 
 ## $F_critical_value
-## [1] 1.897906
+## [1] 1.86387
 ## 
 ## $F_p_value
 ##        value 
-## 4.801344e-13 
+## 1.629597e-12 
 ## 
 ## $ADF_p_value
 ## [1] 0.99
 ## 
 ## $Ljung_Box_p_value
-## [1] 0.5813833</code></pre>
+## [1] 0.5998307</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>(test1_ratio <span class="ot">&lt;-</span> esgtoolkit<span class="sc">::</span><span class="fu">esgmartingaletest</span>(<span class="at">r =</span> r0, <span class="at">X =</span> sim.GBM, <span class="at">p0 =</span> S0, </span>
 <span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>                            <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">method =</span> <span class="st">&quot;ratio&quot;</span>))</span></code></pre></div>
 <pre><code>## 

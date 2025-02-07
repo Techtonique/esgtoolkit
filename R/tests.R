@@ -169,7 +169,7 @@ martingale_test <- function(X, level=95) {
   Y <- X[n, ] - X[n-1, ]
   
   # Create predictors (past values of X up to t_n-1)
-  X_past <- t(X[1:(n-2), ])
+  X_past <- t(X[seq_len(n-1), ])
   
   # Fit the multiple regression model
   model <- lm(Y ~ X_past - 1)
