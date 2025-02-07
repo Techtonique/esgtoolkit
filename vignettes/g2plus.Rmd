@@ -139,7 +139,7 @@ difference <- (Dt_SW - marketprices)
 
 **test for the "martingale" difference** (this implementation is very slow)
 
-```{r echo=TRUE, cache=TRUE}
+```{r echo=TRUE, cache=TRUE, eval=FALSE}
 lapply(1:nrow(difference), function(i) vrtest::DL.test(difference[i, ]))
 ```
 

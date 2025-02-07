@@ -1,8 +1,8 @@
 Package: esgtoolkit
 Type: Package
 Title: Toolkit for Monte Carlo Simulations
-Version: 1.2.0
-Date: 2025-01-29
+Version: 1.2.1
+Date: 2025-02-07
 Authors@R: c(
         person("T.", "Moudiki", , "thierry.moudiki@gmail.com", role = c("aut", "cre")
         )
