@@ -28,12 +28,12 @@ library(devtools)
 devtools::install_github("Techtonique/esgtoolkit")
 ```
 
-- From R universe: 
+- From Techtonique R repository: 
 
 ```r
 # Enable universe(s) by techtonique
 options(repos = c(
-  techtonique = 'https://techtonique.r-universe.dev',
+  techtonique = 'https://r-packages.techtonique.net',
   CRAN = 'https://cloud.r-project.org'))
 
 # Install some packages

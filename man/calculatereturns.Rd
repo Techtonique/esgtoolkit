@@ -21,14 +21,15 @@ V0 <- theta <- 0.04
 sigma_v <- 0.2
 theta1 <- kappa*theta
 theta2 <- kappa
+n_simulations <- 10
 
-eps0 <- simshocks(n = 100, horizon = 5, frequency = "quart")
-sim_GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",   
+eps0 <- simshocks(n = n_simulations, horizon = 5, frequency = "quart")
+sim_GBM <- simdiff(n = n_simulations, horizon = 5, frequency = "quart",   
                    model = "GBM", 
                 x0 = 100, theta1 = 0.03, theta2 = 0.1, eps = eps0) 
 
 returns <- calculatereturns(sim_GBM)
-log_returns <- calculatereturns(sim_GBM, type = "log")
+log_returns <- diff(log(sim_GBM))
 
 print(identical(returns, log_returns))
 

@@ -1,4 +1,4 @@
-.PHONY: build buildsite check clean cleanvars coverage getwd initialize install installcranpkg installgithubpkg installedpkgs load removepkg render setwd start test usegit
+.PHONY: build buildsite check clean cleanvars coverage docs getwd initialize install installcranpkg installgithubpkg installedpkgs load removepkg render setwd start test usegit
 .DEFAULT_GOAL := help
 
 # The directory where R files are stored
@@ -33,7 +33,7 @@ build: setwd ## build package
 
 buildsite: setwd ## create a website for the package
 	Rscript -e "pkgdown::build_site('.')"
-	cp -rf docs/* ../../Pro_Website/Techtonique.github.io/ESGtoolkit
+	cp -rf docs/* ~/Documents/Pro_Website/Techtonique.github.io/esgtoolkit/
 
 check: clean setwd ## check package 
 	@read -p "Enter options (e.g: --no-tests --no-examples) or leave empty: " pckgcheckoptions; \
@@ -67,11 +67,18 @@ create: setwd ## create a new package in current directory
 	Rscript -e "usethis::create_package(path = getwd(), rstudio = FALSE)"
 	rm -f .here
 
+docs: clean setwd ## generate docs		
+	Rscript -e "devtools::document('.')"
+
 getwd: ## get current directory
 	Rscript -e "getwd()"
 
-install: clean setwd ## install current package
+install: clean setwd docs ## install current package
 	Rscript -e "try(devtools::install('.'), silent = FALSE)"
+	@read -p "Start R session? (y/n): " choice; \
+	if [ "$$choice" = "y" ]; then \
+		$(MAKE) start; \
+	fi
 
 installcranpkg: setwd ## install a package
 	@read -p "Enter the name of package to be installed: " pckg; \
@@ -98,7 +105,7 @@ initialize: setwd ## initialize: install packages devtools, usethis, pkgdown and
 help: ## print menu with all options
 	@python3 -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-load: clean setwd ## load all and restart (when developing the package)
+load: clean setwd docs ## load all and restart (when developing the package)
 	Rscript -e "devtools::load_all('.')"
 	@read -p "Start R session? (y/n): " choice; \
 	if [ "$$choice" = "y" ]; then \
