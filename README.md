@@ -21,13 +21,6 @@ ResearchGate](https://www.researchgate.net/publication/338549100_esgtoolkit_a_to
 
 # Installation
 
-- From Github: 
-
-```r
-library(devtools)
-devtools::install_github("Techtonique/esgtoolkit")
-```
-
 - From Techtonique R repository: 
 
 ```r
