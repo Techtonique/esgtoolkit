@@ -1,6 +1,46 @@
 # Martingale Tests and Monte Carlo convergence --------------------------------------------------
 
-# Convergence of Monte Carlo prices
+#' Convergence of Monte Carlo prices
+#' 
+#' @description
+#' Analyzes the convergence of Monte Carlo prices by computing average prices and confidence intervals
+#' as the number of simulations increases.
+#' 
+#' @param r Interest rate time series or constant
+#' @param X Price time series
+#' @param maturity Maturity time point
+#' @param plot Logical indicating whether to plot the convergence (default: TRUE)
+#' @param ... Additional arguments passed to plotting functions
+#' 
+#' @details
+#' The function computes the average price and confidence intervals for increasing numbers of simulations
+#' to analyze the convergence of Monte Carlo estimates. It discounts the price series using the provided
+#' interest rate and evaluates at the specified maturity.
+#' 
+#' If plot=TRUE, it creates a plot showing:
+#' \itemize{
+#'   \item Confidence intervals as shaded area
+#'   \item Average price as a blue line
+#'   \item X-axis showing number of simulations
+#'   \item Y-axis showing Monte Carlo estimated prices
+#' }
+#' 
+#' @return A list containing:
+#' \itemize{
+#'   \item avg.price: Vector of average prices for different numbers of simulations
+#'   \item conf.int: Matrix of confidence intervals (lower and upper bounds)
+#' }
+#' 
+#' @examples
+#' # Generate sample data
+#' r <- 0.05
+#' X <- ts(matrix(rnorm(1000), 100, 10), start = 0, deltat = 0.1)
+#' 
+#' # Analyze convergence
+#' convergence <- esgmccv(r, X, maturity = 1)
+#' 
+#' @export
+
 esgmccv <- function(r, X, maturity, plot = TRUE, ...)
 {
   if(missing(r) || missing(X) || missing(maturity))
@@ -34,7 +74,54 @@ esgmccv <- function(r, X, maturity, plot = TRUE, ...)
 }
 
 
-# Martingale and market consistency tests
+#' Test for martingale property and market consistency
+#' 
+#' @description
+#' Performs statistical tests to verify if a time series follows a martingale property
+#' and maintains market consistency. Three different testing methods are available.
+#' 
+#' @param r Risk-free rate (scalar or time series)
+#' @param X Time series of asset prices or values
+#' @param p0 Initial price(s) for comparison
+#' @param alpha Significance level for hypothesis tests (default: 0.05)
+#' @param method Testing method:
+#'   \itemize{
+#'     \item "onevsone": One-to-one comparison test
+#'     \item "trend": Trend analysis test
+#'     \item "ratio": Ratio-based test
+#'   }
+#' 
+#' @details
+#' The function implements three different approaches to test for martingale properties:
+#' \itemize{
+#'   \item "onevsone": Compares each observation against its expected value
+#'   \item "trend": Analyzes trends in the martingale differences
+#'   \item "ratio": Tests the ratio between discounted values and initial prices
+#' }
+#' 
+#' The test results help determine if the time series maintains the martingale property
+#' and market consistency under the risk-neutral measure.
+#' 
+#' @return A list containing test results, which may include:
+#' \itemize{
+#'   \item t-statistic and p-value for ratio test
+#'   \item trend analysis results
+#'   \item mean and standard deviation of martingale differences
+#' }
+#' 
+#' @examples
+#' # Generate sample data
+#' r <- 0.05
+#' X <- ts(matrix(rnorm(1000), 100, 10), start = 0, deltat = 0.1)
+#' p0 <- 100
+#' 
+#' # Perform martingale test using ratio method
+#' result <- esgmartingaletest(r, X, p0, method = "ratio")
+#' 
+#' # Perform trend analysis
+#' trend_result <- esgmartingaletest(r, X, p0, method = "trend")
+#' 
+#' @export
 esgmartingaletest <- function(r, X, p0, alpha = 0.05, 
                               method=c("onevsone", 
                                        "trend",
@@ -136,7 +223,43 @@ esgmartingaletest <- function(r, X, p0, alpha = 0.05,
 # Correlation test for shocks --------------------------------------------------------
 
 
-# Correlation tests for the shocks
+#' Correlation test for shocks
+#' 
+#' @description
+#' Performs correlation tests between two sets of shocks at each time point.
+#' 
+#' @param x A list containing two time series objects to test for correlation
+#' @param alternative A character string specifying the alternative hypothesis:
+#'   "two.sided" (default), "less", or "greater"
+#' @param method A character string indicating which correlation coefficient is to be used:
+#'   "pearson" (default), "kendall", or "spearman"
+#' @param conf.level Confidence level for the returned confidence interval
+#' 
+#' @details
+#' The function performs correlation tests between two sets of shocks at each time point.
+#' It returns both the correlation estimates and confidence intervals for the correlation
+#' coefficient at each time point.
+#' 
+#' @return A list containing:
+#' \itemize{
+#'   \item cor.estimate: A time series of correlation estimates
+#'   \item conf.int: A time series matrix containing the lower and upper bounds of the confidence intervals
+#' }
+#' 
+#' @examples
+#' # Generate sample shocks
+#' x <- ts(matrix(rnorm(1000), 100, 10))
+#' y <- ts(matrix(rnorm(1000), 100, 10))
+#' 
+#' # Test correlation between shocks
+#' result <- esgcortest(list(x, y))
+#' 
+#' # Plot correlation estimates with confidence intervals
+#' plot(result$cor.estimate)
+#' lines(result$conf.int[,1], col="red")
+#' lines(result$conf.int[,2], col="red")
+#' 
+#' @export
 esgcortest <- function(x, alternative = c("two.sided", "less", "greater"),
                        method = c("pearson", "kendall", "spearman"),
                        conf.level = 0.95)

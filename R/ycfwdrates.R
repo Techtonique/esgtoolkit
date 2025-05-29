@@ -1,7 +1,59 @@
 # Instantaneous forward rates ---------------------------------------------
 
 
-# Instantaneous forward rates
+#' Instantaneous forward rates
+#' 
+#' @description
+#' Computes instantaneous forward rates from zero rates using various interpolation methods.
+#' 
+#' @param in.maturities Vector of input maturities
+#' @param in.zerorates Vector of input zero rates
+#' @param n Number of simulations
+#' @param horizon Time horizon for forward rates
+#' @param out.frequency Output frequency for forward rates. One of:
+#'   \itemize{
+#'     \item "annual" (default)
+#'     \item "semi-annual"
+#'     \item "quarterly" 
+#'     \item "monthly"
+#'     \item "weekly"
+#'     \item "daily"
+#'   }
+#' @param method Interpolation method. One of:
+#'   \itemize{
+#'     \item "fmm" (default)
+#'     \item "periodic"
+#'     \item "natural"
+#'     \item "monoH.FC"
+#'     \item "hyman"
+#'     \item "HCSPL"
+#'     \item "SW"
+#'   }
+#' @param ... Additional arguments passed to interpolation functions
+#' 
+#' @details
+#' The function computes instantaneous forward rates from zero rates using various interpolation methods.
+#' It first converts zero rates to zero-coupon prices, then interpolates these prices using the specified method.
+#' The forward rates are then computed from the interpolated prices.
+#' 
+#' The function supports different output frequencies and interpolation methods to suit various needs.
+#' 
+#' @return A time series object containing the instantaneous forward rates
+#' 
+#' @examples
+#' # Generate sample data
+#' maturities <- c(1, 2, 3, 5, 7, 10)
+#' zero_rates <- c(0.01, 0.015, 0.02, 0.025, 0.03, 0.035)
+#' 
+#' # Compute forward rates with annual frequency
+#' fwd_rates <- esgfwdrates(in.maturities = maturities,
+#'                         in.zerorates = zero_rates,
+#'                         n = 1000,
+#'                         horizon = 10,
+#'                         out.frequency = "annual",
+#'                         method = "fmm")
+#' 
+#' @export
 esgfwdrates <- function(in.maturities, in.zerorates,
                         n, horizon, 
                         out.frequency = c("annual", "semi-annual", 

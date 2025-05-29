@@ -35,7 +35,56 @@ CDRVineSim <- function(N, family, par=NULL,
 }
 
 
-# Underlying gaussian shocks for risk factors' simulation.
+#' Simulation of Gaussian shocks for risk factors
+#' 
+#' @description
+#' Generates Gaussian shocks for simulating risk factors using various methods including
+#' classic Monte Carlo, antithetic variates, moment matching, and hybrid approaches.
+#' 
+#' @param n Number of simulations/scenarios
+#' @param horizon Time horizon for simulation
+#' @param frequency Frequency of observations: "annual", "semi-annual", "quarterly", 
+#'                  "monthly", "weekly", or "daily"
+#' @param method Simulation method: "classic", "antithetic", "mm" (moment matching),
+#'               "hybridantimm" (hybrid antithetic-moment matching), or "TAG"
+#' @param family Vector of copula families (optional)
+#' @param par Vector of copula parameters (optional)
+#' @param par2 Vector of second copula parameters (optional)
+#' @param RVM RVineMatrix object for R-vine copula (optional)
+#' @param type Type of vine copula: "CVine", "DVine", or "RVine"
+#' @param start Starting time (optional)
+#' @param seed Random seed for reproducibility
+#' 
+#' @details
+#' The function generates Gaussian shocks that can be used for simulating various risk factors.
+#' Different simulation methods are available:
+#' \itemize{
+#'   \item "classic": Standard Monte Carlo simulation
+#'   \item "antithetic": Uses antithetic variates to reduce variance
+#'   \item "mm": Moment matching to improve statistical properties
+#'   \item "hybridantimm": Combines antithetic variates and moment matching
+#'   \item "TAG": Taguchi method
+#' }
+#' 
+#' When using copulas (by specifying family and par), the function supports C-vine, D-vine,
+#' and R-vine copula structures.
+#' 
+#' @return A time series object containing the simulated Gaussian shocks
+#' 
+#' @examples
+#' # Generate shocks using classic Monte Carlo
+#' shocks <- simshocks(n = 1000, horizon = 5, frequency = "quarterly")
+#' 
+#' # Generate shocks using antithetic variates
+#' shocks_antithetic <- simshocks(n = 1000, horizon = 5, frequency = "quarterly",
+#'                               method = "antithetic")
+#' 
+#' # Generate shocks using C-vine copula
+#' shocks_copula <- simshocks(n = 1000, horizon = 5, frequency = "quarterly",
+#'                           family = c(1, 1), par = c(0.5, 0.3),
+#'                           type = "CVine")
+#' 
+#' @export
 simshocks <- function(n, horizon, 
                       frequency = c("annual", "semi-annual", 
                                     "quarterly", "monthly", 

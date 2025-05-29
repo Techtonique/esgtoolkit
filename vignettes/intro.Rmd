@@ -1,0 +1,276 @@
+---
+title: "Introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+For more details (and text), read [https://www.researchgate.net/publication/338549100_ESGtoolkit_a_tool_for_stochastic_simulation_v020](https://www.researchgate.net/publication/338549100_ESGtoolkit_a_tool_for_stochastic_simulation_v020). 
+
+```{r}
+devtools::install_github("cran/fOptions")
+```
+
+```{r}
+library(esgtoolkit)
+```
+
+```{r fig.width=7.2}
+# ESGtoolkit R Code Examples
+# Source: ESGtoolkit documentation v0.2.0
+
+# ============================================================================
+# INSTALLATION
+# ============================================================================
+
+# ============================================================================
+# BASIC SETUP FOR SIMSHOCKS EXAMPLES
+# ============================================================================
+
+# Number of simulations
+nb <- 1000
+
+# Number of risk factors
+d <- 2
+
+# Number of possible combinations of the risk factors (here : 1)
+dd <- d*(d-1)/2
+
+# Family : Gaussian copula
+fam1 <- rep(1, dd)
+
+# Correlation coefficients between the risk factors (d*(d-1)/2)
+par0_1 <- 0.1
+par0_2 <- -0.9
+
+# ============================================================================
+# SIMULATING SHOCKS WITH GAUSSIAN COPULA
+# ============================================================================
+
+set.seed(2)
+
+# Simulation of shocks for the d risk factors
+s0_par1 <- simshocks(n = nb, horizon = 4,
+                     family = fam1, par = par0_1)
+
+s0_par2 <- simshocks(n = nb, horizon = 4,
+                     family = fam1, par = par0_2)
+
+# ============================================================================
+# CORRELATION TESTING
+# ============================================================================
+
+# Correlation test
+esgcortest(s0_par1)
+
+# Visualization of confidence intervals
+(test <- esgcortest(s0_par2))
+#par(mfrow=c(2, 1))
+#esgplotbands(esgcortest(s0_par1))
+#esgplotbands(test)
+
+# ============================================================================
+# CLAYTON COPULA EXAMPLES
+# ============================================================================
+
+# Family : Rotated Clayton (180 degrees)
+fam2 <- 13
+par0_3 <- 2
+
+# Family : Rotated Clayton (90 degrees)
+fam3 <- 23
+par0_4 <- -2
+
+# number of simulations
+nb <- 200
+
+# Simulation of shocks for the d risk factors
+s0_par3 <- simshocks(n = nb, horizon = 4,
+                     family = fam2, par = par0_3)
+
+s0_par4 <- simshocks(n = nb, horizon = 4,
+                     family = fam3, par = par0_4)
+
+# Visualizing dependence between shocks
+esgplotshocks(s0_par3, s0_par4)
+
+# ============================================================================
+# BATES MODEL (SVJD) - COMPLETE EXAMPLE
+# ============================================================================
+
+# Load required library for options pricing
+#library(fOptions)
+
+# ============================================================================
+# BATES MODEL PARAMETERS
+# ============================================================================
+
+# Spot variance
+V0 <- 0.1372
+
+# mean-reversion speed
+kappa <- 9.5110/100
+
+# long-term variance
+theta <- 0.0285
+
+# volatility of volatility
+volvol <- 0.8010/100
+
+# Correlation between stoch. vol and prices
+rho <- -0.5483
+
+# Intensity of the Poisson process
+lambda <- 0.3635
+
+# mean and vol of the merton jumps diffusion
+mu_J <- -0.2459
+sigma_J <- 0.2547/100
+m <- exp(mu_J + 0.5*(sigma_J^2)) - 1
+
+# Initial stock price
+S0 <- 4468.17
+
+# Initial short rate
+r0 <- 0.0357
+
+# ============================================================================
+# SIMULATION SETUP
+# ============================================================================
+
+n <- 300
+horizon <- 1
+freq <- "weekly"
+
+# Simulation of shocks, with antithetic variates
+shocks <- simshocks(n = n, horizon = horizon,
+                    frequency = freq,
+                    method = "anti",
+                    family = 1, par = rho)
+
+# ============================================================================
+# VOLATILITY SIMULATION (CIR PROCESS)
+# ============================================================================
+
+# Vol simulation
+sim_vol <- simdiff(n = n, horizon = horizon,
+                   frequency = freq, model = "CIR", x0 = V0,
+                   theta1 = kappa*theta, theta2 = kappa,
+                   theta3 = volvol,
+                   eps = shocks[[1]])
+
+# Plotting the volatility (only for a low number of simulations)
+esgplotts(sim_vol)
+
+# ============================================================================
+# ASSET PRICE SIMULATION (GBM WITH JUMPS)
+# ============================================================================
+
+# prices simulation
+sim_price <- simdiff(n = n, horizon = horizon,
+                     frequency = freq, model = "GBM", x0 = S0,
+                     theta1 = r0 - lambda*m, theta2 = sim_vol,
+                     lambda = lambda, mu_z = mu_J,
+                     sigma_z = sigma_J,
+                     eps = shocks[[2]])
+
+# ============================================================================
+# VISUALIZATION OF PRICE PATHS
+# ============================================================================
+
+# Plot asset price paths
+#par(mfrow=c(2, 1))
+#matplot(time(sim_price), sim_price, type = 'l',
+#        main = "with matplot")
+#esgplotbands(sim_price, main = "with esgplotbands", xlab = "time",
+#             ylab = "values")
+
+# ============================================================================
+# MARTINGALE TESTING
+# ============================================================================
+
+# Discounted Monte Carlo price
+print(as.numeric(esgmcprices(r0, sim_price, 2/52)))
+
+# Initial price
+print(S0)
+
+# pct. difference
+print(as.numeric((esgmcprices(r0, sim_price, 2/52)/S0 - 1)*100))
+
+# convergence of the discounted price
+esgmccv(r0, sim_price, 2/52,
+        main = "Convergence towards the initial \n asset price")
+
+# Statistical martingale test
+martingaletest_sim_price <- esgmartingaletest(r = r0,
+                                              X = sim_price,
+                                              p0 = S0)
+
+# Visualization of confidence intervals
+esgplotbands(martingaletest_sim_price)
+```
+
+```{r eval=FALSE}
+# ============================================================================
+# OPTION PRICING EXAMPLE
+# ============================================================================
+
+# Option pricing parameters
+# Strike
+K <- 3400
+Kts <- ts(matrix(K, nrow(sim_price), ncol(sim_price)),
+          start = start(sim_price),
+          deltat = deltat(sim_price),
+          end = end(sim_price))
+
+# Implied volatility
+sigma_imp <- 0.6625
+
+# Maturity
+maturity <- 2/52
+
+# payoff at maturity
+payoff_ <- (sim_price - Kts)*(sim_price > Kts)
+payoff <- window(payoff_,
+                 start = deltat(sim_price),
+                 deltat = deltat(sim_price),
+                 names = paste0("Series ", 1:n))
+
+# True price (Black-Scholes)
+c0 <- GBSOption("c", S = S0, X = K, Time = maturity, r = r0,
+                b = 0, sigma = sigma_imp)
+print(c0@price)
+
+# Monte Carlo price
+print(as.numeric(esgmcprices(r = r0, X = payoff, maturity)))
+
+# pct. difference
+print(as.numeric((esgmcprices(r = r0, X = payoff,
+                              maturity = maturity)/c0@price - 1)*100))
+
+# Convergence towards the option price
+esgmccv(r = r0, X = payoff, maturity = maturity,
+        main = "Convergence towards the call \n option price")
+
+# ============================================================================
+# ADDITIONAL UTILITY FUNCTIONS (Examples of usage)
+# ============================================================================
+
+# Time series windowing
+# window.ts(sim_price, start = 0.25, end = 0.75)
+
+# Get frequency of time series
+# frequency(sim_price)
+
+# Statistical testing with esgcortest
+# esgcortest(shocks)
+
+# Monte Carlo convergence visualization
+# esgmccv(r0, sim_price, maturity)
+
+# Plotting multiple shock series
+# esgplotshocks(s0_par1, s0_par2)
+```

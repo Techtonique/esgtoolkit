@@ -2,7 +2,38 @@
 # Misc plots --------------------------------------------------------------
 
 
-# Plot time series percentiles and confidence intervals
+#' Plot time series percentiles and confidence intervals
+#' 
+#' @description
+#' Creates a plot showing time series data with confidence intervals, percentiles, and mean values.
+#' 
+#' @param x A time series object containing the data to plot
+#' @param ... Additional arguments passed to the plotting function
+#' 
+#' @details
+#' The function creates a plot with:
+#' \itemize{
+#'   \item Mean values as the central line
+#'   \item 95th and 5th percentiles as outer bands
+#'   \item Upper and lower quartiles as inner bands
+#'   \item Confidence intervals based on t-tests
+#' }
+#' 
+#' The plot uses a color gradient from light yellow to light green for the different bands.
+#' 
+#' @return A plot object
+#' 
+#' @examples
+#' # Create sample time series
+#' x <- ts(matrix(rnorm(1000), ncol=10), start=0, deltat=1)
+#' 
+#' # Plot with default settings
+#' esgplotbands(x)
+#' 
+#' # Plot with custom title
+#' esgplotbands(x, main="Custom Title")
+#' 
+#' @export
 esgplotbands <- function(x, ...)
 {
   if (is.ts(x))
@@ -94,7 +125,28 @@ esgplotbands <- function(x, ...)
 }
 
 
-# Plot time series objects
+#' Plot time series objects
+#' 
+#' @description
+#' Creates a line plot of time series data using ggplot2, with each series represented by a different color.
+#' 
+#' @param x A time series object (ts) containing the data to plot
+#' 
+#' @details
+#' The function converts the time series data into a format suitable for ggplot2 plotting.
+#' Each column of the time series is plotted as a separate line with a different color.
+#' The x-axis represents time/maturity and the y-axis shows the values.
+#' 
+#' @return A ggplot2 object containing the line plot
+#' 
+#' @examples
+#' # Create sample time series data
+#' x <- ts(matrix(rnorm(100), 20, 5), start = 0, deltat = 0.1)
+#' 
+#' # Plot the time series
+#' esgplotts(x)
+#' 
+#' @export
 esgplotts <- function(x)
 { 
   x0 <- start(x)[1]
@@ -108,7 +160,33 @@ esgplotts <- function(x)
 }
 
 
-# Visualize the dependence between 2 gaussian shocks
+#' Visualize the dependence between Gaussian shocks
+#' 
+#' @description
+#' Creates a scatter plot with marginal density plots to visualize the relationship between two sets of Gaussian shocks.
+#' 
+#' @param x A matrix or list containing two columns of Gaussian shocks
+#' @param y Optional second matrix or list of Gaussian shocks to compare with x
+#' 
+#' @details
+#' The function creates a scatter plot of the shocks with marginal density plots on the top and right sides.
+#' If y is provided, both sets of shocks are plotted with different colors (blue for x, red for y).
+#' The marginal density plots show the distribution of shocks along each dimension.
+#' 
+#' @return A ggplot2 object containing the scatter plot with marginal densities
+#' 
+#' @examples
+#' # Generate sample Gaussian shocks
+#' x <- matrix(rnorm(1000), 500, 2)
+#' 
+#' # Plot single set of shocks
+#' esgplotshocks(x)
+#' 
+#' # Plot two sets of shocks for comparison
+#' y <- matrix(rnorm(1000), 500, 2)
+#' esgplotshocks(x, y)
+#' 
+#' @export
 esgplotshocks <-  function(x, y = NULL)
 {
   x <- matrix(unlist(x), ncol = 2)

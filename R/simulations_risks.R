@@ -1,7 +1,51 @@
 # simulation of risk factors ----------------------------------------------
 
 
-# Simulation of diffusion processes. 
+#' Simulation of diffusion processes
+#' 
+#' @description
+#' Simulates various diffusion processes including Geometric Brownian Motion (GBM), 
+#' Cox-Ingersoll-Ross (CIR), and Ornstein-Uhlenbeck (OU) processes.
+#' 
+#' @param n Number of simulations/scenarios
+#' @param horizon Time horizon for simulation
+#' @param frequency Frequency of observations: "annual", "semi-annual", "quarterly", 
+#'                  "monthly", "weekly", or "daily"
+#' @param model Type of diffusion process: "GBM", "CIR", or "OU"
+#' @param x0 Initial value
+#' @param theta1 First parameter (drift for GBM, mean reversion for CIR/OU)
+#' @param theta2 Second parameter (volatility for GBM, long-term mean for CIR/OU)
+#' @param theta3 Third parameter (optional, used for some models)
+#' @param lambda Jump intensity parameter (optional)
+#' @param mu_z Mean of jump size (optional)
+#' @param sigma_z Standard deviation of jump size (optional)
+#' @param p Probability parameter (optional)
+#' @param eta_up Upward jump size (optional)
+#' @param eta_down Downward jump size (optional)
+#' @param eps Pre-generated random shocks (optional)
+#' @param start Starting time (optional)
+#' @param seed Random seed for reproducibility
+#' 
+#' @details
+#' The function simulates various diffusion processes with different frequencies.
+#' For GBM, theta1 represents the drift and theta2 the volatility.
+#' For CIR and OU processes, theta1 is the mean reversion speed and theta2 is the long-term mean.
+#' 
+#' @return A time series object containing the simulated paths
+#' 
+#' @examples
+#' # Simulate GBM process
+#' eps <- simshocks(n = 10, horizon = 5, frequency = "quarterly")
+#' sim_GBM <- simdiff(n = 10, horizon = 5, frequency = "quarterly",
+#'                    model = "GBM", x0 = 100, theta1 = 0.03, theta2 = 0.1,
+#'                    eps = eps)
+#' 
+#' # Simulate CIR process
+#' sim_CIR <- simdiff(n = 10, horizon = 5, frequency = "quarterly",
+#'                    model = "CIR", x0 = 0.04, theta1 = 1.5, theta2 = 0.04,
+#'                    theta3 = 0.2, eps = eps)
+#' 
+#' @export
 simdiff <- function(n, horizon, 
                     frequency = c("annual", "semi-annual", 
                                   "quarterly", "monthly", 

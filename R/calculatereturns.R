@@ -4,7 +4,7 @@
 #' @param x Multivariate time series 
 #' @param type Type of return: basic return ("basic") or log-return ("log")
 #'
-#' @return
+#' @return A vector of returns
 #' @export
 #'
 #' @examples
