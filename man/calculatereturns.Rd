@@ -11,6 +11,9 @@ calculatereturns(x, type = c("basic", "log"))
 
 \item{type}{Type of return: basic return ("basic") or log-return ("log")}
 }
+\value{
+A vector of returns
+}
 \description{
 Calculate returns or log-returns for multivariate time series
 }

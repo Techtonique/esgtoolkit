@@ -1,0 +1,119 @@
+---
+title: "More flexibility for simulations"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{More flexibility for simulations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r}
+library(esgtoolkit)
+```
+
+```{r 1-shocks, fig.width=7.2}
+# Spot variance
+V0 <- 0.1372
+
+# mean-reversion speed
+kappa <- 9.5110/100
+
+# long-term variance
+theta <- 0.0285
+
+# volatility of volatility
+volvol <- 0.8010/100
+
+# Correlation between stoch. vol and prices
+rho <- -0.5483
+
+# Intensity of the Poisson process
+lambda <- 0.3635
+
+# mean and vol of the merton jumps diffusion
+mu_J <- -0.2459
+sigma_J <- 0.2547/100
+m <- exp(mu_J + 0.5*(sigma_J^2)) - 1
+
+# Initial stock price
+S0 <- 4468.17
+
+# Initial short rate
+r0 <- 0.0357
+
+# ============================================================================
+# SIMULATION SETUP
+# ============================================================================
+
+n <- 300
+horizon <- 1
+freq <- "weekly"
+
+start_ <- start(EuStockMarkets)
+end_ <- end(EuStockMarkets)
+freq_ <- frequency(EuStockMarkets)
+
+# Simulation of shocks, with antithetic variates
+shocks <- esgtoolkit::simshocks(n = n,
+                                horizon = 8L,
+                    method = "anti",
+                    family = 1, par = rho, 
+                    start = start_, frequency=freq_)
+
+print(start_)
+print(freq_)
+print(end_)
+print(start(shocks[[1]]))
+print(frequency(shocks[[1]]))
+print(end(shocks[[1]]))
+```
+
+# ============================================================================
+# VOLATILITY SIMULATION (CIR PROCESS)
+# ============================================================================
+
+```{r 2-vol, fig.width=7.2}
+# Vol simulation
+sim_vol <- esgtoolkit::simdiff(n = n, 
+                   model = "CIR", x0 = V0,
+                   theta1 = kappa*theta, theta2 = kappa,
+                   theta3 = volvol,
+                   eps = shocks[[1]], 
+                   start = start_,
+                   frequency=freq_,
+                   horizon = 8L)
+print(start(sim_vol))
+print(frequency(sim_vol))
+print(end(sim_vol))
+```
+
+# ============================================================================
+# ASSET PRICE SIMULATION (GBM WITH JUMPS)
+# ============================================================================
+
+```{r 3-price, fig.width=7.2}
+# prices simulation
+sim_price <- esgtoolkit::simdiff(n = n, start = start_, 
+                                 end = end_,
+                                 frequency=freq_,
+                     horizon = 8L,
+                     model = "GBM", x0 = S0,
+                     theta1 = r0 - lambda*m, theta2 = sim_vol,
+                     lambda = lambda, mu_z = mu_J,
+                     sigma_z = sigma_J,
+                     eps = shocks[[2]])
+print(start(sim_price))
+print(frequency(sim_price))
+print(end(sim_price))
+print(dim(sim_price))
+```
+
+
+```{r 4-plot, fig.width=7.2}
+# Plot the simulated volatility paths
+esgtoolkit::esgplotbands(sim_vol)
+
+# Plot the simulated price paths
+esgtoolkit::esgplotbands(sim_price)
+```

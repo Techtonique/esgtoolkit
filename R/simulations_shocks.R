@@ -52,7 +52,8 @@ CDRVineSim <- function(N, family, par=NULL,
 #' @param par2 Vector of second copula parameters (optional)
 #' @param RVM RVineMatrix object for R-vine copula (optional)
 #' @param type Type of vine copula: "CVine", "DVine", or "RVine"
-#' @param start Starting time (optional)
+#' @param start_ Starting time (optional)
+#' @param end_ Ending time (optional)
 #' @param seed Random seed for reproducibility
 #' 
 #' @details
@@ -95,20 +96,26 @@ simshocks <- function(n, horizon,
                       par = NULL, par2 = rep(0, length(par)), 
                       RVM = NULL, 
                       type = c("CVine", "DVine", "RVine"),
-                      start = NULL, 
+                      start_ = NULL, 
+                      end_ = NULL, 
                       seed = 123)
 {
   if (floor(n) != n) stop("'n' must be an integer")
   if (n <= 1) stop("'n' must be > 1")
   if (floor(horizon) != horizon) stop("'horizon' must be an integer")
-  frequency <- match.arg(frequency)
-  delta <- switch(frequency, 
-                  "annual" = 1, 
-                  "semi-annual" = 0.5, 
-                  "quarterly" = 0.25, 
-                  "monthly" = 1/12L,
-                  "weekly" = 1/52L,
-                  "daily" = 1/252L)
+  if (is.numeric(frequency))
+  {
+    delta <- 1/frequency
+  } else {
+    frequency <- match.arg(frequency)
+    delta <- switch(frequency, 
+                    "annual" = 1, 
+                    "semi-annual" = 0.5, 
+                    "quarterly" = 0.25, 
+                    "monthly" = 1/12,
+                    "weekly" = 1/52,
+                    "daily" = 1/252)
+  }
   type <- match.arg(type)
   
   method <- match.arg(method)
@@ -121,12 +128,12 @@ simshocks <- function(n, horizon,
   {
     if (method == "classic")
     {
-      if (!is.null(start))
-        return(ts(data = rnormESGcpp(N = n, M = m), 
-           start = start, deltat = delta))
+      if (!is.null(start_))
+        return(window(end = end_, x = ts(rnormESGcpp(N = n, M = m), 
+           start = start_, deltat = delta)))
         
-      return(ts(data = rnormESGcpp(N = n, M = m), 
-                start = delta, deltat = delta))  
+      return(window(end = end_, x = ts(rnormESGcpp(N = n, M = m), 
+                start = delta, deltat = delta)))  
     }
     
     if (method == "antithetic")
@@ -135,22 +142,22 @@ simshocks <- function(n, horizon,
       if(floor(half.n) != half.n) stop("'n' must be divisible by 2")        
       temp <- rnormESGcpp(N = half.n, M = m)        
       
-      if (!is.null(start))
-        return(ts(data = cbind(temp, -temp), 
-                  start = start, deltat = delta))
+      if (!is.null(start_))
+        return(window(end = end_, x = ts(cbind(temp, -temp), 
+                  start = start_, deltat = delta)))
       
-      return(ts(data = cbind(temp, -temp), 
-                start = delta, deltat = delta))
+      return(window(end = end_, x = ts(cbind(temp, -temp), 
+                start = delta, deltat = delta)))
     }
     
     if (method == "mm") 
     {
-      if (!is.null(start))
-        return(ts(data = scaleESG(rnormESGcpp(N = n, M = m)), 
-                  start = start, deltat = delta))  
+      if (!is.null(start_))
+        return(window(end = end_, x = ts(scaleESG(rnormESGcpp(N = n, M = m)), 
+                  start = start_, deltat = delta)))  
         
-      return(ts(data = scaleESG(rnormESGcpp(N = n, M = m)), 
-                start = delta, deltat = delta))  
+      return(window(end = end_, x = ts(scaleESG(rnormESGcpp(N = n, M = m)), 
+                start = delta, deltat = delta)))  
     }
     
     if (method == "hybridantimm")
@@ -159,22 +166,22 @@ simshocks <- function(n, horizon,
       if(floor(half.n) != half.n) stop("'n' must be divisible by 2")
       temp <- rnormESGcpp(N = half.n, M = m)
       
-      if (!is.null(start))
-        return(ts(data = scaleESG(cbind(temp, -temp)), 
-                  start = start, deltat = delta))
+      if (!is.null(start_))
+        return(window(end = end_, x = ts(scaleESG(cbind(temp, -temp)), 
+                  start = start_, deltat = delta)))
       
-      return(ts(data = scaleESG(cbind(temp, -temp)), 
-                start = delta, deltat = delta))
+      return(window(end = end_, x = ts(scaleESG(cbind(temp, -temp)), 
+                start = delta, deltat = delta)))
     }
     
     if (method == "TAG")
     {
-      if (!is.null(start))
-        return(ts(data = TAG(n, m), 
-                  start = start, deltat = delta))        
+      if (!is.null(start_))
+        return(window(end = end_, x = ts(TAG(n, m), 
+                  start = start_, deltat = delta)))        
         
-      return(ts(data = TAG(n, m), 
-                start = delta, deltat = delta))        
+      return(window(end = end_, x = ts(TAG(n, m), 
+                start = delta, deltat = delta)))        
     }    
   } 
   else # !is.null(family) && !is.null(par) # C, D, R-Vine
@@ -187,14 +194,14 @@ simshocks <- function(n, horizon,
                                     family, par, par2, type))
       d <- dim(shocks.sim)[2]
       
-      if (!is.null(start))
+      if (!is.null(start_))
         return(lapply(1:d, function(i)
-          ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n),
-             start = start, deltat = delta)))
+          window(end = end_, x = ts(matrix(shocks.sim[ , i], nrow = m, ncol = n),
+             start = start_, deltat = delta))))
       
       return(lapply(1:d, function(i)
-        ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n),
-           start = delta, deltat = delta)))
+        window(end = end_, x = ts(matrix(shocks.sim[ , i], nrow = m, ncol = n),
+           start = delta, deltat = delta))))
     }
     
     if (method == "antithetic")
@@ -206,14 +213,14 @@ simshocks <- function(n, horizon,
       shocks.sim <- rbind(temp, -temp)
       d <- dim(shocks.sim)[2]
       
-      if (!is.null(start))
+      if (!is.null(start_))
         return(lapply(1:d, function(i)
-          ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n),
-             start = start, deltat = delta)))
+          window(end = end_, x = ts(matrix(shocks.sim[ , i], nrow = m, ncol = n),
+             start = start_, deltat = delta))))
       
       return(lapply(1:d, function(i)
-        ts(data = matrix(shocks.sim[ , i], nrow = m, ncol = n),
-           start = delta, deltat = delta)))
+        window(end = end_, x = ts(matrix(shocks.sim[ , i], nrow = m, ncol = n),
+           start = delta, deltat = delta))))
     }
 
     if (method == "mm")
@@ -222,14 +229,14 @@ simshocks <- function(n, horizon,
                                     family, par, par2, type))
       d <- dim(shocks.sim)[2]
       
-      if (!is.null(start))
+      if (!is.null(start_))
         return(lapply(1:d, function(i)
-          ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
-             start = start, deltat = delta)))
+          window(end = end_, x = ts(scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
+             start = start_, deltat = delta))))
         
       return(lapply(1:d, function(i)
-        ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
-           start = delta, deltat = delta)))
+        window(end = end_, x = ts(scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
+           start = delta, deltat = delta))))
     }
 
     if (method == "hybridantimm")
@@ -241,28 +248,28 @@ simshocks <- function(n, horizon,
       shocks.sim <- rbind(temp, -temp)
       d <- dim(shocks.sim)[2]
       
-      if (!is.null(start))
+      if (!is.null(start_))
         return(lapply(1:d, function(i)
-          ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
-             start = start, deltat = delta)))
+          window(end = end_, x = ts(scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
+             start = start_, deltat = delta))))
       
       return(lapply(1:d, function(i)
-        ts(data = scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
-           start = delta, deltat = delta)))
+        window(end = end_, x = ts(scaleESG(matrix(shocks.sim[ , i], nrow = m, ncol = n)),
+           start = delta, deltat = delta))))
     }
 
     if (method == "TAG")
     {
       if (!is.null(family) && family > 0) warning("for method == 'TAG', only the independence copula is implemented")
       
-      if (!is.null(start))
+      if (!is.null(start_))
         return(lapply(1:d, function(i)
-          ts(data = TAG(n = n, m = m),
-             start = start, deltat = delta)))
+          window(end = end_, x = ts(TAG(n = n, m = m),
+             start = start_, deltat = delta))))
         
       return(lapply(1:d, function(i)
-        ts(data = TAG(n = n, m = m),
-           start = delta, deltat = delta)))
+        window(end = end_, x = ts(TAG(n = n, m = m),
+           start = delta, deltat = delta))))
     }
   }
 }

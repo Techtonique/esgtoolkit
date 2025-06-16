@@ -14,7 +14,7 @@ simshocks(
   par2 = rep(0, length(par)),
   RVM = NULL,
   type = c("CVine", "DVine", "RVine"),
-  start = NULL,
+  start_ = NULL,
   seed = 123
 )
 }
@@ -39,7 +39,7 @@ simshocks(
 
 \item{type}{Type of vine copula: "CVine", "DVine", or "RVine"}
 
-\item{start}{Starting time (optional)}
+\item{start_}{Starting time (optional)}
 
 \item{seed}{Random seed for reproducibility}
 }

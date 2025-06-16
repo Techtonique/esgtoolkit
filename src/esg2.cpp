@@ -327,7 +327,7 @@ NumericVector out(p);
     for(j = 0; j < n; j++)
     {
       sim_j = sim(j);    
-      if((sim_j >= sj_down(i)) & (sim_j < sj_up(i))) 
+      if((sim_j >= sj_down(i)) && (sim_j < sj_up(i))) 
       {
         somme = somme + sim_j;
         divsomme = divsomme + 1;

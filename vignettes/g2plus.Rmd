@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r}
+```{r chunk-1}
 rm(list=ls()) # beware, removes everything in your environment
 
 library(esgtoolkit)
@@ -85,7 +85,7 @@ simG2plus <- function(n, methodyc = c("fmm", "hyman", "HCSPL", "SW"))
 }
 ```
 
-```{r}
+```{r chunk-2}
 set.seed(3)
 # 4 types of simulations, by changing the number of scenarios
 ptm <- proc.time()
@@ -93,20 +93,20 @@ r_SW <- simG2plus(n = 100, methodyc = "hyman")
 proc.time() - ptm
 ```
 
-```{r fig.width=7.2}
+```{r chunk-3, fig.width=7.2}
 par(mfrow=c(1, 2))
 esgtoolkit::esgplotbands(r_SW, xlab = 'time', ylab = 'short rate')
 matplot(r_SW, type = 'l', xlab = 'time', ylab = 'short rate')
 ```
 
-```{r}
+```{r chunk-4}
 # Stochastic deflators :
 deltat_r <- deltat(r_SW)
 Dt_SW <- esgtoolkit::esgdiscountfactor(r = r_SW, X = 1)
 Dt_SW <- window(Dt_SW, start = deltat_r, deltat = 2*deltat_r)
 ```
 
-```{r}
+```{r chunk-5}
 # Market prices
 horizon <- 20
 marketprices <- p[1:horizon]
@@ -120,7 +120,7 @@ conf_int_SW <- apply(Dt_SW - marketprices, 1, function(x) t.test(x)$conf.int)
 conf_int_SW
 ```
 
-```{r fig.width=7.2}
+```{r chunk-6, fig.width=7.2}
 par(mfrow=c(1, 2))
 plot(marketprices, col = "blue", type = 'l', 
      xlab = "time", ylab = "prices", main = "Prices")
@@ -133,17 +133,17 @@ lines(estim_SW, col = "blue")
 ```
 
 
-```{r}
+```{r chunk-7}
 difference <- (Dt_SW - marketprices)
 ```
 
 **test for the "martingale" difference** (this implementation is very slow)
 
-```{r echo=TRUE, cache=TRUE, eval=FALSE}
+```{r chunk-8, echo=TRUE, cache=TRUE, eval=FALSE}
 lapply(1:nrow(difference), function(i) vrtest::DL.test(difference[i, ]))
 ```
 
-```{r fig.width=7.2}
+```{r chunk-9, fig.width=7.2}
 boxplot(t(difference))
 abline(h = 0, color = "red", lty = 2)
 ```

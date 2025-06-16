@@ -20,7 +20,7 @@ simdiff(
   eta_up = NULL,
   eta_down = NULL,
   eps = NULL,
-  start = NULL,
+  start_ = NULL,
   seed = 123
 )
 }
@@ -56,7 +56,7 @@ simdiff(
 
 \item{eps}{Pre-generated random shocks (optional)}
 
-\item{start}{Starting time (optional)}
+\item{start_}{Starting time (optional)}
 
 \item{seed}{Random seed for reproducibility}
 }
