@@ -15,6 +15,7 @@ simshocks(
   RVM = NULL,
   type = c("CVine", "DVine", "RVine"),
   start_ = NULL,
+  end_ = NULL,
   seed = 123
 )
 }
@@ -23,8 +24,9 @@ simshocks(
 
 \item{horizon}{Time horizon for simulation}
 
-\item{frequency}{Frequency of observations: "annual", "semi-annual", "quarterly", 
-"monthly", "weekly", or "daily"}
+\item{frequency}{Frequency of observations: if numeric (as for \code{ts} objects), 
+better used with \code{start_} and \code{end_}. Otherwise a string, either "annual", 
+"semi-annual", "quarterly", "monthly", "weekly", or "daily"}
 
 \item{method}{Simulation method: "classic", "antithetic", "mm" (moment matching),
 "hybridantimm" (hybrid antithetic-moment matching), or "TAG"}
@@ -39,7 +41,9 @@ simshocks(
 
 \item{type}{Type of vine copula: "CVine", "DVine", or "RVine"}
 
-\item{start_}{Starting time (optional)}
+\item{start_}{Starting time (optional), better used with numeric \code{frequency}}
+
+\item{end_}{Ending time (optional), better used with numeric \code{frequency}}
 
 \item{seed}{Random seed for reproducibility}
 }
@@ -58,7 +62,7 @@ Different simulation methods are available:
   \item "antithetic": Uses antithetic variates to reduce variance
   \item "mm": Moment matching to improve statistical properties
   \item "hybridantimm": Combines antithetic variates and moment matching
-  \item "TAG": Taguchi method
+  \item "TAG": TAG method
 }
 
 When using copulas (by specifying family and par), the function supports C-vine, D-vine,
@@ -73,8 +77,8 @@ shocks_antithetic <- simshocks(n = 1000, horizon = 5, frequency = "quarterly",
                               method = "antithetic")
 
 # Generate shocks using C-vine copula
-shocks_copula <- simshocks(n = 1000, horizon = 5, frequency = "quarterly",
-                          family = c(1, 1), par = c(0.5, 0.3),
-                          type = "CVine")
+#shocks_copula <- simshocks(n = 1000, horizon = 5, frequency = "quarterly",
+#                          family = c(1, 1), par = c(0.5, 0.3),
+#                          type = "CVine")
 
 }

@@ -39,6 +39,6 @@ X_ts <- ts(matrix(rnorm(100), 10, 10), start = 0, deltat = 0.1)
 prices_ts <- esgmcprices(r_ts, X_ts)
 
 # With maturity
-price_at_maturity <- esgmcprices(r_ts, X_ts, maturity = 1)
+price_at_maturity <- esgmcprices(r_ts, X_ts, maturity = c(0, 5))
 
 }

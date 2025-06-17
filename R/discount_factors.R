@@ -129,7 +129,7 @@ esgdiscountfactor <- function(r, X)
 #' prices_ts <- esgmcprices(r_ts, X_ts)
 #' 
 #' # With maturity
-#' price_at_maturity <- esgmcprices(r_ts, X_ts, maturity = 1)
+#' price_at_maturity <- esgmcprices(r_ts, X_ts, maturity = c(0, 5))
 #' 
 #' @export
 esgmcprices <- function(r, X, maturity = NULL)

@@ -43,8 +43,9 @@ CDRVineSim <- function(N, family, par=NULL,
 #' 
 #' @param n Number of simulations/scenarios
 #' @param horizon Time horizon for simulation
-#' @param frequency Frequency of observations: "annual", "semi-annual", "quarterly", 
-#'                  "monthly", "weekly", or "daily"
+#' @param frequency Frequency of observations: if numeric (as for \code{ts} objects), 
+#' better used with \code{start_} and \code{end_}. Otherwise a string, either "annual", 
+#' "semi-annual", "quarterly", "monthly", "weekly", or "daily"
 #' @param method Simulation method: "classic", "antithetic", "mm" (moment matching),
 #'               "hybridantimm" (hybrid antithetic-moment matching), or "TAG"
 #' @param family Vector of copula families (optional)
@@ -52,8 +53,8 @@ CDRVineSim <- function(N, family, par=NULL,
 #' @param par2 Vector of second copula parameters (optional)
 #' @param RVM RVineMatrix object for R-vine copula (optional)
 #' @param type Type of vine copula: "CVine", "DVine", or "RVine"
-#' @param start_ Starting time (optional)
-#' @param end_ Ending time (optional)
+#' @param start_ Starting time (optional), better used with numeric \code{frequency}
+#' @param end_ Ending time (optional), better used with numeric \code{frequency}
 #' @param seed Random seed for reproducibility
 #' 
 #' @details
@@ -64,7 +65,7 @@ CDRVineSim <- function(N, family, par=NULL,
 #'   \item "antithetic": Uses antithetic variates to reduce variance
 #'   \item "mm": Moment matching to improve statistical properties
 #'   \item "hybridantimm": Combines antithetic variates and moment matching
-#'   \item "TAG": Taguchi method
+#'   \item "TAG": TAG method
 #' }
 #' 
 #' When using copulas (by specifying family and par), the function supports C-vine, D-vine,
@@ -81,9 +82,9 @@ CDRVineSim <- function(N, family, par=NULL,
 #'                               method = "antithetic")
 #' 
 #' # Generate shocks using C-vine copula
-#' shocks_copula <- simshocks(n = 1000, horizon = 5, frequency = "quarterly",
-#'                           family = c(1, 1), par = c(0.5, 0.3),
-#'                           type = "CVine")
+#' #shocks_copula <- simshocks(n = 1000, horizon = 5, frequency = "quarterly",
+#' #                          family = c(1, 1), par = c(0.5, 0.3),
+#' #                          type = "CVine")
 #' 
 #' @export
 simshocks <- function(n, horizon, 

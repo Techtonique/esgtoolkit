@@ -9,8 +9,9 @@
 #' 
 #' @param n Number of simulations/scenarios
 #' @param horizon Time horizon for simulation
-#' @param frequency Frequency of observations: "annual", "semi-annual", "quarterly", 
-#'                  "monthly", "weekly", or "daily"
+#' @param frequency Frequency of observations: if numeric (as for \code{ts} objects), 
+#' better used with \code{start_} and \code{end_}. Otherwise a string, either "annual", 
+#' "semi-annual", "quarterly", "monthly", "weekly", or "daily"
 #' @param model Type of diffusion process: "GBM", "CIR", or "OU"
 #' @param x0 Initial value
 #' @param theta1 First parameter (drift for GBM, mean reversion for CIR/OU)
@@ -23,8 +24,8 @@
 #' @param eta_up Upward jump size (optional)
 #' @param eta_down Downward jump size (optional)
 #' @param eps Pre-generated random shocks (optional)
-#' @param start_ Starting time (optional)
-#' @param end_ Ending time (optional)
+#' @param start_ Starting time (optional), better used with numeric \code{frequency}
+#' @param end_ Ending time (optional), better used with numeric \code{frequency}
 #' @param seed Random seed for reproducibility
 #' 
 #' @details
@@ -133,9 +134,6 @@ simdiff <- function(n, horizon,
     
     if (!is.null(start_))
     {
-      misc::debug_print(horizon)
-      misc::debug_print(start_)
-      misc::debug_print(delta)
       # rCIRESGcpp(const int N, const int horizon, const double Delta, const double x0, 
       # NumericVector theta, NumericMatrix eps)
       return(window(end = end_, x = ts(rCIRESGcppexact(N = n, horizon = horizon, Delta = delta, x0 = x0, 

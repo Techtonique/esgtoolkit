@@ -52,6 +52,7 @@ freq <- "weekly"
 
 start_ <- start(EuStockMarkets)
 end_ <- end(EuStockMarkets)
+print(end_ - start_)
 freq_ <- frequency(EuStockMarkets)
 
 # Simulation of shocks, with antithetic variates
@@ -111,9 +112,6 @@ print(dim(sim_price))
 
 
 ```{r 4-plot, fig.width=7.2}
-# Plot the simulated volatility paths
-esgtoolkit::esgplotbands(sim_vol)
-
 # Plot the simulated price paths
 esgtoolkit::esgplotbands(sim_price)
 ```

@@ -52,7 +52,7 @@ sim.GBM <- simdiff(n = 100, horizon = 5, frequency = "quart",
                x0 = 100, theta1 = 0.03, theta2 = 0.1, 
                eps = eps0)
 esgplotbands(sim.GBM, xlab = "time", ylab = "values", main = "with esgplotbands")                
-matplot(as.vector(time(sim.GBM)), sim.GBM, type = 'l', main = "with matplot")
+matplot(sim.GBM, type = 'l', main = "with matplot")
 
 ```
 

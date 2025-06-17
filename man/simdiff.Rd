@@ -21,6 +21,7 @@ simdiff(
   eta_down = NULL,
   eps = NULL,
   start_ = NULL,
+  end_ = NULL,
   seed = 123
 )
 }
@@ -29,8 +30,9 @@ simdiff(
 
 \item{horizon}{Time horizon for simulation}
 
-\item{frequency}{Frequency of observations: "annual", "semi-annual", "quarterly", 
-"monthly", "weekly", or "daily"}
+\item{frequency}{Frequency of observations: if numeric (as for \code{ts} objects), 
+better used with \code{start_} and \code{end_}. Otherwise a string, either "annual", 
+"semi-annual", "quarterly", "monthly", "weekly", or "daily"}
 
 \item{model}{Type of diffusion process: "GBM", "CIR", or "OU"}
 
@@ -56,7 +58,9 @@ simdiff(
 
 \item{eps}{Pre-generated random shocks (optional)}
 
-\item{start_}{Starting time (optional)}
+\item{start_}{Starting time (optional), better used with numeric \code{frequency}}
+
+\item{end_}{Ending time (optional), better used with numeric \code{frequency}}
 
 \item{seed}{Random seed for reproducibility}
 }
