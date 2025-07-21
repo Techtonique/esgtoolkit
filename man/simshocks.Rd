@@ -16,7 +16,8 @@ simshocks(
   type = c("CVine", "DVine", "RVine"),
   start_ = NULL,
   end_ = NULL,
-  seed = 123
+  seed = 123,
+  return_zoo = FALSE
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ better used with \code{start_} and \code{end_}. Otherwise a string, either "annu
 \item{end_}{Ending time (optional), better used with numeric \code{frequency}}
 
 \item{seed}{Random seed for reproducibility}
+
+\item{return_zoo}{Boolean; Either return a \code{zoo} object or not}
 }
 \value{
 A time series object containing the simulated Gaussian shocks

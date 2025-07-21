@@ -27,6 +27,7 @@
 #' @param start_ Starting time (optional), better used with numeric \code{frequency}
 #' @param end_ Ending time (optional), better used with numeric \code{frequency}
 #' @param seed Random seed for reproducibility
+#' @param return_zoo Boolean; Either return a \code{zoo} object or not 
 #' 
 #' @details
 #' The function simulates various diffusion processes with different frequencies.
@@ -59,8 +60,11 @@ simdiff <- function(n, horizon,
                     eps = NULL, 
                     start_ = NULL,
                     end_ = NULL, 
-                    seed = 123)
+                    seed = 123, 
+                    return_zoo = FALSE)
 {
+  if (!requireNamespace("zoo", quietly = TRUE)) stop("Package 'zoo' must be installed for return_zoo = TRUE")
+
   if (floor(n) != n) stop("'n' must be an integer")
   if (n <= 1) stop("'n' must be > 1")
   if (floor(horizon) != horizon) stop("'horizon' must be an integer") 
@@ -76,11 +80,19 @@ simdiff <- function(n, horizon,
                     "monthly" = 1/12,
                     "weekly" = 1/52,
                     "daily" = 1/252)
-  }
+  }  
   
   m <- horizon/delta 
   nbdates <- m + 1
   model <- match.arg(model)
+
+  if (return_zoo) {
+    return(sim_to_zoo(
+      simdiff(n = n, horizon = horizon, frequency = frequency, model = model,
+              x0 = x0, theta1 = theta1, theta2 = theta2,
+              return_zoo = FALSE, start_ = start_, end_ = end_, seed = seed),
+      start_ = start_, frequency = frequency, end_ = end_))
+  }
   
   set.seed(seed)
   

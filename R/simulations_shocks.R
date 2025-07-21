@@ -56,6 +56,7 @@ CDRVineSim <- function(N, family, par=NULL,
 #' @param start_ Starting time (optional), better used with numeric \code{frequency}
 #' @param end_ Ending time (optional), better used with numeric \code{frequency}
 #' @param seed Random seed for reproducibility
+#' @param return_zoo Boolean; Either return a \code{zoo} object or not 
 #' 
 #' @details
 #' The function generates Gaussian shocks that can be used for simulating various risk factors.
@@ -99,8 +100,11 @@ simshocks <- function(n, horizon,
                       type = c("CVine", "DVine", "RVine"),
                       start_ = NULL, 
                       end_ = NULL, 
-                      seed = 123)
+                      seed = 123, 
+                      return_zoo = FALSE)
 {
+  if (!requireNamespace("zoo", quietly = TRUE)) stop("Package 'zoo' must be installed for return_zoo = TRUE")
+
   if (floor(n) != n) stop("'n' must be an integer")
   if (n <= 1) stop("'n' must be > 1")
   if (floor(horizon) != horizon) stop("'horizon' must be an integer")
@@ -122,6 +126,22 @@ simshocks <- function(n, horizon,
   method <- match.arg(method)
   m <- horizon/delta  
   type <- match.arg(type)
+
+  if (return_zoo) {
+    return(sim_to_zoo(
+      simshocks(n = n, horizon = horizon, 
+                frequency = frequency, 
+                method = method, 
+                family = family, 
+                par = par, par2 = par2, 
+                RVM = RVM, 
+                type = type,
+                start_ = start_, 
+                end_ = end_, 
+                seed = seed, 
+                return_zoo = FALSE),
+      start_ = start_, frequency = frequency, end_ = end_))
+  }
   
   set.seed(seed)
   
