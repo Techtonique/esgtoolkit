@@ -14,6 +14,10 @@ export(forwardrates)
 export(ycextra)
 export(ycinter)
 export(debug_print)
+export(rsvjd)
+export(generate_svjd)
+export(generate_synthetic_returns)
+export(generate_diverse_sv_paths)
 importFrom("graphics", "hist")
 importFrom("methods", "new")
 importFrom("stats", "density", "median", "nlminb", "optim", "pf",
@@ -36,5 +40,7 @@ importFrom("graphics", "abline", "lines", "matplot", "par", "plot",
 importFrom("stats", "cor", "cor.test", "deltat", "end", "is.ts", "pt",
              "qnorm", "qt", "quantile", "sd", "start", "t.test", "time",
              "ts", "tsp", "window")
+importFrom("stats", "confint", "frequency", "lm", "qf", "rexp",
+               "rnorm", "rpois", "rt", "runif")             
 useDynLib("esgtoolkit")
 
