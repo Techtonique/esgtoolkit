@@ -1,0 +1,44 @@
+---
+title: "Synthetic Copula simulation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Synthetic Copula simulation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r fig.width=7.5}
+library(esgtoolkit)
+
+y <- EuStockMarkets[1:250, ]
+
+# Run simulation
+result <- simulate_rvine(y, n = 300, verbose = TRUE, n_trials = 5)
+
+# Print summary
+print(result)
+```
+
+```{r fig.width=7.5}
+# Create different types of plots
+plot(result, type = "distribution")  # Default
+```
+
+```{r fig.width=7.5}
+plot(result, type = "correlation")
+```
+
+```{r fig.width=7.5}
+plot(result, type = "both")
+```
+
+```{r fig.width=7.5}
+# Access detailed diagnostics
+str(result$diagnostics)
+
+# Access simulated data
+sim_data <- result$simulated_data
+
+head(sim_data)
+```
+

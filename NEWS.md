@@ -1,3 +1,7 @@
+# version 1.8.0
+
+- `simulate_rvine` for simulating from an adjusted multivariate copula
+
 # version 1.1.0
 
 - Fix weird bug on `horizon > max.in.maturities`

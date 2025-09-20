@@ -334,3 +334,416 @@ generate_diverse_sv_paths <- function(
   
   return(result)
 }
+
+
+#' Enhanced R-vine copula simulation with proper distribution preservation
+#'
+#' Simulates multivariate time series data using R-vine copulas while preserving
+#' the dependence structure and marginal distributions of the original data.
+#'
+#' @param data Matrix or data.frame of multivariate time series
+#' @param n Number of simulations to generate
+#' @param seed Random seed for reproducibility
+#' @param verbose Whether to print fitting information
+#' @param n_trials Number of trials to select best fit
+#' @param oversample_factor Factor to oversample for better selection (default 1.5)
+#' @param score_weights Vector of weights for scoring criteria. Must be length 5 and sum to 1.
+#'                      Order: [Kendall_cor, Pearson_cor, KS_test, mean_error, sd_error]
+#'
+#' @return A list of class 'rvine_simulation' containing:
+#' \itemize{
+#'   \item \code{simulated_data} - The simulated multivariate time series
+#'   \item \code{diagnostics} - Comprehensive diagnostic information including:
+#'   \itemize{
+#'     \item Correlation matrices and errors
+#'     \item Distribution comparison metrics
+#'     \item Quality scores and trial results
+#'     \item Model information
+#'   }
+#' }
+#'
+#' @examples
+#' \dontrun{
+#' # Basic usage with default weights
+#' result <- simulate_rvine(uschange, n = 200)
+#' 
+#' # Custom weights emphasizing correlation preservation
+#' result <- simulate_rvine(uschange, n = 200, 
+#'                         score_weights = c(0.6, 0.2, 0.1, 0.05, 0.05))
+#' 
+#' # Plot results
+#' plot(result)
+#' }
+#'
+#' @export
+simulate_rvine <- function(data, n = 100, seed = 123, 
+                           verbose = FALSE, n_trials = 10,
+                           oversample_factor = 1.5,
+                           score_weights = c(0.4, 0.2, 0.2, 0.1, 0.1)) {
+  # Input validation
+  if (!is.matrix(data) && !is.data.frame(data)) {
+    stop("Data must be a matrix or data.frame")
+  }
+  
+  # Validate score weights
+  if (length(score_weights) != 5) {
+    stop("score_weights must be a vector of length 5")
+  }
+  if (abs(sum(score_weights) - 1) > 1e-10) {
+    stop("score_weights must sum to 1")
+  }
+  if (any(score_weights < 0)) {
+    stop("score_weights must be non-negative")
+  }
+  
+  data <- as.matrix(data)  # Ensure matrix format
+  n_obs <- nrow(data)
+  n_series <- ncol(data)
+  series_names <- colnames(data)
+  
+  # Enhanced validation
+  if (n_obs < 30) {
+    stop("Sample size too small for reliable copula estimation (minimum 30 observations)")
+  } else if (n_obs < 50) {
+    warning("Small sample size may affect copula estimation quality")
+  }
+  
+  if (any(is.na(data))) {
+    stop("Data contains missing values. Please handle missing data before simulation.")
+  }
+  
+  if (n_series < 2) {
+    stop("At least 2 variables required for copula modeling")
+  }
+  
+  # Store original statistics for comparison
+  original_cor <- cor(data, method = "kendall")  # Use Kendall's tau for copulas
+  original_cor_pearson <- cor(data)
+  original_means <- colMeans(data)
+  original_sds <- apply(data, 2, sd)
+  
+  # Improved uniformization with better boundary handling
+  if (verbose) message("Transforming data to uniform margins with improved boundary handling...")
+  U <- matrix(NA, nrow = n_obs, ncol = n_series)
+  for (i in 1:n_series) {
+    # Use empirical CDF with interpolation for smoother transformation
+    ecdf_func <- ecdf(data[, i])
+    u_vals <- ecdf_func(data[, i])
+    # Adjust for boundary issues
+    u_vals[u_vals == 0] <- 1 / (2 * n_obs)
+    u_vals[u_vals == 1] <- 1 - 1 / (2 * n_obs)
+    U[, i] <- u_vals
+  }
+  
+  # Fit the R-vine copula model with enhanced family selection
+  if (verbose) message("Fitting R-vine copula model...")
+  # Extended set of valid copula families
+  valid_families <- c(1, 2, 3, 4, 5, 6,           # Basic families
+                      13, 14, 16, 17, 18, 19, 20,  # Rotated Clayton
+                      23, 24, 26, 27, 28, 29, 30,  # Rotated Gumbel  
+                      33, 34, 36, 37, 38, 39, 40)  # Rotated Frank
+  
+  # Try different selection criteria and choose best
+  tryCatch({
+    RVM_U <- VineCopula::RVineStructureSelect(
+      data = U, 
+      familyset = valid_families, 
+      type = 0, 
+      selectioncrit = "BIC",
+      progress = verbose,
+      treecrit = "tau",
+      trunclevel = min(n_series - 1, 3)  # Limit complexity for small datasets
+    )
+  }, error = function(e) {
+    if (verbose) message("Full model failed, trying simplified approach...")
+    # Fallback to basic families
+    RVM_U <- VineCopula::RVineStructureSelect(
+      data = U, 
+      familyset = c(1:6), 
+      type = 0, 
+      selectioncrit = "AIC",
+      progress = verbose
+    )
+  })
+  
+  if (verbose) {
+    message("R-vine copula model fitted successfully")
+    print(summary(RVM_U))
+  }
+  
+  # Multiple simulation trials with improved back-transformation
+  best_sim <- NULL
+  best_score <- Inf
+  trial_scores <- numeric(n_trials)
+  
+  if (verbose) message(sprintf("Running %d simulation trials...", n_trials))
+  
+  for (trial in 1:n_trials) {
+    # Better seed management
+    set.seed(seed * 1000 + trial * 17)  # More distributed seeds
+    # Simulate with oversampling for better selection
+    n_sim <- max(n, ceiling(n * oversample_factor))
+    tryCatch({
+      rvine_simulation <- VineCopula::RVineSim(N = n_sim, RVM = RVM_U)
+      # Select best n observations if oversampling
+      if (n_sim > n) {
+        # Calculate quality for each potential subsample
+        subsample_scores <- numeric(n_sim - n + 1)
+        for (start_idx in 1:(n_sim - n + 1)) {
+          end_idx <- start_idx + n - 1
+          temp_sim <- rvine_simulation[start_idx:end_idx, , drop = FALSE]
+          temp_cor <- cor(temp_sim, method = "kendall")
+          subsample_scores[start_idx] <- mean(abs(temp_cor - original_cor))
+        }
+        best_start <- which.min(subsample_scores)
+        rvine_simulation <- rvine_simulation[best_start:(best_start + n - 1), , drop = FALSE]
+      }
+      
+      # Improved back-transformation using empirical quantiles
+      simulated_data <- matrix(NA, nrow = n, ncol = n_series)
+      
+      for (i in 1:n_series) {
+        # Use empirical quantile function with interpolation
+        simulated_data[, i] <- quantile(data[, i], 
+                                        probs = pmax(pmin(rvine_simulation[, i], 
+                                                          1 - 1e-10), 1e-10), 
+                                        type = 8)
+      }
+      
+      # Enhanced quality scoring using provided weights
+      sim_cor <- cor(simulated_data, method = "kendall")
+      sim_cor_pearson <- cor(simulated_data)
+      
+      # Correlation preservation (Kendall's tau)
+      cor_error_tau <- mean(abs(sim_cor - original_cor))
+      cor_error_pearson <- mean(abs(sim_cor_pearson - original_cor_pearson))
+      
+      # Distribution similarity using multiple metrics
+      ks_stats <- numeric(n_series)
+      for (i in 1:n_series) {
+        # Suppress KS test warnings about ties (expected with continuous data)
+        ks_result <- suppressWarnings(ks.test(data[, i], simulated_data[, i]))
+        ks_stats[i] <- ks_result$statistic
+      }
+      mean_ks <- mean(ks_stats)
+      
+      # Moment preservation
+      sim_means <- colMeans(simulated_data)
+      sim_sds <- apply(simulated_data, 2, sd)
+      mean_error <- mean(abs(sim_means - original_means) / abs(original_means))
+      sd_error <- mean(abs(sim_sds - original_sds) / original_sds)
+      
+      # Combined score with user-defined weights
+      score <- score_weights[1] * cor_error_tau + 
+        score_weights[2] * cor_error_pearson + 
+        score_weights[3] * mean_ks + 
+        score_weights[4] * mean_error + 
+        score_weights[5] * sd_error
+      
+      trial_scores[trial] <- score
+      if (score < best_score) {
+        best_score <- score
+        best_sim <- simulated_data
+      }
+    }, error = function(e) {
+      if (verbose) message(sprintf("Trial %d failed: %s", trial, e$message))
+      trial_scores[trial] <- Inf
+    })
+  }
+  
+  if (is.null(best_sim)) {
+    stop("All simulation trials failed. Check data quality and model specification.")
+  }
+  
+  colnames(best_sim) <- series_names
+  
+  # Calculate comprehensive diagnostics
+  sim_cor <- cor(best_sim, method = "kendall")
+  sim_cor_pearson <- cor(best_sim)
+  cor_error <- sim_cor - original_cor
+  cor_error_pearson <- sim_cor_pearson - original_cor_pearson
+  
+  # Additional diagnostic statistics
+  diagnostics <- list(
+    # Correlation analysis
+    original_correlation_tau = original_cor,
+    simulated_correlation_tau = sim_cor,
+    correlation_error_tau = cor_error,
+    original_correlation_pearson = original_cor_pearson,
+    simulated_correlation_pearson = sim_cor_pearson,
+    correlation_error_pearson = cor_error_pearson,
+    
+    # Error metrics
+    mean_absolute_error_tau = mean(abs(cor_error)),
+    max_absolute_error_tau = max(abs(cor_error)),
+    mean_absolute_error_pearson = mean(abs(cor_error_pearson)),
+    max_absolute_error_pearson = max(abs(cor_error_pearson)),
+    
+    # Quality assessment
+    quality_score = best_score,
+    score_weights_used = score_weights,
+    trial_scores = trial_scores,
+    successful_trials = sum(is.finite(trial_scores)),
+    
+    # Model information
+    RVM_model = RVM_U,
+    n_observations = n_obs,
+    n_variables = n_series,
+    n_simulations = n,
+    
+    # Distribution comparison
+    original_means = original_means,
+    simulated_means = colMeans(best_sim),
+    original_sds = original_sds,
+    simulated_sds = apply(best_sim, 2, sd),
+    
+    # KS test results for distribution similarity
+    ks_test_statistics = sapply(1:n_series, function(i) {
+      suppressWarnings(ks.test(data[, i], best_sim[, i])$statistic)
+    }),
+    ks_test_pvalues = sapply(1:n_series, function(i) {
+      suppressWarnings(ks.test(data[, i], best_sim[, i])$p.value)
+    })
+  )
+  
+  if (verbose) {
+    message(sprintf("Best simulation achieved quality score: %.4f", best_score))
+    message(sprintf("Score weights used: [%.1f, %.1f, %.1f, %.1f, %.1f]", 
+                    score_weights[1], score_weights[2], score_weights[3], 
+                    score_weights[4], score_weights[5]))
+    message(sprintf("Mean absolute correlation error (Kendall): %.4f", 
+                    diagnostics$mean_absolute_error_tau))
+    message(sprintf("Mean absolute correlation error (Pearson): %.4f", 
+                    diagnostics$mean_absolute_error_pearson))
+  }
+  
+  # Create result object with class
+  result <- list(
+    simulated_data = best_sim,
+    diagnostics = diagnostics,
+    original_data = data,
+    call = match.call()
+  )
+  
+  class(result) <- "rvine_simulation"
+  return(result)
+}
+
+#' Plot method for rvine_simulation objects
+#'
+#' Creates diagnostic plots for R-vine copula simulation results.
+#'
+#' @param x An object of class 'rvine_simulation'
+#' @param type Type of plot: "distribution" (default), "correlation", or "both"
+#' @param ... Additional arguments passed to plotting functions
+#'
+#' @return A ggplot2 object or grid of plots
+#'
+#' @method plot rvine_simulation
+#' @export
+plot.rvine_simulation <- function(x, type = "distribution", ...) {
+  if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    stop("ggplot2 package required for plotting")
+  }
+  if (!requireNamespace("reshape2", quietly = TRUE)) {
+    stop("reshape2 package required for plotting")
+  }
+  if (!requireNamespace("gridExtra", quietly = TRUE)) {
+    stop("gridExtra package required for plotting")
+  }
+  
+  # Prepare data for plotting
+  original_df <- data.frame(x$original_data, type = "Original")
+  simulated_df <- data.frame(x$simulated_data, type = "Simulated")
+  combined_df <- rbind(original_df, simulated_df)
+  melted_df <- reshape2::melt(combined_df, id.vars = "type")
+  
+  if (type == "distribution") {
+    # Distribution comparison plot
+    p <- ggplot2::ggplot(melted_df, ggplot2::aes(x = value, fill = type)) +
+      ggplot2::geom_density(alpha = 0.6) +
+      ggplot2::facet_wrap(~variable, scales = "free") +
+      ggplot2::theme_minimal() +
+      ggplot2::labs(
+        title = "Distribution Comparison: Original vs Simulated",
+        x = "Value", 
+        y = "Density",
+        fill = "Data Type"
+      ) +
+      ggplot2::scale_fill_manual(values = c("Original" = "blue", "Simulated" = "red"))
+    
+    return(p)
+    
+  } else if (type == "correlation") {
+    # Correlation comparison plot
+    orig_cor <- x$diagnostics$original_correlation_pearson
+    sim_cor <- x$diagnostics$simulated_correlation_pearson
+    
+    # Melt correlation matrices
+    orig_melt <- reshape2::melt(orig_cor, varnames = c("Var1", "Var2"))
+    sim_melt <- reshape2::melt(sim_cor, varnames = c("Var1", "Var2"))
+    orig_melt$type <- "Original"
+    sim_melt$type <- "Simulated"
+    cor_df <- rbind(orig_melt, sim_melt)
+    
+    p1 <- ggplot2::ggplot(orig_melt, ggplot2::aes(x = Var1, y = Var2, fill = value)) +
+      ggplot2::geom_tile() +
+      ggplot2::scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                                    midpoint = 0, limit = c(-1, 1)) +
+      ggplot2::theme_minimal() +
+      ggplot2::labs(title = "Original Correlation Matrix", fill = "Correlation") +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+    
+    p2 <- ggplot2::ggplot(sim_melt, ggplot2::aes(x = Var1, y = Var2, fill = value)) +
+      ggplot2::geom_tile() +
+      ggplot2::scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                                    midpoint = 0, limit = c(-1, 1)) +
+      ggplot2::theme_minimal() +
+      ggplot2::labs(title = "Simulated Correlation Matrix", fill = "Correlation") +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+    
+    return(gridExtra::grid.arrange(p1, p2, ncol = 2))
+    
+  } else if (type == "both") {
+    # Both distribution and correlation plots
+    p_dist <- plot.rvine_simulation(x, type = "distribution")
+    p_corr <- plot.rvine_simulation(x, type = "correlation")
+    
+    # Create a simple correlation error plot for the grid
+    cor_error <- x$diagnostics$correlation_error_pearson
+    error_melt <- reshape2::melt(cor_error, varnames = c("Var1", "Var2"))
+    p_error <- ggplot2::ggplot(error_melt, ggplot2::aes(x = Var1, y = Var2, fill = value)) +
+      ggplot2::geom_tile() +
+      ggplot2::scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+                                    midpoint = 0, limit = c(-1, 1)) +
+      ggplot2::theme_minimal() +
+      ggplot2::labs(title = "Correlation Error (Original - Simulated)", fill = "Error") +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+    
+    return(gridExtra::grid.arrange(p_dist, p_corr, p_error, ncol = 1, heights = c(2, 1, 1)))
+  }
+}
+
+#' Print method for rvine_simulation objects
+#'
+#' @param x An object of class 'rvine_simulation'
+#' @param ... Additional arguments passed to print
+#'
+#' @method print rvine_simulation
+#' @export
+print.rvine_simulation <- function(x, ...) {
+  cat("R-vine Copula Simulation Results\n")
+  cat("================================\n\n")
+  cat(sprintf("Original observations: %d\n", x$diagnostics$n_observations))
+  cat(sprintf("Variables: %d\n", x$diagnostics$n_variables))
+  cat(sprintf("Simulated observations: %d\n", x$diagnostics$n_simulations))
+  cat(sprintf("Quality score: %.4f\n", x$diagnostics$quality_score))
+  cat(sprintf("Successful trials: %d/%d\n", 
+              x$diagnostics$successful_trials, 
+              length(x$diagnostics$trial_scores)))
+  cat(sprintf("Mean absolute correlation error (Kendall): %.4f\n", 
+              x$diagnostics$mean_absolute_error_tau))
+  cat(sprintf("Mean absolute correlation error (Pearson): %.4f\n", 
+              x$diagnostics$mean_absolute_error_pearson))
+  cat("\nUse plot() to visualize results and $diagnostics for detailed metrics.\n")
+}
