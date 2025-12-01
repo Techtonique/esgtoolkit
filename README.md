@@ -3,6 +3,9 @@ esgtoolkit | <a class="github-button" href="https://github.com/Techtonique/esgto
 
 [![Last Commit](https://img.shields.io/github/last-commit/Techtonique/esgtoolkit)](https://github.com/Techtonique/esgtoolkit)
 [![Documentation](https://img.shields.io/badge/documentation-is_here-green)](https://docs.techtonique.net/ESGtoolkit/index.html)
+![Downloads](https://r-packages.techtonique.net/badges/downloads/last-month/esgtoolkit.svg)
+![Total Downloads](https://r-packages.techtonique.net/badges/downloads/grand-total/esgtoolkit.svg?color=brightgreen)
+
 
 **Important:** Starting with 1.0.0, the package is renamed as lower case 'esgtoolkit' (to finally remove all my active packages from CRAN)
 
