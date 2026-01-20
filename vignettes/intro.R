@@ -1,23 +1,12 @@
----
-title: "Introduction"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Introduction}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
-For more details (and text), read [https://www.researchgate.net/publication/338549100_ESGtoolkit_a_tool_for_stochastic_simulation_v020](https://www.researchgate.net/publication/338549100_ESGtoolkit_a_tool_for_stochastic_simulation_v020). 
-
-```{r}
+## -----------------------------------------------------------------------------
 devtools::install_github("cran/fOptions")
-```
 
-```{r}
+
+## -----------------------------------------------------------------------------
 library(esgtoolkit)
-```
 
-```{r fig.width=7.2}
+
+## ----fig.width=7.2------------------------------------------------------------
 # ESGtoolkit R Code Examples
 # Source: ESGtoolkit documentation v0.2.0
 
@@ -109,16 +98,12 @@ esgplotshocks(s0_par3, s0_par4)
 
 # Spot variance
 V0 <- 0.1372
-
 # mean-reversion speed
 kappa <- 9.5110/100
-
 # long-term variance
 theta <- 0.0285
-
 # volatility of volatility
 volvol <- 0.8010/100
-
 # Correlation between stoch. vol and prices
 rho <- -0.5483
 
@@ -211,47 +196,47 @@ martingaletest_sim_price <- esgmartingaletest(r = r0,
 
 # Visualization of confidence intervals
 esgplotbands(martingaletest_sim_price)
-```
 
-```{r eval=FALSE}
-# ============================================================================
-# OPTION PRICING EXAMPLE
-# ============================================================================
 
-# Option pricing parameters
-# Strike
-K <- 3400
-Kts <- ts(matrix(K, nrow(sim_price), ncol(sim_price)),
-          start = start(sim_price),
-          deltat = deltat(sim_price),
-          end = end(sim_price))
+## ----eval=FALSE---------------------------------------------------------------
+# # ============================================================================
+# # OPTION PRICING EXAMPLE
+# # ============================================================================
+# 
+# # Option pricing parameters
+# # Strike
+# K <- 3400
+# Kts <- ts(matrix(K, nrow(sim_price), ncol(sim_price)),
+#           start = start(sim_price),
+#           deltat = deltat(sim_price),
+#           end = end(sim_price))
+# 
+# # Implied volatility
+# sigma_imp <- 0.6625
+# 
+# # Maturity
+# maturity <- 2/52
+# 
+# # payoff at maturity
+# payoff_ <- (sim_price - Kts)*(sim_price > Kts)
+# payoff <- window(payoff_,
+#                  start = deltat(sim_price),
+#                  deltat = deltat(sim_price),
+#                  names = paste0("Series ", 1:n))
+# 
+# # True price (Black-Scholes)
+# c0 <- GBSOption("c", S = S0, X = K, Time = maturity, r = r0,
+#                 b = 0, sigma = sigma_imp)
+# print(c0@price)
+# 
+# # Monte Carlo price
+# print(as.numeric(esgmcprices(r = r0, X = payoff, maturity)))
+# 
+# # pct. difference
+# print(as.numeric((esgmcprices(r = r0, X = payoff,
+#                               maturity = maturity)/c0@price - 1)*100))
+# 
+# # Convergence towards the option price
+# esgmccv(r = r0, X = payoff, maturity = maturity,
+#         main = "Convergence towards the call \n option price")
 
-# Implied volatility
-sigma_imp <- 0.6625
-
-# Maturity
-maturity <- 2/52
-
-# payoff at maturity
-payoff_ <- (sim_price - Kts)*(sim_price > Kts)
-payoff <- window(payoff_,
-                 start = deltat(sim_price),
-                 deltat = deltat(sim_price),
-                 names = paste0("Series ", 1:n))
-
-# True price (Black-Scholes)
-c0 <- GBSOption("c", S = S0, X = K, Time = maturity, r = r0,
-                b = 0, sigma = sigma_imp)
-print(c0@price)
-
-# Monte Carlo price
-print(as.numeric(esgmcprices(r = r0, X = payoff, maturity)))
-
-# pct. difference
-print(as.numeric((esgmcprices(r = r0, X = payoff,
-                              maturity = maturity)/c0@price - 1)*100))
-
-# Convergence towards the option price
-esgmccv(r = r0, X = payoff, maturity = maturity,
-        main = "Convergence towards the call \n option price")
-```

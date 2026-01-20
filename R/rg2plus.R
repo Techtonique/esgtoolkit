@@ -11,6 +11,7 @@
 #' @param eta Volatility of factor y.
 #' @param rho Correlation between factors.
 #' @param methodyc Interpolation method for forward rates ("fmm", "hyman", "HCSPL", "SW").
+#' @param ... Additional parameters to be passed to simdiff or simshocks
 #' @return A time series of simulated short rates for each scenario.
 rg2plus <- function(n = 10L,
                     horizon = 5L,
@@ -53,7 +54,8 @@ rg2plus <- function(n = 10L,
                     sigma = 0.09416266,
                     eta = 0.08439934,
                     rho = -0.99855687,
-                    methodyc = c("fmm", "hyman", "HCSPL", "SW")) {
+                    methodyc = c("fmm", "hyman", "HCSPL", "SW"), 
+                    ...) {
   # Compute delta_t based on freq
   if (is.character(freq)) {
     delta_t <- switch(
@@ -78,7 +80,8 @@ rg2plus <- function(n = 10L,
     horizon = horizon,
     frequency = freq,
     family = 1,
-    par = rho
+    par = rho, 
+    ...
   )
   
   # Simulate OU factors
@@ -91,7 +94,8 @@ rg2plus <- function(n = 10L,
     theta1 = 0,
     theta2 = a,
     theta3 = sigma,
-    eps = eps[[1]]
+    eps = eps[[1]], 
+    ...
   )
   y <- esgtoolkit::simdiff(
     n = n,
@@ -102,7 +106,8 @@ rg2plus <- function(n = 10L,
     theta1 = 0,
     theta2 = b,
     theta3 = eta,
-    eps = eps[[2]]
+    eps = eps[[2]], 
+    ...
   )
   
   # Forward rate curve

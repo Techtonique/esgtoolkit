@@ -8,6 +8,7 @@
 #' @param rho_g2plus Correlation between G2++ factors
 #' @param ... Additional parameters to be passed to \code{\link{rsvjd}} and
 #' \code{\link{rg2plus}}
+#' @return A of time series objects (\code{ts}).
 rsvjdg2plus <- function(n = 10,
                         horizon = 5,
                         freq = "quarterly",

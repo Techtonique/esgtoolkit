@@ -14,6 +14,7 @@
 #' @param mu_J Mean jump size.
 #' @param sigma_J Std dev of jump size.
 #' @param start_ Starting time (optional), better used with numeric \code{frequency}
+#' @param ... Additional parameters to be passed to simdiff or simshocks
 #' @return A time series object (\code{ts}).
 rsvjd <- function(n = 10L,
                   horizon = 5L,
@@ -28,7 +29,8 @@ rsvjd <- function(n = 10L,
                   lambda = 0.1,
                   mu_J = 0.0,
                   sigma_J = 0.1,
-                  start_ = NULL) {
+                  start_ = NULL, 
+                  ...) {
   # Check Feller condition
   if (2 * kappa * theta < volvol^2) {
     warning(
@@ -45,7 +47,8 @@ rsvjd <- function(n = 10L,
     method = "anti",
     family = 1,
     par = rho,
-    start_ = start_
+    start_ = start_, 
+    ...
   )
   
   sim_vol <- esgtoolkit::simdiff(
@@ -58,7 +61,8 @@ rsvjd <- function(n = 10L,
     theta2 = kappa,
     theta3 = volvol,
     eps = shocks[[1]],
-    start_ = start_
+    start_ = start_, 
+    ...
   )
   
   return(
@@ -74,7 +78,8 @@ rsvjd <- function(n = 10L,
       mu_z = mu_J,
       sigma_z = sigma_J,
       eps = shocks[[2]],
-      start_ = start_
+      start_ = start_, 
+      ...
     )
   )
 }
