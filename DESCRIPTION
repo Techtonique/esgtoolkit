@@ -19,7 +19,8 @@ Suggests:
     ggplot2,
     testthat,
     knitr,
-    misc 
+    misc,
+    tseries
 VignetteBuilder: knitr    
 LinkingTo: Rcpp
 Packaged: 2014-06-12 23:32:30 UTC; Thierry
