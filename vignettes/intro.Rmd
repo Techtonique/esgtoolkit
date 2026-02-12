@@ -10,10 +10,6 @@ vignette: >
 For more details (and text), read [https://www.researchgate.net/publication/338549100_ESGtoolkit_a_tool_for_stochastic_simulation_v020](https://www.researchgate.net/publication/338549100_ESGtoolkit_a_tool_for_stochastic_simulation_v020). 
 
 ```{r}
-devtools::install_github("cran/fOptions")
-```
-
-```{r}
 library(esgtoolkit)
 ```
 
@@ -239,17 +235,8 @@ payoff <- window(payoff_,
                  deltat = deltat(sim_price),
                  names = paste0("Series ", 1:n))
 
-# True price (Black-Scholes)
-c0 <- GBSOption("c", S = S0, X = K, Time = maturity, r = r0,
-                b = 0, sigma = sigma_imp)
-print(c0@price)
-
 # Monte Carlo price
 print(as.numeric(esgmcprices(r = r0, X = payoff, maturity)))
-
-# pct. difference
-print(as.numeric((esgmcprices(r = r0, X = payoff,
-                              maturity = maturity)/c0@price - 1)*100))
 
 # Convergence towards the option price
 esgmccv(r = r0, X = payoff, maturity = maturity,
