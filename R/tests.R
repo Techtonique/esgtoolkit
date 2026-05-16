@@ -284,6 +284,59 @@ esgcortest <- function(x, alternative = c("two.sided", "less", "greater"),
 }
 
 
+#' Test whether a multivariate time series satisfies a martingale property.
+#'
+#' Regresses the last increment \code{X[n,] - X[n-1,]} onto all preceding
+#' values \code{X[1,...,n-1]} (no intercept) and reports whether past
+#' observations have statistically significant joint predictive power over
+#' that increment. Under the martingale null hypothesis, all regression
+#' coefficients should be zero and the F-statistic non-significant.
+#' Residual diagnostics (ADF, Ljung-Box) are included as secondary checks
+#' on model adequacy.
+#'
+#' @param X        A numeric matrix of dimension \code{n x p}, where rows are
+#'                 time points and columns are series. Must have at least 3
+#'                 rows.
+#' @param level    Confidence level for the F critical value, as a percentage
+#'                 (default: 95, i.e. 5% significance). Note: this does not
+#'                 affect the returned p-value.
+#'
+#' @return A named list with:
+#' \describe{
+#'   \item{model}{The fitted \code{lm} object.}
+#'   \item{confint}{Confidence intervals for all regression coefficients.}
+#'   \item{regression_summary}{Full \code{summary.lm} output.}
+#'   \item{F_statistic}{Observed F-statistic for joint significance of
+#'         all predictors (first response column only when \code{p > 1}).}
+#'   \item{F_critical_value}{Critical value of the F distribution at
+#'         \code{level}\% for the same degrees of freedom.}
+#'   \item{F_p_value}{Two-sided p-value for the F-statistic. Values below
+#'         \code{1 - level/100} indicate rejection of the martingale null.}
+#'   \item{ADF_p_value}{p-value from the Augmented Dickey-Fuller test on
+#'         the residuals; small values suggest the residuals are stationary
+#'         (desirable).}
+#'   \item{Ljung_Box_p_value}{p-value from the Ljung-Box test (lag 1) on
+#'         the residuals; small values indicate residual autocorrelation
+#'         (undesirable).}
+#' }
+#'
+#' @details
+#' \strong{Limitations.} Only the final increment is tested; the function is
+#' therefore sensitive to the last observation and may have low power. With
+#' \code{p} series the regressor matrix has \code{p * (n-1)} columns for a
+#' single response vector, which becomes underdetermined quickly. For a more
+#' robust test, consider averaging the F-statistics over all increments
+#' (see \code{martingale_test_rolling}).
+#'
+#' @seealso \code{\link[tseries]{adf.test}}, \code{\link[stats]{Box.test}}
+#'
+#' @examples
+#' set.seed(42)
+#' X <- matrix(cumsum(rnorm(100)), ncol = 1)   # random walk -- should pass
+#' martingale_test(X)
+#'
+#' X2 <- matrix(cumsum(rnorm(200)), ncol = 2)
+#' martingale_test(X2, level = 99)
 martingale_test <- function(X, level=95) {
   n <- nrow(X)
   p <- ncol(X)
@@ -328,7 +381,7 @@ martingale_test <- function(X, level=95) {
     F_statistic = F_obs,
     F_critical_value = F_critical,
     F_p_value = p_value,
-    ADF_p_value = 1 - adf_result$p.value,
+    ADF_p_value = adf_result$p.value,
     Ljung_Box_p_value = lb_p_value
   ))
 }
